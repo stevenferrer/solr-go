@@ -15,8 +15,10 @@ import (
 
 // Client is the contract for interacting with solr
 type Client interface {
-	// Query is used for querying. It accepts the request as JSON bytes
-	Query(ctx context.Context, collection string, request []byte) (*QueryResponse, error)
+	// Select is used for querying. It accepts the request as JSON
+	Select(ctx context.Context, collection string, request []byte) (*SelectResponse, error)
+	// Update is used for indexing new data. It accepts the request as JSON
+	Update(ctx context.Context, collection string, request []byte) (*UpdateResponse, error)
 }
 
 // client - default Clienter implementation
@@ -28,11 +30,8 @@ type client struct {
 }
 
 // NewClient - a factory for creating default Client
-func NewClient(
-	host string,
-	port int,
-) Client {
-	timeout := time.Second
+func NewClient(host string, port int) Client {
+	timeout := time.Second * 60
 	httpClient := httpclient.NewClient(
 		httpclient.WithHTTPTimeout(timeout),
 	)
@@ -44,11 +43,7 @@ func NewClient(
 	}
 }
 
-func (c *client) Query(
-	ctx context.Context,
-	collection string,
-	request []byte,
-) (*QueryResponse, error) {
+func (c *client) Select(ctx context.Context, collection string, request []byte) (*SelectResponse, error) {
 	theURL, err := url.Parse(
 		fmt.Sprintf("http://%s:%d/solr/%s/query", c.host, c.port, collection),
 	)
@@ -69,7 +64,37 @@ func (c *client) Query(
 		return nil, errors.Wrap(err, "http post")
 	}
 
-	var response QueryResponse
+	var response SelectResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&response)
+	if err != nil {
+		return nil, errors.Wrap(err, "decode json response")
+	}
+
+	return &response, nil
+}
+
+func (c *client) Update(ctx context.Context, collection string, request []byte) (*UpdateResponse, error) {
+	theURL, err := url.Parse(
+		fmt.Sprintf("http://%s:%d/solr/%s/update?commit=true", c.host, c.port, collection),
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	headers := http.Header{
+		"content-type": []string{"application/json"},
+	}
+
+	httpResp, err := c.httpClient.Post(
+		theURL.String(),
+		bytes.NewReader(request),
+		headers,
+	)
+	if err != nil {
+		return nil, errors.Wrap(err, "http post")
+	}
+
+	var response UpdateResponse
 	err = json.NewDecoder(httpResp.Body).Decode(&response)
 	if err != nil {
 		return nil, errors.Wrap(err, "decode json response")

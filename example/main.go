@@ -13,34 +13,40 @@ import (
 func main() {
 	ctx := context.Background()
 
+	// solr server configurations
 	const (
 		host = "192.168.100.19"
 		port = 8983
 	)
 
+	// create a new helios client
 	client := helios.NewClient(host, port)
-	b, err := json.Marshal(helios.SimpleQueryRequest{
+	b, err := ioutil.ReadFile("beers.json")
+	checkErr(err)
+
+	uresponse, err := client.Update(ctx, "products", b)
+	checkErr(err)
+
+	b, err = json.Marshal(uresponse)
+	fmt.Println("update resposne")
+	fmt.Println(string(b))
+
+	b, err = json.Marshal(helios.SimpleSelectRequest{
 		Query: "*:*",
-		Facet: helios.M{
-			"categories": helios.M{
-				"type":  "terms",
-				"field": "category",
-				"limit": 100,
-			},
-		},
 	})
 	checkErr(err)
 
+	// perform query
+	sresponse, err := client.Select(ctx, "products", b)
+	checkErr(err)
+
+	b, err = json.MarshalIndent(sresponse, "", "  ")
+	checkErr(err)
+
+	// print response
+	fmt.Println("select reponse")
 	fmt.Println(string(b))
 
-	response, err := client.Query(ctx, "products", b)
-	checkErr(err)
-
-	b, err = json.Marshal(response)
-	checkErr(err)
-
-	err = ioutil.WriteFile("response.json", b, 0644)
-	checkErr(err)
 }
 
 func checkErr(err error) {

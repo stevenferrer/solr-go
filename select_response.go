@@ -1,6 +1,7 @@
 package helios
 
-type QueryResponse struct {
+// SelectResponse is the select response
+type SelectResponse struct {
 	ResponseHeader ResponseHeader `json:"responseHeader"`
 	Response       *Response      `json:"response,omitempty"`
 	Facets         Facets         `json:"facets,omitempty"`

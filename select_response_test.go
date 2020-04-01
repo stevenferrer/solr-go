@@ -15,7 +15,7 @@ func TestMarshalQueryResponse(t *testing.T) {
 	assert.NoError(err)
 
 	// FIXME: assert the fields
-	var queryResponse QueryResponse
-	err = json.Unmarshal(b, &queryResponse)
+	var response SelectResponse
+	err = json.Unmarshal(b, &response)
 	assert.NoError(err)
 }
