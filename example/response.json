@@ -1,0 +1,186 @@
+{
+  "responseHeader": {
+    "zkConnected": false,
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "json": "{\"query\":\"*:*\",\"facet\":{\"categories\":{\"field\":\"category\",\"limit\":100,\"type\":\"terms\"}}}"
+    }
+  },
+  "response": {
+    "numFound": 100,
+    "docs": [
+      {
+        "_version_": 1662751612168306700,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:19.528Z"],
+        "currency": ["PHP"],
+        "description": [
+          "English Brown Ale, Yakima Gol, Chocolate malt, 3068 - Weihenstephan Weizen, 99 IBU, 7.2%"
+        ],
+        "id": "1",
+        "name": ["Ruination IPA"],
+        "price": [495.8563],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612170403800,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:20.089Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Belgian Strong Ale, Golding, Caramel, 1007 - German Ale, 58 IBU, 5.8%"
+        ],
+        "id": "2",
+        "name": ["Schneider Aventinus"],
+        "price": [752.9409],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612171452400,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:20.598Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Stout, Cascade, Caramel, 1469 - West Yorkshire Ale, 92 IBU, 8.4%"
+        ],
+        "id": "3",
+        "name": ["Founders Breakfast Stout"],
+        "price": [499.8444],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612172501000,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:21.129Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Bock, Chelan, Carapils, 3522 - Belgian Ardennes, 88 IBU, 2.7%"
+        ],
+        "id": "4",
+        "name": ["Hop Rod Rye"],
+        "price": [936.9367],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612173549600,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:21.605Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Fruit Beer, Columbia, Pale, 1318 - London Ale III, 16 IBU, 3.5%"
+        ],
+        "id": "5",
+        "name": ["Racer 5 India Pale Ale, Bear Republic Bre"],
+        "price": [875.7791],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612174598100,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:22.180Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Dark Lager, Citra, Wheat mal, 3942 - Belgian Wheat, 38 IBU, 4.9%"
+        ],
+        "id": "6",
+        "name": ["Pliny The Elder"],
+        "price": [404.7855],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612175646700,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:22.779Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Pilsner, Mt. Hood, Black malt, 2001 - Urquell Lager, 55 IBU, 2.5%"
+        ],
+        "id": "7",
+        "name": ["Ten FIDY"],
+        "price": [479.4207],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612176695300,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:23.819Z"],
+        "currency": ["PHP"],
+        "description": [
+          "English Brown Ale, Simcoe, Chocolate malt, 1275 - Thames Valley Ale, 88 IBU, 6.5%"
+        ],
+        "id": "8",
+        "name": ["Bourbon County Stout"],
+        "price": [901.7298],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612177744000,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:24.107Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Light Lager, Simcoe, Black malt, 1968 - London ESB Ale, 90 IBU, 4.1%"
+        ],
+        "id": "9",
+        "name": ["Hennepin"],
+        "price": [414.3696],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      },
+      {
+        "_version_": 1662751612178792400,
+        "category": ["wines_and_liquor"],
+        "category_id": [14],
+        "created_at": ["2020-04-01T06:44:24.428Z"],
+        "currency": ["PHP"],
+        "description": [
+          "Smoke-flavored, Newport, Caramel, 3942 - Belgian Wheat, 35 IBU, 3.0%"
+        ],
+        "id": "10",
+        "name": ["HopSlam Ale"],
+        "price": [549.6579],
+        "seller_id": [1],
+        "unit": ["1 case"]
+      }
+    ]
+  },
+  "facets": {
+    "count": 100,
+    "categories": {
+      "buckets": [
+        { "val": "wines_and_liquor", "count": 26 },
+        { "val": "canned_goods", "count": 9 },
+        { "val": "frozen_prepared_foods", "count": 9 },
+        { "val": "drinks_and_beverages", "count": 8 },
+        { "val": "processed_foods", "count": 8 },
+        { "val": "bread_pastries_and_pasta", "count": 6 },
+        { "val": "fruits_veggies_and_salads", "count": 6 },
+        { "val": "meat_and_poultry", "count": 6 },
+        { "val": "milk_and_dairy", "count": 5 },
+        { "val": "cereals_and_breakfast", "count": 4 },
+        { "val": "condiments", "count": 4 },
+        { "val": "fish_and_seafods", "count": 4 },
+        { "val": "biscuits_chips_and_crackers", "count": 3 },
+        { "val": "food_supplements_and_vitamins", "count": 2 }
+      ]
+    }
+  }
+}

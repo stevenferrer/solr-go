@@ -1,0 +1,213 @@
+{
+  "responseHeader": {
+    "status": 0,
+    "QTime": 0,
+    "params": {
+      "q": "chicken",
+      "facet.field": "category",
+      "rows": "100",
+      "facet": "on",
+      "wt": "json",
+      "_": "1585721683015"
+    }
+  },
+  "response": {
+    "numFound": 5,
+    "start": 0,
+    "docs": [
+      {
+        "id": "34",
+        "created_at": [
+          "2020-04-01T06:44:31.800Z"
+        ],
+        "seller_id": [
+          1
+        ],
+        "name": [
+          "Chicken, cricket, invertebrates"
+        ],
+        "description": [
+          "Finest breeds of fox from the alps of Uganda"
+        ],
+        "unit": [
+          "1 pc."
+        ],
+        "currency": [
+          "PHP"
+        ],
+        "price": [
+          1237.5106
+        ],
+        "category_id": [
+          4
+        ],
+        "category": [
+          "canned_goods"
+        ],
+        "_version_": 1662751612205006800
+      },
+      {
+        "id": "53",
+        "created_at": [
+          "2020-04-01T06:44:37.546Z"
+        ],
+        "seller_id": [
+          1
+        ],
+        "name": [
+          "Chicken, donkey, mammals"
+        ],
+        "description": [
+          "Finest breeds of turtle  from the alps of Grenada"
+        ],
+        "unit": [
+          "1 pc."
+        ],
+        "currency": [
+          "PHP"
+        ],
+        "price": [
+          1024.7338
+        ],
+        "category_id": [
+          4
+        ],
+        "category": [
+          "canned_goods"
+        ],
+        "_version_": 1662751612224929800
+      },
+      {
+        "id": "60",
+        "created_at": [
+          "2020-04-01T06:44:39.616Z"
+        ],
+        "seller_id": [
+          1
+        ],
+        "name": [
+          "Chicken, trout, invertebrates"
+        ],
+        "description": [
+          "Finest breeds of monkey from the alps of Qatar"
+        ],
+        "unit": [
+          "1 pc."
+        ],
+        "currency": [
+          "PHP"
+        ],
+        "price": [
+          387.5426
+        ],
+        "category_id": [
+          13
+        ],
+        "category": [
+          "biscuits_chips_and_crackers"
+        ],
+        "_version_": 1662751612232269800
+      },
+      {
+        "id": "68",
+        "created_at": [
+          "2020-04-01T06:44:42.284Z"
+        ],
+        "seller_id": [
+          1
+        ],
+        "name": [
+          "Chicken, rabbit, invertebrates"
+        ],
+        "description": [
+          "Finest breeds of cod from the alps of Liberia"
+        ],
+        "unit": [
+          "1 pc."
+        ],
+        "currency": [
+          "PHP"
+        ],
+        "price": [
+          415.0662
+        ],
+        "category_id": [
+          2
+        ],
+        "category": [
+          "drinks_and_beverages"
+        ],
+        "_version_": 1662751612241707000
+      },
+      {
+        "id": "96",
+        "created_at": [
+          "2020-04-01T06:44:52.700Z"
+        ],
+        "seller_id": [
+          1
+        ],
+        "name": [
+          "Chicken, chinchilla, amphibians"
+        ],
+        "description": [
+          "Finest breeds of trout from the alps of Bahamas"
+        ],
+        "unit": [
+          "1 pc."
+        ],
+        "currency": [
+          "PHP"
+        ],
+        "price": [
+          864.7197
+        ],
+        "category_id": [
+          12
+        ],
+        "category": [
+          "fish_and_seafods"
+        ],
+        "_version_": 1662751612266872800
+      }
+    ]
+  },
+  "facet_counts": {
+    "facet_queries": {},
+    "facet_fields": {
+      "category": [
+        "canned_goods",
+        2,
+        "biscuits_chips_and_crackers",
+        1,
+        "drinks_and_beverages",
+        1,
+        "fish_and_seafods",
+        1,
+        "bread_pastries_and_pasta",
+        0,
+        "cereals_and_breakfast",
+        0,
+        "condiments",
+        0,
+        "food_supplements_and_vitamins",
+        0,
+        "frozen_prepared_foods",
+        0,
+        "fruits_veggies_and_salads",
+        0,
+        "meat_and_poultry",
+        0,
+        "milk_and_dairy",
+        0,
+        "processed_foods",
+        0,
+        "wines_and_liquor",
+        0
+      ]
+    },
+    "facet_ranges": {},
+    "facet_intervals": {},
+    "facet_heatmaps": {}
+  }
+}
