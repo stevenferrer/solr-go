@@ -21,7 +21,7 @@ type Client interface {
 	Update(ctx context.Context, collection string, request []byte) (*UpdateResponse, error)
 }
 
-// client - default Clienter implementation
+// client is the default implementation of solr client
 type client struct {
 	host string
 	port int

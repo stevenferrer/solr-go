@@ -5,7 +5,7 @@ type JSONer interface {
 	JSON() ([]byte, error)
 }
 
-// M is an alias to map of interfaces
+// M is an alias to map of interfaces. You can use this to define nested json fields.
 type M map[string]interface{}
 
 // SimpleSelectRequest is used for simple query

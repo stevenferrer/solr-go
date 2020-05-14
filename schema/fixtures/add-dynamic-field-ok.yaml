@@ -1,0 +1,35 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"add-dynamic-field":{"name":"*_wtf","stored":true,"type":"string"}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/schema
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":512}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
+        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
+        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

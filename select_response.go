@@ -6,12 +6,6 @@ type SelectResponse struct {
 	Response       *Response      `json:"response,omitempty"`
 	Facets         Facets         `json:"facets,omitempty"`
 }
-type ResponseHeader struct {
-	ZkConnected bool    `json:"zkConnected"`
-	Status      int     `json:"status"`
-	QTime       int     `json:"QTime"`
-	Params      *Params `json:"params,omitempty"`
-}
 
 type Params struct {
 	JSON       string `json:"json,omitempty"`

@@ -1,5 +1,7 @@
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dnaeon/go-vcr v1.0.1 h1:r8L/HqC0Hje5AXMu1ooW8oyQyOFv4GxqpL0nRP7SLLY=
+github.com/dnaeon/go-vcr v1.0.1/go.mod h1:aBB1+wY4s93YsC3HHjMBMrwTj2R9FHDzUr9KyGc8n1E=
 github.com/gojek/heimdall v5.0.2+incompatible h1:S9IJNuRErtH5MZ7Aps10haoTAoxy9Q0E0bYIjJZT7Vg=
 github.com/gojek/heimdall v5.0.2+incompatible/go.mod h1:caFYHVXyKSrgUJgtgHM+KJZGyI1wWxghxu7aFPLVfI8=
 github.com/gojektech/heimdall v5.0.2+incompatible h1:mfGLnHNTKN7b1OMTO4ZvL3oT2P13kqTTV7owK7BZDck=
