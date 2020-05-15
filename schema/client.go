@@ -14,6 +14,19 @@ import (
 
 // Client is the contract for interacting with Solr schema API
 type Client interface {
+	// GetSchema returns the schema details
+	GetSchema(ctx context.Context, coll string) (*Schema, error)
+	// ListFields returns the list of fields
+	ListFields(ctx context.Context, coll string) ([]Field, error)
+	// GetField returns a field details
+	GetField(ctx context.Context, coll, fldNm string) (*Field, error)
+	// ListDynamicFields returns list of dynamic fields
+	ListDynamicFields(ctx context.Context, coll string) ([]Field, error)
+	// ListFieldTypes returns the list of field types
+	ListFieldTypes(ctx context.Context, coll string) ([]FieldType, error)
+	// ListCopyFields returns the list of copy fields
+	ListCopyFields(ctx context.Context, coll string) ([]CopyField, error)
+
 	//  AddField adds a new field definition to your schema
 	// Reference: https://lucene.apache.org/solr/guide/8_5/schema-api.html#add-a-new-field
 	AddField(ctx context.Context, coll string, fld Field) error
@@ -58,61 +71,146 @@ type client struct {
 
 // NewClient is a factory for schema API client
 func NewClient(host string, port int, httpClient *http.Client) Client {
-	useHTTPS := false
 	proto := "http"
-	if useHTTPS {
-		proto = "https"
-	}
-
 	return client{host: host, port: port,
 		proto: proto, httpClient: httpClient,
 	}
 }
 
+func (c client) GetSchema(ctx context.Context, coll string) (*Schema, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema",
+		c.proto, c.host, c.port, coll))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.Schema, nil
+}
+
+func (c client) ListFields(ctx context.Context, coll string) ([]Field, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema/fields",
+		c.proto, c.host, c.port, coll))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.Fields, nil
+}
+
+func (c client) ListDynamicFields(ctx context.Context, coll string) ([]Field, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema/dynamicfields",
+		c.proto, c.host, c.port, coll))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.DynamicFields, nil
+}
+
+func (c client) GetField(ctx context.Context, coll, fldNm string) (*Field, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema/fields/%s",
+		c.proto, c.host, c.port, coll, fldNm))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.Field, nil
+}
+
+func (c client) ListFieldTypes(ctx context.Context, coll string) ([]FieldType, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema/fieldtypes",
+		c.proto, c.host, c.port, coll))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.FieldTypes, nil
+}
+
+func (c client) ListCopyFields(ctx context.Context, coll string) ([]CopyField, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema/copyfields",
+		c.proto, c.host, c.port, coll))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
+	var resp *Response
+	resp, err = c.doRtrv(ctx, theURL.String())
+	if err != nil {
+		return nil, err
+	}
+	return resp.CopyFields, nil
+}
+
 func (c client) AddField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "add-field", fld)
+	return c.doMdfy(ctx, coll, "add-field", fld)
 }
 
 func (c client) DeleteField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "delete-field", fld)
+	return c.doMdfy(ctx, coll, "delete-field", fld)
 }
 
 func (c client) ReplaceField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "replace-field", fld)
+	return c.doMdfy(ctx, coll, "replace-field", fld)
 }
 
 func (c client) AddDynamicField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "add-dynamic-field", fld)
+	return c.doMdfy(ctx, coll, "add-dynamic-field", fld)
 }
 
 func (c client) DeleteDynamicField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "delete-dynamic-field", fld)
+	return c.doMdfy(ctx, coll, "delete-dynamic-field", fld)
 }
 
 func (c client) ReplaceDynamicField(ctx context.Context, coll string, fld Field) error {
-	return c.doCmd(ctx, coll, "replace-dynamic-field", fld)
+	return c.doMdfy(ctx, coll, "replace-dynamic-field", fld)
 }
 
 func (c client) AddCopyField(ctx context.Context, coll string, cpyFld CopyField) error {
-	return c.doCmd(ctx, coll, "add-copy-field", cpyFld)
+	return c.doMdfy(ctx, coll, "add-copy-field", cpyFld)
 }
 
 func (c client) DeleteCopyField(ctx context.Context, coll string, cpyFld CopyField) error {
-	return c.doCmd(ctx, coll, "delete-copy-field", cpyFld)
+	return c.doMdfy(ctx, coll, "delete-copy-field", cpyFld)
 }
 
 func (c client) AddFieldType(ctx context.Context, coll string, fldTyp FieldType) error {
-	return c.doCmd(ctx, coll, "add-field-type", fldTyp)
+	return c.doMdfy(ctx, coll, "add-field-type", fldTyp)
 }
 
 func (c client) DeleteFieldType(ctx context.Context, coll string, fldTyp FieldType) error {
-	return c.doCmd(ctx, coll, "delete-field-type", fldTyp)
+	return c.doMdfy(ctx, coll, "delete-field-type", fldTyp)
 }
 func (c client) ReplaceFieldType(ctx context.Context, coll string, fldTyp FieldType) error {
-	return c.doCmd(ctx, coll, "replace-field-type", fldTyp)
+	return c.doMdfy(ctx, coll, "replace-field-type", fldTyp)
 }
 
-func (c client) doCmd(ctx context.Context, coll, cmd string, body interface{}) error {
+func (c client) doMdfy(ctx context.Context, coll, cmd string, body interface{}) error {
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/schema",
 		c.proto, c.host, c.port, coll))
 	if err != nil {
@@ -149,4 +247,30 @@ func (c client) doCmd(ctx context.Context, coll, cmd string, body interface{}) e
 	}
 
 	return nil
+}
+
+func (c client) doRtrv(ctx context.Context, theURL string) (*Response, error) {
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodGet, theURL, nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "new http request")
+	}
+	httpReq.Header.Add("content-type", "application/json")
+
+	var httpResp *http.Response
+	httpResp, err = c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, errors.Wrap(err, "http do request")
+	}
+
+	var resp Response
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return nil, errors.Wrap(err, "decode response")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return nil, resp.Error
+	}
+
+	return &resp, nil
 }

@@ -3,6 +3,7 @@ module github.com/stevenferrer/helios
 go 1.14
 
 require (
+	github.com/davecgh/go-spew v1.1.0
 	github.com/dnaeon/go-vcr v1.0.1
 	github.com/gojek/heimdall v5.0.2+incompatible
 	github.com/gojektech/heimdall v5.0.2+incompatible // indirect

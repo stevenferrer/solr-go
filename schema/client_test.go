@@ -16,7 +16,126 @@ import (
 	"github.com/stevenferrer/helios/schema"
 )
 
-func TestClient(t *testing.T) {
+func TestRetrieveSchema(t *testing.T) {
+	ctx := context.Background()
+	coll := "gettingstarted"
+
+	t.Run("get schema", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/get-schema")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		gotSchema, err := client.GetSchema(ctx, coll)
+		a.NoError(err)
+		a.NotNil(gotSchema)
+	})
+
+	t.Run("list fields", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/list-fields")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		gotFields, err := client.ListFields(ctx, coll)
+		a.NoError(err)
+		a.NotNil(gotFields)
+	})
+
+	t.Run("get field", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/get-field")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		gotField, err := client.GetField(ctx, coll, "_text_")
+		a.NoError(err)
+		a.NotNil(gotField)
+	})
+
+	t.Run("list dynamic fields", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/list-dynamic-fields")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		gotDynamicFields, err := client.ListDynamicFields(ctx, coll)
+		a.NoError(err)
+		a.NotNil(gotDynamicFields)
+	})
+
+	t.Run("list field types", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/list-field-types")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		gotFieldTypes, err := client.ListFieldTypes(ctx, coll)
+		a.NoError(err)
+		a.NotNil(gotFieldTypes)
+	})
+
+	t.Run("list copy fields", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/list-copy-fields")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := schema.NewClient("localhost", 8983, &http.Client{
+			Timeout:   time.Second * 60,
+			Transport: rec,
+		})
+
+		err = client.AddField(ctx, coll, schema.Field{
+			Name:   "my_field",
+			Type:   "string",
+			Stored: true,
+		})
+
+		err = client.AddCopyField(ctx, coll, schema.CopyField{
+			Source: "my_field",
+			Dest:   "_text_",
+		})
+
+		var gotCopyFields []schema.CopyField
+		gotCopyFields, err = client.ListCopyFields(ctx, coll)
+		a.NoError(err)
+		a.NotNil(gotCopyFields)
+	})
+}
+
+func TestModifySchema(t *testing.T) {
 	var testCases = []struct {
 		name, command string
 		body          interface{}
@@ -262,5 +381,4 @@ func TestClient(t *testing.T) {
 			}
 		})
 	}
-
 }

@@ -9,6 +9,12 @@ import (
 // Response is a schema API response
 type Response struct {
 	ResponseHeader ResponseHeader `json:"responseHeader"`
+	Schema         *Schema        `json:"schema,omitempty"`
+	Fields         []Field        `json:"fields,omitempty"`
+	DynamicFields  []Field        `json:"dynamicFields,omitempty"`
+	FieldTypes     []FieldType    `json:"fieldTypes,omitempty"`
+	CopyFields     []CopyField    `json:"copyFields,omitempty"`
+	Field          *Field         `json:"field,omitempty"`
 	Error          *Error         `json:"error,omitempty"`
 }
 

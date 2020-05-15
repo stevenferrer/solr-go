@@ -2,13 +2,12 @@ package schema
 
 // Schema is a schema
 type Schema struct {
-	Name          string      `json:"name"`
-	Version       float64     `json:"version"`
-	UniqueKey     string      `json:"uniqueKey"`
-	FieldTypes    []FieldType `json:"fieldTypes,omitempty"`
-	Fields        []Field     `json:"fields,omitempty"`
-	DynamicFields []Field     `json:"dynamicFields,omitempty"`
-	CopyFields    []CopyField `json:"copyFields"`
+	Name       string      `json:"name"`
+	Version    float64     `json:"version"`
+	UniqueKey  string      `json:"uniqueKey"`
+	FieldTypes []FieldType `json:"fieldTypes,omitempty"`
+	Fields     []Field     `json:"fields,omitempty"`
+	CopyFields []CopyField `json:"copyFields"`
 }
 
 // FieldType is a field type
@@ -83,6 +82,7 @@ type Filter struct {
 	Replacement         string `json:"replacement,omitempty"`
 	Pattern             string `json:"pattern,omitempty"`
 	PreserveOriginal    string `json:"preserveOriginal,omitempty"`
+	Replace             string `json:"replace,omitempty"`
 }
 
 // Field is a field
