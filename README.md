@@ -19,7 +19,7 @@ An [Apache Solr](https://lucene.apache.org/solr/) client for Go
 - [ ] Query API client
   - [ ] Examples
 - [ ] Basic Auth
-- [ ] Improved documentation and an awesome logo :)
+- [ ] Improve documentation and create an awesome logo :)
 
 ### Examples
 
