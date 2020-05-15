@@ -1,5 +1,5 @@
 # Helios
-An Solr client in Go
+Solr client in Go
 
 ## TODO:
 - [ ] Schema API

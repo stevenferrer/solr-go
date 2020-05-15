@@ -13,124 +13,123 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/helios"
 	"github.com/stevenferrer/helios/schema"
 )
 
 func TestClient(t *testing.T) {
 	var testCases = []struct {
 		name, command string
-		m             helios.M
+		body          interface{}
 		wantErr       bool
 	}{
 		{
 			name:    "add field with error",
 			command: "add-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "add field ok",
 			command: "add-field",
-			m: helios.M{
-				"name":   "sell_by",
-				"type":   "pdate",
-				"stored": true,
+			body: schema.Field{
+				Name:   "sell_by",
+				Type:   "pdate",
+				Stored: true,
 			},
 		},
 
 		{
 			name:    "replace field with error",
 			command: "replace-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "replace field ok",
 			command: "replace-field",
-			m: helios.M{
-				"name":   "sell_by",
-				"type":   "string",
-				"stored": false,
+			body: schema.Field{
+				Name:   "sell_by",
+				Type:   "string",
+				Stored: false,
 			},
 		},
 
 		{
 			name:    "delete field with error",
 			command: "delete-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "delete field ok",
 			command: "delete-field",
-			m: helios.M{
-				"name": "sell_by",
+			body: schema.Field{
+				Name: "sell_by",
 			},
 		},
 
 		{
 			name:    "add dynamic field with error",
 			command: "add-dynamic-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "add dynamic field ok",
 			command: "add-dynamic-field",
-			m: helios.M{
-				"name":   "*_wtf",
-				"type":   "string",
-				"stored": true,
+			body: schema.Field{
+				Name:   "*_wtf",
+				Type:   "string",
+				Stored: true,
 			},
 		},
 		{
 			name:    "replace dynamic field with error",
 			command: "replace-dynamic-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "replace dynamic field ok",
 			command: "replace-dynamic-field",
-			m: helios.M{
-				"name":   "*_wtf",
-				"type":   "text_general",
-				"stored": false,
+			body: schema.Field{
+				Name:   "*_wtf",
+				Type:   "text_general",
+				Stored: false,
 			},
 		},
 		{
 			name:    "delete dynamic field with error",
 			command: "delete-dynamic-field",
-			m:       helios.M{},
+			body:    schema.Field{},
 			wantErr: true,
 		},
 		{
 			name:    "delete dynamic field ok",
 			command: "delete-dynamic-field",
-			m:       helios.M{"name": "*_wtf"},
+			body:    schema.Field{Name: "*_wtf"},
 		},
 		{
 			name:    "add field type with error",
 			command: "add-field-type",
-			m:       helios.M{},
+			body:    schema.FieldType{},
 			wantErr: true,
 		},
 		{
 			name:    "add field type ok",
 			command: "add-field-type",
-			m: helios.M{
-				"name":  "myNewTextField",
-				"class": "solr.TextField",
-				"indexAnalyzer": helios.M{
-					"tokenizer": helios.M{
-						"class":     "solr.PathHierarchyTokenizerFactory",
-						"delimiter": "/",
+			body: schema.FieldType{
+				Name:  "myNewTextField",
+				Class: "solr.TextField",
+				IndexAnalyzier: &schema.Analyzer{
+					Tokenizer: &schema.Tokenizer{
+						Class:     "solr.PathHierarchyTokenizerFactory",
+						Delimeter: "/",
 					},
 				},
-				"queryAnalyzer": helios.M{
-					"tokenizer": helios.M{
-						"class": "solr.KeywordTokenizerFactory",
+				QueryAnalyzer: &schema.Analyzer{
+					Tokenizer: &schema.Tokenizer{
+						Class: "solr.KeywordTokenizerFactory",
 					},
 				},
 			},
@@ -139,19 +138,19 @@ func TestClient(t *testing.T) {
 		{
 			name:    "replace field type with error",
 			command: "replace-field-type",
-			m:       helios.M{},
+			body:    schema.FieldType{},
 			wantErr: true,
 		},
 		{
 			name:    "replace field type ok",
 			command: "replace-field-type",
-			m: helios.M{
-				"name":                 "myNewTextField",
-				"class":                "solr.TextField",
-				"positionIncrementGap": "100",
-				"analyzer": helios.M{
-					"tokenizer": helios.M{
-						"class": "solr.StandardTokenizerFactory",
+			body: schema.FieldType{
+				Name:                 "myNewTextField",
+				Class:                "solr.TextField",
+				PositionIncrementGap: "100",
+				Analyzer: &schema.Analyzer{
+					Tokenizer: &schema.Tokenizer{
+						Class: "solr.StandardTokenizerFactory",
 					},
 				},
 			},
@@ -160,42 +159,44 @@ func TestClient(t *testing.T) {
 		{
 			name:    "delete field type with error",
 			command: "delete-field-type",
-			m:       helios.M{},
+			body:    schema.FieldType{},
 			wantErr: true,
 		},
 		{
 			name:    "delete field type ok",
 			command: "delete-field-type",
-			m:       helios.M{"name": "myNewTextField"},
+			body: schema.FieldType{
+				Name: "myNewTextField",
+			},
 		},
 
 		{
 			name:    "add copy field with error",
 			command: "add-copy-field",
-			m:       helios.M{},
+			body:    schema.CopyField{},
 			wantErr: true,
 		},
 		{
 			name:    "add copy field ok",
 			command: "add-copy-field",
-			m: helios.M{
-				"source": "*_shelf",
-				"dest":   "_text_",
+			body: schema.CopyField{
+				Source: "*_shelf",
+				Dest:   "_text_",
 			},
 		},
 
 		{
 			name:    "delete copy field with error",
 			command: "delete-copy-field",
-			m:       helios.M{},
+			body:    schema.CopyField{},
 			wantErr: true,
 		},
 		{
 			name:    "delete copy field ok",
 			command: "delete-copy-field",
-			m: helios.M{
-				"source": "*_shelf",
-				"dest":   "_text_",
+			body: schema.CopyField{
+				Source: "*_shelf",
+				Dest:   "_text_",
 			},
 		},
 	}
@@ -220,35 +221,36 @@ func TestClient(t *testing.T) {
 
 			switch tc.command {
 			case "add-field":
-				err = client.AddField(ctx, coll, tc.m)
+				err = client.AddField(ctx, coll, tc.body.(schema.Field))
 			case "delete-field":
-				err = client.DeleteField(ctx, coll, tc.m)
+				err = client.DeleteField(ctx, coll, tc.body.(schema.Field))
 			case "replace-field":
-				err = client.ReplaceField(ctx, coll, tc.m)
+				err = client.ReplaceField(ctx, coll, tc.body.(schema.Field))
 			case "add-dynamic-field":
-				err = client.AddDynamicField(ctx, coll, tc.m)
+				err = client.AddDynamicField(ctx, coll, tc.body.(schema.Field))
 			case "delete-dynamic-field":
-				err = client.DeleteDynamicField(ctx, coll, tc.m)
+				err = client.DeleteDynamicField(ctx, coll, tc.body.(schema.Field))
 			case "replace-dynamic-field":
-				err = client.ReplaceDynamicField(ctx, coll, tc.m)
+				err = client.ReplaceDynamicField(ctx, coll, tc.body.(schema.Field))
 			case "add-field-type":
-				err = client.AddFieldType(ctx, coll, tc.m)
+				err = client.AddFieldType(ctx, coll, tc.body.(schema.FieldType))
 			case "delete-field-type":
-				err = client.DeleteFieldType(ctx, coll, tc.m)
+				err = client.DeleteFieldType(ctx, coll, tc.body.(schema.FieldType))
 			case "replace-field-type":
-				err = client.ReplaceFieldType(ctx, coll, tc.m)
+				err = client.ReplaceFieldType(ctx, coll, tc.body.(schema.FieldType))
 			case "add-copy-field":
+				cpyField := tc.body.(schema.CopyField)
 				if !tc.wantErr {
-					err = client.AddDynamicField(ctx, coll, helios.M{
-						"name":   tc.m["source"],
-						"type":   "string",
-						"stored": true,
+					err = client.AddDynamicField(ctx, coll, schema.Field{
+						Name:   cpyField.Source,
+						Type:   "string",
+						Stored: true,
 					})
 					assert.NoError(t, err)
 				}
-				err = client.AddCopyField(ctx, coll, tc.m)
+				err = client.AddCopyField(ctx, coll, cpyField)
 			case "delete-copy-field":
-				err = client.DeleteCopyField(ctx, coll, tc.m)
+				err = client.DeleteCopyField(ctx, coll, tc.body.(schema.CopyField))
 			default:
 				err = errors.New("command not found")
 			}

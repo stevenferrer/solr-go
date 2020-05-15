@@ -32,7 +32,7 @@ type command struct {
 	DeleteFieldType     interface{} `json:"delete-field-type"`
 }
 
-func (c command) GetCommand() string {
+func (c command) getCmd() string {
 	cv := reflect.ValueOf(c)
 	for i := 0; i < cv.NumField(); i++ {
 		cf := cv.Field(i)
@@ -45,7 +45,7 @@ func (c command) GetCommand() string {
 		return args[0]
 	}
 
-	return ""
+	return "unknown"
 }
 
 // Error is the response error detail
@@ -71,7 +71,7 @@ func (e Error) Error() string {
 		}
 
 		errMsgs = append(errMsgs, fmt.Sprintf("%s: %s",
-			det.GetCommand(), strings.Join(errs, ", ")))
+			det.getCmd(), strings.Join(errs, ", ")))
 
 	}
 
