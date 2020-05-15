@@ -14,26 +14,39 @@ type Schema struct {
 type FieldType struct {
 	Name                      string    `json:"name"`
 	Class                     string    `json:"class"`
-	Default                   string    `json:"default,omitempty"`
+	PositionIncrementGap      string    `json:"positionIncrementGap,omitempty"`
+	AutoGeneratePhraseQueries string    `json:"autoGeneratePhraseQueries,omitempty"`
+	SynonymQueryStyle         string    `json:"synonymQueryStyle,omitempty"`
+	EnableGraphQueries        string    `json:"enableGraphQueries,omitempty"`
+	DocValuesFormat           string    `json:"docValuesFormat,omitempty"`
+	PostingsFormat            string    `json:"postingsFormat,omitempty"`
 	Indexed                   bool      `json:"indexed,omitempty"`
-	OmitTermFreqAndPositions  bool      `json:"omitTermFreqAndPositions,omitempty"`
-	OmitNorms                 bool      `json:"omitNorms,omitempty"`
-	MaxCharsForDocValues      string    `json:"maxCharsForDocValues,omitempty"`
 	Stored                    bool      `json:"stored,omitempty"`
-	IndexAnalyzier            *Analyzer `json:"indexAnalyzer,omitempty"`
-	QueryAnalyzer             *Analyzer `json:"queryAnalyzer,omitempty"`
+	DocValues                 bool      `json:"docValues,omitempty"`
+	SortMissingFirst          bool      `json:"sortMissingFirst,omitempty"`
 	SortMissingLast           bool      `json:"sortMissingLast,omitempty"`
 	MultiValued               bool      `json:"multiValued,omitempty"`
-	Analyzer                  *Analyzer `json:"analyzer,omitempty"`
+	Uninvertible              bool      `json:"uninvertible,omitempty"`
+	OmitNorms                 bool      `json:"omitNorms,omitempty"`
+	OmitTermFreqAndPositions  bool      `json:"omitTermFreqAndPositions,omitempty"`
+	OmitPositions             bool      `json:"omitPositions,omitempty"`
+	TermVectors               bool      `json:"termVectors,omitempty"`
+	TermPositions             bool      `json:"termPositions,omitempty"`
+	TermOffsets               bool      `json:"termOffsets,omitempty"`
+	TermPayloads              bool      `json:"termPayloads,omitempty"`
+	Required                  bool      `json:"required,omitempty"`
+	UseDocValuesAsStored      bool      `json:"useDocValuesAsStored,omitempty"`
+	Large                     bool      `json:"large,omitempty"`
+	MaxCharsForDocValues      string    `json:"maxCharsForDocValues,omitempty"`
 	Geo                       string    `json:"geo,omitempty"`
 	MaxDistErr                string    `json:"maxDistErr,omitempty"`
 	DistErrPct                string    `json:"distErrPct,omitempty"`
 	DistanceUnits             string    `json:"distanceUnits,omitempty"`
-	PositionIncrementGap      string    `json:"positionIncrementGap,omitempty"`
-	DocValues                 bool      `json:"docValues,omitempty"`
 	SubFieldSuffix            string    `json:"subFieldSuffix,omitempty"`
 	Dimension                 string    `json:"dimension,omitempty"`
-	AutoGeneratePhraseQueries string    `json:"autoGeneratePhraseQueries,omitempty"`
+	Analyzer                  *Analyzer `json:"analyzer,omitempty"`
+	IndexAnalyzier            *Analyzer `json:"indexAnalyzer,omitempty"`
+	QueryAnalyzer             *Analyzer `json:"queryAnalyzer,omitempty"`
 }
 
 // Tokenizer is a tokenizer

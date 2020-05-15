@@ -19,6 +19,8 @@ import (
 func TestRetrieveSchema(t *testing.T) {
 	ctx := context.Background()
 	coll := "gettingstarted"
+	host := "localhost"
+	port := 8983
 
 	t.Run("get schema", func(t *testing.T) {
 		a := assert.New(t)
@@ -27,7 +29,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})
@@ -44,7 +46,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})
@@ -61,7 +63,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})
@@ -78,7 +80,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})
@@ -95,7 +97,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})
@@ -112,7 +114,7 @@ func TestRetrieveSchema(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := schema.NewClient("localhost", 8983, &http.Client{
+		client := schema.NewClient(host, port, &http.Client{
 			Timeout:   time.Second * 60,
 			Transport: rec,
 		})

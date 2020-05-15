@@ -72,7 +72,7 @@ type client struct {
 // NewClient is a factory for schema API client
 func NewClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
-	return client{host: host, port: port,
+	return &client{host: host, port: port,
 		proto: proto, httpClient: httpClient,
 	}
 }
