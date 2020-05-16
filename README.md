@@ -13,17 +13,20 @@ Helios contains set of packages for interacting with [Apache Solr](https://lucen
   - [Installation and usage](#installation)
   - [Features and todo](#features-and-todo)
   - [Examples](#examples)
-    - [Indexing and updating documents](#indexing-and-updating-documents)
-	- [Quering with JSON request API](#querying-with-json-request-api)
-	- [Interacting with Schema API](#interacting-with-schema-api)
-	  - [Retrieving schema information](#retrieving-schema-information)
-	  - [Managing and updating the schema](#modifying-and-updating-the-schema)
+    - [Indexing and updating documents](#indexing-and-updating-documents) 
+	- [Quering with JSON request API](#querying-with-json-request-api) 
+	- [Interacting with Schema API](#interacting-with-schema-api) 
+		- [Retrieving schema information](#retrieving-schema-information) 
+		- [Managing and updating the schema](#modifying-and-updating-the-schema)
   - [Contributing](#contributing)
 
 ## Installation and usage
-1. Download the module using `go get`
 
-`$ go get -v github.com/stevenferrer/helios`
+1. Download the module/package using `go get`
+
+```sh
+$ go get github.com/stevenferrer/helios
+```
 
 2. Import the package that you need. For example, the query package
 
@@ -34,6 +37,7 @@ import (
 	"github.com/stevenferrer/helios/query"
 )
 ```
+
 3. Initialize the client.
 
 ```go
@@ -47,7 +51,7 @@ func main() {
 4. Start using it!
 
 ```go
-	resp, err := client.Query(context.Background(), 
+	resp, err := client.Query(context.Background(),
 		"techproducts", helios.M{"query": "name:iPod"},
 	)
 	if err != nil {
@@ -69,8 +73,7 @@ func main() {
   - [x] JSON client
     - [x] [Add single document](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-a-single-json-document)
     - [x] [Add multiple documents](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-multiple-json-documents)
-    - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
-	- [x] Example
+    - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) - [x] Example
   - [ ] XML client ??
   - [ ] CSV client ??
 - [x] [JSON Query API](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
