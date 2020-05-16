@@ -10,6 +10,7 @@ Helios contains set of packages for interacting with [Apache Solr](https://lucen
 
 - [Helios](#helios)
   - [Contents](#contents)
+  - [Installation and usage](#installation)
   - [Features and todo](#features-and-todo)
   - [Examples](#examples)
     - [Indexing and updating documents](#indexing-and-updating-documents)
@@ -18,6 +19,45 @@ Helios contains set of packages for interacting with [Apache Solr](https://lucen
 	  - [Retrieving schema information](#retrieving-schema-information)
 	  - [Managing and updating the schema](#modifying-and-updating-the-schema)
   - [Contributing](#contributing)
+
+## Installation and usage
+1. Download the module using `go get`
+
+`$ go get -v github.com/stevenferrer/helios`
+
+2. Import the package that you need. For example, the query package
+
+```go
+import (
+	// optional to include the convenience type "M"
+	"github.com/stevenferrer/helios"
+	"github.com/stevenferrer/helios/query"
+)
+```
+3. Initialize the client.
+
+```go
+func main() {
+	client := query.NewJSONClient(
+		"localhost", 8983, &http.Client{},
+	)
+	...
+```
+
+4. Start using it!
+
+```go
+	resp, err := client.Query(context.Background(), 
+		"techproducts", helios.M{"query": "name:iPod"},
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// do something with the response
+	...
+}
+```
 
 ## Features and todo
 
