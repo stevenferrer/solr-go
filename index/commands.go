@@ -9,14 +9,14 @@ import (
 	"github.com/stevenferrer/helios"
 )
 
-// Cmd is an update command
-type Cmd interface {
-	// ToCmd returns an update command string
-	ToCmd() (string, error)
+// Commander is a contract for an update command
+type Commander interface {
+	// Command returns an update command string
+	Command() (string, error)
 }
 
-// AddCmd is an add command
-type AddCmd struct {
+// AddCommand is an add command
+type AddCommand struct {
 	// CommitWithin option to add the document within the
 	// specified number of milliseconds
 	CommitWithin int
@@ -27,8 +27,8 @@ type AddCmd struct {
 	Doc interface{}
 }
 
-// ToCmd formats add command
-func (c AddCmd) ToCmd() (string, error) {
+// Command formats add command
+func (c AddCommand) Command() (string, error) {
 	cmd := helios.M{}
 
 	if c.CommitWithin > 0 {
@@ -49,13 +49,13 @@ func (c AddCmd) ToCmd() (string, error) {
 	return "\"add\"" + ":" + string(b), nil
 }
 
-// DelByQryCmd is a delete by query command
-type DelByQryCmd struct {
+// DelByQryCommand is a delete by query command
+type DelByQryCommand struct {
 	Query string
 }
 
-// ToCmd formats delete by query command
-func (c DelByQryCmd) ToCmd() (string, error) {
+// Command formats delete by query command
+func (c DelByQryCommand) Command() (string, error) {
 	cmd := helios.M{
 		"query": c.Query,
 	}
@@ -68,13 +68,13 @@ func (c DelByQryCmd) ToCmd() (string, error) {
 	return "\"delete\"" + ":" + string(b), nil
 }
 
-// DelByIDsCmd is a delete by list of ids command
-type DelByIDsCmd struct {
+// DelByIDsCommand is a delete by list of ids command
+type DelByIDsCommand struct {
 	IDs []string
 }
 
-// ToCmd formats delete by ids command
-func (c DelByIDsCmd) ToCmd() (string, error) {
+// Command formats delete by ids command
+func (c DelByIDsCommand) Command() (string, error) {
 	ids := []string{}
 	for _, id := range c.IDs {
 		ids = append(ids, fmt.Sprintf("%q", id))

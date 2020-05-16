@@ -7,30 +7,30 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/helios"
+	. "github.com/stevenferrer/helios"
 	"github.com/stevenferrer/helios/index"
 )
 
 func TestCommands(t *testing.T) {
 	t.Run("add command", func(t *testing.T) {
-		addCmds := []index.AddCmd{
+		addCmds := []index.AddCommand{
 			{
 				CommitWithin: 5000,
 				Overwrite:    true,
-				Doc: helios.M{
+				Doc: M{
 					"id":   "1",
 					"name": "Milana Vino",
 				},
 			},
 			{
-				Doc: helios.M{
+				Doc: M{
 					"id":   "2",
 					"name": "Daisy Keech",
 				},
 			},
 
 			{
-				Doc: helios.M{
+				Doc: M{
 					"id":   "3",
 					"name": "Charley Jordan",
 				},
@@ -39,7 +39,7 @@ func TestCommands(t *testing.T) {
 
 		cmdStrs := []string{}
 		for _, cmd := range addCmds {
-			cmdStr, err := cmd.ToCmd()
+			cmdStr, err := cmd.Command()
 			require.NoError(t, err)
 			cmdStrs = append(cmdStrs, cmdStr)
 		}
@@ -51,7 +51,7 @@ func TestCommands(t *testing.T) {
 	})
 
 	t.Run("delete by query command", func(t *testing.T) {
-		delByQryCmds := []index.DelByQryCmd{
+		delByQryCmds := []index.DelByQryCommand{
 			{
 				Query: "*:*",
 			},
@@ -61,7 +61,7 @@ func TestCommands(t *testing.T) {
 		}
 		cmdStrs := []string{}
 		for _, cmd := range delByQryCmds {
-			cmdStr, err := cmd.ToCmd()
+			cmdStr, err := cmd.Command()
 			require.NoError(t, err)
 			cmdStrs = append(cmdStrs, cmdStr)
 		}
@@ -73,7 +73,7 @@ func TestCommands(t *testing.T) {
 	})
 
 	t.Run("delete by ids command", func(t *testing.T) {
-		delByQryCmds := []index.DelByIDsCmd{
+		delByQryCmds := []index.DelByIDsCommand{
 			{
 				IDs: []string{"ID1", "ID2"},
 			},
@@ -83,7 +83,7 @@ func TestCommands(t *testing.T) {
 		}
 		cmdStrs := []string{}
 		for _, cmd := range delByQryCmds {
-			cmdStr, err := cmd.ToCmd()
+			cmdStr, err := cmd.Command()
 			require.NoError(t, err)
 			cmdStrs = append(cmdStrs, cmdStr)
 		}

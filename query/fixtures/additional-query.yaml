@@ -1,0 +1,224 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"queries":{"electronic":{"field":{"f":"cat","query":"electronics"}},"manufacturers":["manu:apple",{"field":{"f":"manu","query":"belkin"}}]},"query":"{!v=$electronic}"}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/techproducts/query
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":0,
+          "params":{
+            "json":"{\"queries\":{\"electronic\":{\"field\":{\"f\":\"cat\",\"query\":\"electronics\"}},\"manufacturers\":[\"manu:apple\",{\"field\":{\"f\":\"manu\",\"query\":\"belkin\"}}]},\"query\":\"{!v=$electronic}\"}"}},
+        "response":{"numFound":12,"start":0,"docs":[
+            {
+              "id":"SP2514N",
+              "name":"Samsung SpinPoint P120 SP2514N - hard drive - 250 GB - ATA-133",
+              "manu":"Samsung Electronics Co. Ltd.",
+              "manu_id_s":"samsung",
+              "cat":["electronics",
+                "hard drive"],
+              "features":["7200RPM, 8MB cache, IDE Ultra ATA-133",
+                "NoiseGuard, SilentSeek technology, Fluid Dynamic Bearing (FDB) motor"],
+              "price":92.0,
+              "price_c":"92.0,USD",
+              "popularity":6,
+              "inStock":true,
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "store":"35.0752,-97.032",
+              "_version_":1666827118628044800,
+              "price_c____l_ns":9200},
+            {
+              "id":"6H500F0",
+              "name":"Maxtor DiamondMax 11 - hard drive - 500 GB - SATA-300",
+              "manu":"Maxtor Corp.",
+              "manu_id_s":"maxtor",
+              "cat":["electronics",
+                "hard drive"],
+              "features":["SATA 3.0Gb/s, NCQ",
+                "8.5ms seek",
+                "16MB cache"],
+              "price":350.0,
+              "price_c":"350.0,USD",
+              "popularity":6,
+              "inStock":true,
+              "store":"45.17614,-93.87341",
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "_version_":1666827118683619328,
+              "price_c____l_ns":35000},
+            {
+              "id":"F8V7067-APL-KIT",
+              "name":"Belkin Mobile Power Cord for iPod w/ Dock",
+              "manu":"Belkin",
+              "manu_id_s":"belkin",
+              "cat":["electronics",
+                "connector"],
+              "features":["car power adapter, white"],
+              "weight":4.0,
+              "price":19.95,
+              "price_c":"19.95,USD",
+              "popularity":1,
+              "inStock":false,
+              "store":"45.18014,-93.87741",
+              "manufacturedate_dt":"2005-08-01T16:30:25Z",
+              "_version_":1666827118693056512,
+              "price_c____l_ns":1995},
+            {
+              "id":"IW-02",
+              "name":"iPod & iPod Mini USB 2.0 Cable",
+              "manu":"Belkin",
+              "manu_id_s":"belkin",
+              "cat":["electronics",
+                "connector"],
+              "features":["car power adapter for iPod, white"],
+              "weight":2.0,
+              "price":11.5,
+              "price_c":"11.50,USD",
+              "popularity":1,
+              "inStock":false,
+              "store":"37.7752,-122.4232",
+              "manufacturedate_dt":"2006-02-14T23:55:59Z",
+              "_version_":1666827118698299392,
+              "price_c____l_ns":1150},
+            {
+              "id":"MA147LL/A",
+              "name":"Apple 60 GB iPod with Video Playback Black",
+              "manu":"Apple Computer Inc.",
+              "manu_id_s":"apple",
+              "cat":["electronics",
+                "music"],
+              "features":["iTunes, Podcasts, Audiobooks",
+                "Stores up to 15,000 songs, 25,000 photos, or 150 hours of video",
+                "2.5-inch, 320x240 color TFT LCD display with LED backlight",
+                "Up to 20 hours of battery life",
+                "Plays AAC, MP3, WAV, AIFF, Audible, Apple Lossless, H.264 video",
+                "Notes, Calendar, Phone book, Hold button, Date display, Photo wallet, Built-in games, JPEG photo playback, Upgradeable firmware, USB 2.0 compatibility, Playback speed control, Rechargeable capability, Battery level indication"],
+              "includes":"earbud headphones, USB cable",
+              "weight":5.5,
+              "price":399.0,
+              "price_c":"399.00,USD",
+              "popularity":10,
+              "inStock":true,
+              "store":"37.7752,-100.0232",
+              "manufacturedate_dt":"2005-10-12T08:00:00Z",
+              "_version_":1666827118710882304,
+              "price_c____l_ns":39900},
+            {
+              "id":"TWINX2048-3200PRO",
+              "name":"CORSAIR  XMS 2GB (2 x 1GB) 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) Dual Channel Kit System Memory - Retail",
+              "manu":"Corsair Microsystems Inc.",
+              "manu_id_s":"corsair",
+              "cat":["electronics",
+                "memory"],
+              "features":["CAS latency 2,  2-3-3-6 timing, 2.75v, unbuffered, heat-spreader"],
+              "price":185.0,
+              "price_c":"185.00,USD",
+              "popularity":5,
+              "inStock":true,
+              "store":"37.7752,-122.4232",
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "payloads":"electronics|6.0 memory|3.0",
+              "_version_":1666827118777991168,
+              "price_c____l_ns":18500},
+            {
+              "id":"VS1GB400C3",
+              "name":"CORSAIR ValueSelect 1GB 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) System Memory - Retail",
+              "manu":"Corsair Microsystems Inc.",
+              "manu_id_s":"corsair",
+              "cat":["electronics",
+                "memory"],
+              "price":74.99,
+              "price_c":"74.99,USD",
+              "popularity":7,
+              "inStock":true,
+              "store":"37.7752,-100.0232",
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "payloads":"electronics|4.0 memory|2.0",
+              "_version_":1666827118783234048,
+              "price_c____l_ns":7499},
+            {
+              "id":"VDBDB1A16",
+              "name":"A-DATA V-Series 1GB 184-Pin DDR SDRAM Unbuffered DDR 400 (PC 3200) System Memory - OEM",
+              "manu":"A-DATA Technology Inc.",
+              "manu_id_s":"corsair",
+              "cat":["electronics",
+                "memory"],
+              "features":["CAS latency 3,   2.7v"],
+              "popularity":0,
+              "inStock":true,
+              "store":"45.18414,-93.88141",
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "payloads":"electronics|0.9 memory|0.1",
+              "_version_":1666827118793719808},
+            {
+              "id":"0579B002",
+              "name":"Canon PIXMA MP500 All-In-One Photo Printer",
+              "manu":"Canon Inc.",
+              "manu_id_s":"canon",
+              "cat":["electronics",
+                "multifunction printer",
+                "printer",
+                "scanner",
+                "copier"],
+              "features":["Multifunction ink-jet color photo printer",
+                "Flatbed scanner, optical scan resolution of 1,200 x 2,400 dpi",
+                "2.5\" color LCD preview screen",
+                "Duplex Copying",
+                "Printing speed up to 29ppm black, 19ppm color",
+                "Hi-Speed USB",
+                "memory card: CompactFlash, Micro Drive, SmartMedia, Memory Stick, Memory Stick Pro, SD Card, and MultiMediaCard"],
+              "weight":352.0,
+              "price":179.99,
+              "price_c":"179.99,USD",
+              "popularity":6,
+              "inStock":true,
+              "store":"45.19214,-93.89941",
+              "_version_":1666827118861877248,
+              "price_c____l_ns":17999},
+            {
+              "id":"9885A004",
+              "name":"Canon PowerShot SD500",
+              "manu":"Canon Inc.",
+              "manu_id_s":"canon",
+              "cat":["electronics",
+                "camera"],
+              "features":["3x zoop, 7.1 megapixel Digital ELPH",
+                "movie clips up to 640x480 @30 fps",
+                "2.0\" TFT LCD, 118,000 pixels",
+                "built in flash, red-eye reduction"],
+              "includes":"32MB SD card, USB cable, AV cable, battery",
+              "weight":6.4,
+              "price":329.95,
+              "price_c":"329.95,USD",
+              "popularity":7,
+              "inStock":true,
+              "manufacturedate_dt":"2006-02-13T15:26:37Z",
+              "store":"45.19614,-93.90341",
+              "_version_":1666827118888091648,
+              "price_c____l_ns":32995}]
+        }}
+    headers:
+      Content-Length:
+      - "7280"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
+        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
+        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

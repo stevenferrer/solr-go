@@ -10,14 +10,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/helios"
+	. "github.com/stevenferrer/helios"
 	"github.com/stevenferrer/helios/index"
 	"github.com/stevenferrer/helios/schema"
 )
 
 func TestJSONClient(t *testing.T) {
 	ctx := context.Background()
-	coll := "gettingstarted"
+	collection := "gettingstarted"
 	host := "localhost"
 	port := 8983
 	timeout := time.Second * 60
@@ -29,7 +29,7 @@ func TestJSONClient(t *testing.T) {
 		Timeout:   timeout,
 		Transport: r,
 	})
-	err = schemaClient.AddField(ctx, coll, schema.Field{
+	err = schemaClient.AddField(ctx, collection, schema.Field{
 		Name:    "name",
 		Type:    "text_general",
 		Indexed: true,
@@ -38,7 +38,7 @@ func TestJSONClient(t *testing.T) {
 	require.NoError(t, err)
 
 	// add copy field
-	err = schemaClient.AddCopyField(ctx, coll, schema.CopyField{
+	err = schemaClient.AddCopyField(ctx, collection, schema.CopyField{
 		Source: "*",
 		Dest:   "_text_",
 	})
@@ -66,7 +66,7 @@ func TestJSONClient(t *testing.T) {
 				Name: "Milana Vino",
 			}
 
-			err = client.AddSingle(ctx, coll, doc)
+			err = client.AddSingle(ctx, collection, doc)
 			a.NoError(err)
 		})
 		t.Run("error", func(t *testing.T) {
@@ -87,7 +87,7 @@ func TestJSONClient(t *testing.T) {
 				Name string `json:"name"`
 			}{}
 
-			err = client.AddSingle(ctx, coll, doc)
+			err = client.AddSingle(ctx, collection, doc)
 			a.Error(err)
 		})
 	})
@@ -122,7 +122,7 @@ func TestJSONClient(t *testing.T) {
 			},
 		}
 
-		err = client.AddMultiple(ctx, coll, docs)
+		err = client.AddMultiple(ctx, collection, docs)
 		a.NoError(err)
 	})
 
@@ -138,43 +138,43 @@ func TestJSONClient(t *testing.T) {
 			Transport: rec,
 		})
 
-		addCmds := []index.AddCmd{
+		addCmds := []index.AddCommand{
 			{
 				CommitWithin: 5000,
 				Overwrite:    true,
-				Doc: helios.M{
+				Doc: M{
 					"id":   "1",
 					"name": "Milana Vino",
 				},
 			},
 			{
-				Doc: helios.M{
+				Doc: M{
 					"id":   "2",
 					"name": "Daisy Keech",
 				},
 			},
 
 			{
-				Doc: helios.M{
+				Doc: M{
 					"id":   "3",
 					"name": "Charley Jordan",
 				},
 			},
 		}
 
-		delByIDsCmd := []index.DelByIDsCmd{
+		delByIDsCmd := []index.DelByIDsCommand{
 			{
 				IDs: []string{"2"},
 			},
 		}
 
-		delByQryCmd := []index.DelByQryCmd{
+		delByQryCmd := []index.DelByQryCommand{
 			{
 				Query: "*:*",
 			},
 		}
 
-		cmds := []index.Cmd{}
+		cmds := []index.Commander{}
 		for _, ac := range addCmds {
 			cmds = append(cmds, ac)
 		}
@@ -187,7 +187,7 @@ func TestJSONClient(t *testing.T) {
 			cmds = append(cmds, dc)
 		}
 
-		err = client.UpdateCmds(ctx, coll, cmds...)
+		err = client.UpdateCommands(ctx, collection, cmds...)
 		a.NoError(err)
 	})
 }

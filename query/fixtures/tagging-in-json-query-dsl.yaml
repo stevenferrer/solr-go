@@ -1,0 +1,59 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"filter":[{"#titleTag":"name:Solr"},{"#inStockTag":"inStock:true"}],"query":"*:*"}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/techproducts/query
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":1,
+          "params":{
+            "json":"{\"filter\":[{\"#titleTag\":\"name:Solr\"},{\"#inStockTag\":\"inStock:true\"}],\"query\":\"*:*\"}"}},
+        "response":{"numFound":1,"start":0,"docs":[
+            {
+              "id":"SOLR1000",
+              "name":"Solr, the Enterprise Search Server",
+              "manu":"Apache Software Foundation",
+              "cat":["software",
+                "search"],
+              "features":["Advanced Full-Text Search Capabilities using Lucene",
+                "Optimized for High Volume Web Traffic",
+                "Standards Based Open Interfaces - XML and HTTP",
+                "Comprehensive HTML Administration Interfaces",
+                "Scalability - Efficient Replication to other Solr Search Servers",
+                "Flexible and Adaptable with XML configuration and Schema",
+                "Good unicode support: héllo (hello with an accent over the e)"],
+              "price":0.0,
+              "price_c":"0.0,USD",
+              "popularity":10,
+              "inStock":true,
+              "incubationdate_dt":"2006-01-17T00:00:00Z",
+              "_version_":1666827118915354624,
+              "price_c____l_ns":0}]
+        }}
+    headers:
+      Content-Length:
+      - "1106"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
+        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
+        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

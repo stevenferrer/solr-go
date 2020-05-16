@@ -18,7 +18,7 @@ import (
 
 func TestRetrieveSchema(t *testing.T) {
 	ctx := context.Background()
-	coll := "gettingstarted"
+	collection := "gettingstarted"
 	host := "localhost"
 	port := 8983
 
@@ -34,7 +34,7 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		gotSchema, err := client.GetSchema(ctx, coll)
+		gotSchema, err := client.GetSchema(ctx, collection)
 		a.NoError(err)
 		a.NotNil(gotSchema)
 	})
@@ -51,7 +51,7 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		gotFields, err := client.ListFields(ctx, coll)
+		gotFields, err := client.ListFields(ctx, collection)
 		a.NoError(err)
 		a.NotNil(gotFields)
 	})
@@ -68,7 +68,7 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		gotField, err := client.GetField(ctx, coll, "_text_")
+		gotField, err := client.GetField(ctx, collection, "_text_")
 		a.NoError(err)
 		a.NotNil(gotField)
 	})
@@ -85,7 +85,7 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		gotDynamicFields, err := client.ListDynamicFields(ctx, coll)
+		gotDynamicFields, err := client.ListDynamicFields(ctx, collection)
 		a.NoError(err)
 		a.NotNil(gotDynamicFields)
 	})
@@ -102,7 +102,7 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		gotFieldTypes, err := client.ListFieldTypes(ctx, coll)
+		gotFieldTypes, err := client.ListFieldTypes(ctx, collection)
 		a.NoError(err)
 		a.NotNil(gotFieldTypes)
 	})
@@ -119,19 +119,19 @@ func TestRetrieveSchema(t *testing.T) {
 			Transport: rec,
 		})
 
-		err = client.AddField(ctx, coll, schema.Field{
+		err = client.AddField(ctx, collection, schema.Field{
 			Name:   "my_field",
 			Type:   "string",
 			Stored: true,
 		})
 
-		err = client.AddCopyField(ctx, coll, schema.CopyField{
+		err = client.AddCopyField(ctx, collection, schema.CopyField{
 			Source: "my_field",
 			Dest:   "_text_",
 		})
 
 		var gotCopyFields []schema.CopyField
-		gotCopyFields, err = client.ListCopyFields(ctx, coll)
+		gotCopyFields, err = client.ListCopyFields(ctx, collection)
 		a.NoError(err)
 		a.NotNil(gotCopyFields)
 	})

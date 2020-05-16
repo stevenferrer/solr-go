@@ -1,0 +1,96 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"query":{"boost":{"b":"log(popularity)","query":{"lucene":{"df":"name","query":"iPod"}}}}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/techproducts/query
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":0,
+          "params":{
+            "json":"{\"query\":{\"boost\":{\"b\":\"log(popularity)\",\"query\":{\"lucene\":{\"df\":\"name\",\"query\":\"iPod\"}}}}}"}},
+        "response":{"numFound":3,"start":0,"docs":[
+            {
+              "id":"MA147LL/A",
+              "name":"Apple 60 GB iPod with Video Playback Black",
+              "manu":"Apple Computer Inc.",
+              "manu_id_s":"apple",
+              "cat":["electronics",
+                "music"],
+              "features":["iTunes, Podcasts, Audiobooks",
+                "Stores up to 15,000 songs, 25,000 photos, or 150 hours of video",
+                "2.5-inch, 320x240 color TFT LCD display with LED backlight",
+                "Up to 20 hours of battery life",
+                "Plays AAC, MP3, WAV, AIFF, Audible, Apple Lossless, H.264 video",
+                "Notes, Calendar, Phone book, Hold button, Date display, Photo wallet, Built-in games, JPEG photo playback, Upgradeable firmware, USB 2.0 compatibility, Playback speed control, Rechargeable capability, Battery level indication"],
+              "includes":"earbud headphones, USB cable",
+              "weight":5.5,
+              "price":399.0,
+              "price_c":"399.00,USD",
+              "popularity":10,
+              "inStock":true,
+              "store":"37.7752,-100.0232",
+              "manufacturedate_dt":"2005-10-12T08:00:00Z",
+              "_version_":1666827118710882304,
+              "price_c____l_ns":39900},
+            {
+              "id":"F8V7067-APL-KIT",
+              "name":"Belkin Mobile Power Cord for iPod w/ Dock",
+              "manu":"Belkin",
+              "manu_id_s":"belkin",
+              "cat":["electronics",
+                "connector"],
+              "features":["car power adapter, white"],
+              "weight":4.0,
+              "price":19.95,
+              "price_c":"19.95,USD",
+              "popularity":1,
+              "inStock":false,
+              "store":"45.18014,-93.87741",
+              "manufacturedate_dt":"2005-08-01T16:30:25Z",
+              "_version_":1666827118693056512,
+              "price_c____l_ns":1995},
+            {
+              "id":"IW-02",
+              "name":"iPod & iPod Mini USB 2.0 Cable",
+              "manu":"Belkin",
+              "manu_id_s":"belkin",
+              "cat":["electronics",
+                "connector"],
+              "features":["car power adapter for iPod, white"],
+              "weight":2.0,
+              "price":11.5,
+              "price_c":"11.50,USD",
+              "popularity":1,
+              "inStock":false,
+              "store":"37.7752,-122.4232",
+              "manufacturedate_dt":"2006-02-14T23:55:59Z",
+              "_version_":1666827118698299392,
+              "price_c____l_ns":1150}]
+        }}
+    headers:
+      Content-Length:
+      - "2448"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
+        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
+        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

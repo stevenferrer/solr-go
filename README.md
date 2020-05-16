@@ -16,8 +16,10 @@ An [Apache Solr](https://lucene.apache.org/solr/) client for Go
   - [ ] XML client ??
   - [ ] CSV client ??
   - [ ] Examples
-- [ ] Query API client
+- [ ] JSON Query API client
   - [ ] Examples
+- [ ] Standard Query API client ??
+  - [ ] Examples ??
 - [ ] Basic Auth
 - [ ] Improve documentation and create an awesome logo :)
 
