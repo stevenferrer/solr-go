@@ -73,7 +73,8 @@ func main() {
   - [x] JSON client
     - [x] [Add single document](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-a-single-json-document)
     - [x] [Add multiple documents](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-multiple-json-documents)
-    - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) - [x] Example
+    - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
+	- [x] Example
   - [ ] XML client ??
   - [ ] CSV client ??
 - [x] [JSON Query API](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
@@ -108,6 +109,8 @@ func main() {
 		Timeout: time.Second * 60,
 	})
 
+	// Note: this can be any struct that you defined
+	// e.g. Person, Product etc.
 	var doc = struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
@@ -124,7 +127,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Indexing multiple documents
+	// Note: this can be any array of struct that you defined 
+	// e.g. []Person, []Product etc.
 	var docs = []struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
@@ -143,6 +147,8 @@ func main() {
 		},
 	}
 
+
+	// Indexing multiple documents
 	err = client.AddMultiple(context.Background(), collection, docs)
 	if err != nil {
 		log.Fatal(err)
