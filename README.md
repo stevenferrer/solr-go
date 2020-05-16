@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/helios)](https://goreportcard.com/report/github.com/stevenferrer/helios)
+
 # Helios
 
 An [Apache Solr](https://lucene.apache.org/solr/) client for Go
