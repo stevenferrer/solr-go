@@ -1,4 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/helios)](https://goreportcard.com/report/github.com/stevenferrer/helios)
+[![CircleCI](https://circleci.com/gh/stevenferrer/helios.svg?style=shield)](https://circleci.com/gh/stevenferrer/helios)
+[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/helios/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/helios?branch=master)
 
 # Helios
 
