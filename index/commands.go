@@ -43,7 +43,7 @@ func (c AddCommand) Command() (string, error) {
 
 	b, err := json.Marshal(cmd)
 	if err != nil {
-		return "", errors.Wrap(err, "marshal cmd")
+		return "", errors.Wrap(err, "marshal command")
 	}
 
 	return "\"add\"" + ":" + string(b), nil
@@ -62,7 +62,7 @@ func (c DelByQryCommand) Command() (string, error) {
 
 	b, err := json.Marshal(cmd)
 	if err != nil {
-		return "", errors.Wrap(err, "marshal cmd")
+		return "", errors.Wrap(err, "marshal command")
 	}
 
 	return "\"delete\"" + ":" + string(b), nil

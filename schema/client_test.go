@@ -23,119 +23,184 @@ func TestRetrieveSchema(t *testing.T) {
 	port := 8983
 
 	t.Run("get schema", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/get-schema")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/get-schema")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			gotSchema, err := client.GetSchema(ctx, collection)
+			a.NoError(err)
+			a.NotNil(gotSchema)
 		})
 
-		gotSchema, err := client.GetSchema(ctx, collection)
-		a.NoError(err)
-		a.NotNil(gotSchema)
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
+
+				_, err := client.GetSchema(ctx, collection)
+				assert.Error(t, err)
+			})
+		})
 	})
 
 	t.Run("list fields", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/list-fields")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/list-fields")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			gotFields, err := client.ListFields(ctx, collection)
+			a.NoError(err)
+			a.NotNil(gotFields)
 		})
 
-		gotFields, err := client.ListFields(ctx, collection)
-		a.NoError(err)
-		a.NotNil(gotFields)
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
+
+				_, err := client.ListFields(ctx, collection)
+				assert.Error(t, err)
+			})
+		})
 	})
 
 	t.Run("get field", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/get-field")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/get-field")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			gotField, err := client.GetField(ctx, collection, "_text_")
+			a.NoError(err)
+			a.NotNil(gotField)
 		})
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
 
-		gotField, err := client.GetField(ctx, collection, "_text_")
-		a.NoError(err)
-		a.NotNil(gotField)
+				_, err := client.GetField(ctx, collection, "_text_")
+				assert.Error(t, err)
+			})
+		})
 	})
 
 	t.Run("list dynamic fields", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/list-dynamic-fields")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/list-dynamic-fields")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			gotDynamicFields, err := client.ListDynamicFields(ctx, collection)
+			a.NoError(err)
+			a.NotNil(gotDynamicFields)
 		})
 
-		gotDynamicFields, err := client.ListDynamicFields(ctx, collection)
-		a.NoError(err)
-		a.NotNil(gotDynamicFields)
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
+
+				_, err := client.ListDynamicFields(ctx, collection)
+				assert.Error(t, err)
+			})
+		})
 	})
 
 	t.Run("list field types", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/list-field-types")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/list-field-types")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			gotFieldTypes, err := client.ListFieldTypes(ctx, collection)
+			a.NoError(err)
+			a.NotNil(gotFieldTypes)
 		})
 
-		gotFieldTypes, err := client.ListFieldTypes(ctx, collection)
-		a.NoError(err)
-		a.NotNil(gotFieldTypes)
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
+
+				_, err := client.ListFieldTypes(ctx, collection)
+				assert.Error(t, err)
+			})
+		})
 	})
 
 	t.Run("list copy fields", func(t *testing.T) {
-		a := assert.New(t)
+		t.Run("ok", func(t *testing.T) {
+			a := assert.New(t)
 
-		rec, err := recorder.New("fixtures/list-copy-fields")
-		require.NoError(t, err)
-		defer rec.Stop()
+			rec, err := recorder.New("fixtures/list-copy-fields")
+			require.NoError(t, err)
+			defer rec.Stop()
 
-		client := schema.NewClient(host, port, &http.Client{
-			Timeout:   time.Second * 60,
-			Transport: rec,
+			client := schema.NewClient(host, port, &http.Client{
+				Timeout:   time.Second * 60,
+				Transport: rec,
+			})
+
+			err = client.AddField(ctx, collection, schema.Field{
+				Name:   "my_field",
+				Type:   "string",
+				Stored: true,
+			})
+			require.NoError(t, err)
+
+			err = client.AddCopyField(ctx, collection, schema.CopyField{
+				Source: "my_field",
+				Dest:   "_text_",
+			})
+			require.NoError(t, err)
+
+			var gotCopyFields []schema.CopyField
+			gotCopyFields, err = client.ListCopyFields(ctx, collection)
+			a.NoError(err)
+			a.NotNil(gotCopyFields)
 		})
 
-		err = client.AddField(ctx, collection, schema.Field{
-			Name:   "my_field",
-			Type:   "string",
-			Stored: true,
-		})
-		require.NoError(t, err)
+		t.Run("error", func(t *testing.T) {
+			t.Run("parse url", func(t *testing.T) {
+				client := schema.NewClient("wtf\\:\\wtf", port, &http.Client{})
 
-		err = client.AddCopyField(ctx, collection, schema.CopyField{
-			Source: "my_field",
-			Dest:   "_text_",
+				_, err := client.ListCopyFields(ctx, collection)
+				assert.Error(t, err)
+			})
 		})
-		require.NoError(t, err)
-
-		var gotCopyFields []schema.CopyField
-		gotCopyFields, err = client.ListCopyFields(ctx, collection)
-		a.NoError(err)
-		a.NotNil(gotCopyFields)
 	})
 }
 
@@ -151,6 +216,7 @@ func TestModifySchema(t *testing.T) {
 			body:    schema.Field{},
 			wantErr: true,
 		},
+
 		{
 			name:    "add field ok",
 			command: "add-field",
