@@ -124,11 +124,13 @@ func TestRetrieveSchema(t *testing.T) {
 			Type:   "string",
 			Stored: true,
 		})
+		require.NoError(t, err)
 
 		err = client.AddCopyField(ctx, collection, schema.CopyField{
 			Source: "my_field",
 			Dest:   "_text_",
 		})
+		require.NoError(t, err)
 
 		var gotCopyFields []schema.CopyField
 		gotCopyFields, err = client.ListCopyFields(ctx, collection)
