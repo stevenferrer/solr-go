@@ -157,8 +157,8 @@ func TestJSONClient(t *testing.T) {
 				Transport: rec,
 			})
 
-			addCmds := []index.AddCommand{
-				{
+			err = client.UpdateCommands(ctx, collection,
+				index.AddCommand{
 					CommitWithin: 5000,
 					Overwrite:    true,
 					Doc: M{
@@ -166,47 +166,26 @@ func TestJSONClient(t *testing.T) {
 						"name": "Milana Vino",
 					},
 				},
-				{
+				index.AddCommand{
 					Doc: M{
 						"id":   "2",
 						"name": "Daisy Keech",
 					},
 				},
 
-				{
+				index.AddCommand{
 					Doc: M{
 						"id":   "3",
 						"name": "Charley Jordan",
 					},
 				},
-			}
-
-			delByIDsCmd := []index.DelByIDsCommand{
-				{
+				index.DelByIDsCommand{
 					IDs: []string{"2"},
 				},
-			}
-
-			delByQryCmd := []index.DelByQryCommand{
-				{
+				index.DelByQryCommand{
 					Query: "*:*",
 				},
-			}
-
-			cmds := []index.Commander{}
-			for _, ac := range addCmds {
-				cmds = append(cmds, ac)
-			}
-
-			for _, dc := range delByIDsCmd {
-				cmds = append(cmds, dc)
-			}
-
-			for _, dc := range delByQryCmd {
-				cmds = append(cmds, dc)
-			}
-
-			err = client.UpdateCommands(ctx, collection, cmds...)
+			)
 			a.NoError(err)
 		})
 
