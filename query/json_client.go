@@ -24,7 +24,7 @@ type jsonClient struct {
 	httpClient *http.Client
 }
 
-// NewJSONClient is a factory for JSONClient
+// NewJSONClient is a factory for JSON query client
 func NewJSONClient(host string, port int, httpClient *http.Client) JSONClient {
 	proto := "http"
 	return &jsonClient{

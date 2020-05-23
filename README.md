@@ -78,10 +78,14 @@ func main() {
   - [ ] XML client ??
   - [ ] CSV client ??
 - [x] [JSON Query API](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
-  - [x] Examples
+  - [x] Example
 - [ ] [Standard Query API](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
-  - [ ] Examples
+  - [ ] Example
+- [x] Suggester Client
+- [ ] Config API ??
+- [ ] Example application
 - [ ] Basic Auth
+- [ ] Unify clients
 - [ ] Improve documentation and create an awesome logo :)
 
 ## Examples
@@ -139,7 +143,7 @@ func main() {
 		},
 		{
 			ID:   "2",
-			Name: "Charlie Jordan",
+			Name: "Charly Jordan",
 		},
 		{
 			ID:   "3",
@@ -173,7 +177,7 @@ func main() {
 		index.AddCommand{
 			Doc: helios.M{
 				"id":   "3",
-				"name": "Charley Jordan",
+				"name": "Charly Jordan",
 			},
 		},
 		index.DelByIDsCommand{

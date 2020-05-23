@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	. "github.com/stevenferrer/helios"
+	"github.com/stevenferrer/helios"
 	"github.com/stevenferrer/helios/query"
 )
 
@@ -21,9 +21,9 @@ func main() {
 	collection := "techproducts"
 
 	// Simple query string
-	resp, err := queryClient.Query(context.Background(), collection, M{
-		"query": "name:iPod",
-	})
+	resp, err := queryClient.Query(context.Background(),
+		collection, helios.M{"query": "name:iPod"},
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,14 +32,16 @@ func main() {
 	_ = resp
 
 	// Full-expanded JSON object
-	resp, err = queryClient.Query(context.Background(), collection, M{
-		"query": M{
-			"lucene": M{
-				"df":    "name",
-				"query": "iPod",
+	resp, err = queryClient.Query(context.Background(),
+		collection, helios.M{
+			"query": helios.M{
+				"lucene": helios.M{
+					"df":    "name",
+					"query": "iPod",
+				},
 			},
 		},
-	})
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,11 +50,11 @@ func main() {
 	_ = resp
 
 	// Complex queries
-	resp, err = queryClient.Query(context.Background(), collection, M{
-		"query": M{
-			"boost": M{
-				"query": M{
-					"lucene": M{
+	resp, err = queryClient.Query(context.Background(), collection, helios.M{
+		"query": helios.M{
+			"boost": helios.M{
+				"query": helios.M{
+					"lucene": helios.M{
 						"df":    "name",
 						"query": "iPod",
 					},
