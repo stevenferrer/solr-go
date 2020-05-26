@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	. "github.com/stevenferrer/solr-go"
 	"github.com/stevenferrer/solr-go/index"
 	"github.com/stevenferrer/solr-go/schema"
+	. "github.com/stevenferrer/solr-go/types"
 )
 
 func TestJSONClient(t *testing.T) {
@@ -25,7 +25,7 @@ func TestJSONClient(t *testing.T) {
 	r, err := recorder.New("fixtures/add-name-field")
 	assert.NoError(t, err)
 
-	schemaClient := schema.NewClient(host, port, &http.Client{
+	schemaClient := schema.NewClientWithHTTPClient(host, port, &http.Client{
 		Timeout:   timeout,
 		Transport: r,
 	})
@@ -53,7 +53,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := index.NewJSONClient(host, port, &http.Client{
+			client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -77,7 +77,7 @@ func TestJSONClient(t *testing.T) {
 				require.NoError(t, err)
 				defer rec.Stop()
 
-				client := index.NewJSONClient(host, port, &http.Client{
+				client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
 					Timeout:   timeout,
 					Transport: rec,
 				})
@@ -93,7 +93,7 @@ func TestJSONClient(t *testing.T) {
 			})
 
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClient("wtf:\\:\\", port, &http.Client{})
+				client := index.NewJSONClientWithHTTPClient("wtf:\\:\\", port, &http.Client{})
 				err := client.AddSingle(ctx, "wtf:\\//\\::", nil)
 				assert.Error(t, err)
 			})
@@ -108,7 +108,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := index.NewJSONClient(host, port, &http.Client{
+			client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -137,7 +137,7 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClient("wtf:\\:\\", port, &http.Client{})
+				client := index.NewJSONClientWithHTTPClient("wtf:\\:\\", port, &http.Client{})
 				err := client.AddMultiple(ctx, "wtf:\\//\\::", nil)
 				assert.Error(t, err)
 			})
@@ -152,7 +152,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := index.NewJSONClient(host, port, &http.Client{
+			client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -191,7 +191,7 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClient("wtf:\\:\\", port, &http.Client{})
+				client := index.NewJSONClientWithHTTPClient("wtf:\\:\\", port, &http.Client{})
 				err := client.UpdateCommands(ctx, "wtf:\\//\\::", index.AddCommand{})
 				assert.Error(t, err)
 			})

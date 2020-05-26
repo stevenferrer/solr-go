@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -24,8 +25,24 @@ type client struct {
 	httpClient *http.Client
 }
 
-// NewClient is a factory for suggester Client
-func NewClient(host string, port int,
+// NewClient is a factory for suggester
+// Client with default configurations
+func NewClient(host string, port int) Client {
+	proto := "http"
+
+	return &client{
+		host:     host,
+		port:     port,
+		endpoint: "suggest",
+		proto:    proto,
+		httpClient: &http.Client{
+			Timeout: time.Second * 60,
+		},
+	}
+}
+
+// NewCustomClient is a factory for suggester Client with custom configurations
+func NewCustomClient(host string, port int,
 	endpoint string, httpClient *http.Client) Client {
 	proto := "http"
 

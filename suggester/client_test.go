@@ -25,7 +25,7 @@ func TestClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := NewClient(host, port, suggestEndpoint,
+		client := NewCustomClient(host, port, suggestEndpoint,
 			&http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
@@ -53,7 +53,7 @@ func TestClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := NewClient(host, port, "/not-exists",
+			client := NewCustomClient(host, port, "/not-exists",
 				&http.Client{
 					Timeout:   time.Second * 60,
 					Transport: rec,
@@ -75,7 +75,7 @@ func TestClient(t *testing.T) {
 		t.Run("parse url error", func(t *testing.T) {
 			a := assert.New(t)
 
-			client := NewClient("http\\\\\\::whatever:://\\::", 1234, "/not-exists",
+			client := NewCustomClient("http\\\\\\::whatever:://\\::", 1234, "/not-exists",
 				&http.Client{
 					Timeout: time.Second * 60,
 				},
@@ -100,7 +100,7 @@ func TestClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := NewClient(host, port, suggestEndpoint,
+			client := NewCustomClient(host, port, suggestEndpoint,
 				&http.Client{
 					Timeout:   time.Second * 60,
 					Transport: rec,

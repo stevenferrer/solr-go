@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 )
@@ -30,7 +31,20 @@ type jsonClient struct {
 }
 
 // NewJSONClient is a factory or JSON index client
-func NewJSONClient(host string, port int, httpClient *http.Client) JSONClient {
+func NewJSONClient(host string, port int) JSONClient {
+	proto := "http"
+	return &jsonClient{
+		host:  host,
+		port:  port,
+		proto: proto,
+		httpClient: &http.Client{
+			Timeout: time.Second * 60,
+		},
+	}
+}
+
+// NewJSONClientWithHTTPClient is a factory or JSON index client with custom http client
+func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client) JSONClient {
 	proto := "http"
 	return &jsonClient{
 		host:       host,

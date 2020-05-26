@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/types"
 )
 
 // Commander is a contract for an update command
@@ -29,7 +29,7 @@ type AddCommand struct {
 
 // Command formats add command
 func (c AddCommand) Command() (string, error) {
-	cmd := solr.M{}
+	cmd := types.M{}
 
 	if c.CommitWithin > 0 {
 		cmd["commitWithin"] = c.CommitWithin
@@ -56,7 +56,7 @@ type DelByQryCommand struct {
 
 // Command formats delete by query command
 func (c DelByQryCommand) Command() (string, error) {
-	cmd := solr.M{
+	cmd := types.M{
 		"query": c.Query,
 	}
 

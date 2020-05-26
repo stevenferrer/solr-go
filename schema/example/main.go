@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
-	"time"
 
 	"github.com/stevenferrer/solr-go/schema"
 )
@@ -14,9 +12,7 @@ func retrievingSchema() {
 	port := 8983
 
 	// Initialize schema client
-	schemaClient := schema.NewClient(host, port, &http.Client{
-		Timeout: time.Second * 60,
-	})
+	schemaClient := schema.NewClient(host, port)
 
 	collection := "gettingstarted"
 
@@ -79,9 +75,7 @@ func modifyingSchema() {
 	port := 8983
 
 	// Initialize schema client
-	schemaClient := schema.NewClient(host, port, &http.Client{
-		Timeout: time.Second * 60,
-	})
+	schemaClient := schema.NewClient(host, port)
 
 	collection := "gettingstarted"
 

@@ -7,14 +7,15 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/pkg/errors"
-	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/types"
 )
 
 // JSONClient is a contract for interacting with Apache Solr JSON Request API
 type JSONClient interface {
-	Query(ctx context.Context, collection string, m solr.M) (*Response, error)
+	Query(ctx context.Context, collection string, m types.M) (*Response, error)
 }
 
 type jsonClient struct {
@@ -25,7 +26,20 @@ type jsonClient struct {
 }
 
 // NewJSONClient is a factory for JSON query client
-func NewJSONClient(host string, port int, httpClient *http.Client) JSONClient {
+func NewJSONClient(host string, port int) JSONClient {
+	proto := "http"
+	return &jsonClient{
+		host:  host,
+		port:  port,
+		proto: proto,
+		httpClient: &http.Client{
+			Timeout: time.Second * 60,
+		},
+	}
+}
+
+// NewJSONClientWithHTTPClient is a factory for JSON query client with custom http client
+func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client) JSONClient {
 	proto := "http"
 	return &jsonClient{
 		host:       host,
@@ -35,7 +49,7 @@ func NewJSONClient(host string, port int, httpClient *http.Client) JSONClient {
 	}
 }
 
-func (c jsonClient) Query(ctx context.Context, collection string, m solr.M) (*Response, error) {
+func (c jsonClient) Query(ctx context.Context, collection string, m types.M) (*Response, error) {
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/query",
 		c.proto, c.host, c.port, collection))
 	if err != nil {

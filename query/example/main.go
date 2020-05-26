@@ -3,26 +3,22 @@ package main
 import (
 	"context"
 	"log"
-	"net/http"
-	"time"
 
-	solr "github.com/stevenferrer/solr-go"
 	"github.com/stevenferrer/solr-go/query"
+	"github.com/stevenferrer/solr-go/types"
 )
 
 func main() {
 	// Initialize JSON query client
 	host := "localhost"
 	port := 8983
-	queryClient := query.NewJSONClient(host, port, &http.Client{
-		Timeout: time.Second * 60,
-	})
+	queryClient := query.NewJSONClient(host, port)
 
 	collection := "techproducts"
 
 	// Simple query string
 	resp, err := queryClient.Query(context.Background(),
-		collection, solr.M{"query": "name:iPod"},
+		collection, types.M{"query": "name:iPod"},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -33,9 +29,9 @@ func main() {
 
 	// Full-expanded JSON object
 	resp, err = queryClient.Query(context.Background(),
-		collection, solr.M{
-			"query": solr.M{
-				"lucene": solr.M{
+		collection, types.M{
+			"query": types.M{
+				"lucene": types.M{
 					"df":    "name",
 					"query": "iPod",
 				},
@@ -50,11 +46,11 @@ func main() {
 	_ = resp
 
 	// Complex queries
-	resp, err = queryClient.Query(context.Background(), collection, solr.M{
-		"query": solr.M{
-			"boost": solr.M{
-				"query": solr.M{
-					"lucene": solr.M{
+	resp, err = queryClient.Query(context.Background(), collection, types.M{
+		"query": types.M{
+			"boost": types.M{
+				"query": types.M{
+					"lucene": types.M{
 						"df":    "name",
 						"query": "iPod",
 					},

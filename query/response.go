@@ -1,7 +1,7 @@
 package query
 
 import (
-	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/types"
 )
 
 // Response is a query response
@@ -13,10 +13,10 @@ type Response struct {
 
 // ResponseBody is the response body
 type ResponseBody struct {
-	NumFound int      `json:"numFound,omitempty"`
-	Start    int      `json:"start,omitempty"`
-	MaxScore float64  `json:"maxScore,omitempty"`
-	Docs     []solr.M `json:"docs,omitempty"`
+	NumFound int       `json:"numFound,omitempty"`
+	Start    int       `json:"start,omitempty"`
+	MaxScore float64   `json:"maxScore,omitempty"`
+	Docs     []types.M `json:"docs,omitempty"`
 }
 
 // ResponseHeader is a response header

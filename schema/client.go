@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/pkg/errors"
-	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/types"
 )
 
 // Client is the contract for interacting with Solr schema API
@@ -70,7 +71,20 @@ type client struct {
 }
 
 // NewClient is a factory for schema API client
-func NewClient(host string, port int, httpClient *http.Client) Client {
+func NewClient(host string, port int) Client {
+	proto := "http"
+	return &client{
+		host:  host,
+		port:  port,
+		proto: proto,
+		httpClient: &http.Client{
+			Timeout: time.Second * 60,
+		},
+	}
+}
+
+// NewClientWithHTTPClient is a factory for schema API client with custom http client
+func NewClientWithHTTPClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
 	return &client{host: host, port: port,
 		proto: proto, httpClient: httpClient,
@@ -218,7 +232,7 @@ func (c client) doMdfy(ctx context.Context, collection, cmd string, body interfa
 	}
 
 	var b []byte
-	b, err = json.Marshal(solr.M{cmd: body})
+	b, err = json.Marshal(types.M{cmd: body})
 	if err != nil {
 		return errors.Wrap(err, "marshal request")
 	}

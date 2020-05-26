@@ -21,8 +21,8 @@ TODO
 ## Features and TODO
 
 - [x] [Schema API](https://lucene.apache.org/solr/guide/8_5/schema-api.html) client
-  - [x] [Modifying schema](https://lucene.apache.org/solr/guide/8_5/schema-api.html#modify-the-schema)
-  - [x] [Retrieving schema information](https://lucene.apache.org/solr/guide/8_5/schema-api.html#retrieve-schema-information)
+  - [x] [Modify schema](https://lucene.apache.org/solr/guide/8_5/schema-api.html#modify-the-schema)
+  - [x] [Retrieve schema information](https://lucene.apache.org/solr/guide/8_5/schema-api.html#retrieve-schema-information)
   - [x] Example
 - [ ] Index API
   - [x] JSON client
@@ -32,15 +32,15 @@ TODO
 	- [x] Example
   - [ ] XML client ??
   - [ ] CSV client ??
-- [x] [JSON Query API](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
+- [x] [JSON query API client](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
   - [x] Example
-- [ ] [Standard Query API](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
+- [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
   - [ ] Example
 - [x] Suggester Client
+- [x] Unified solr client
 - [ ] Config API ??
 - [ ] Example application
 - [ ] Basic Auth
-- [ ] Unify clients
 - [ ] Improve documentation and create an awesome logo :)
 
 

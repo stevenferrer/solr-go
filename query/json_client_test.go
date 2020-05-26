@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	. "github.com/stevenferrer/solr-go"
 	"github.com/stevenferrer/solr-go/query"
+	. "github.com/stevenferrer/solr-go/types"
 )
 
 func TestJSONClient(t *testing.T) {
@@ -32,7 +32,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClient(host, port, &http.Client{
+			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -45,14 +45,14 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("parse url error", func(t *testing.T) {
 			a := assert.New(t)
-			client := query.NewJSONClient("wtf:\\//wtf::", port, &http.Client{})
+			client := query.NewJSONClientWithHTTPClient("wtf:\\//wtf::", port, &http.Client{})
 			_, err := client.Query(ctx, collection, M{})
 			a.Error(err)
 		})
 
 		t.Run("request error", func(t *testing.T) {
 			a := assert.New(t)
-			client := query.NewJSONClient(host, 1234, &http.Client{})
+			client := query.NewJSONClientWithHTTPClient(host, 1234, &http.Client{})
 			_, err := client.Query(ctx, collection, M{})
 			a.Error(err)
 		})
@@ -65,7 +65,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -85,7 +85,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -105,7 +105,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -131,7 +131,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClient(host, port, &http.Client{
+			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -156,7 +156,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClient(host, port, &http.Client{
+			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -187,7 +187,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -216,7 +216,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -241,7 +241,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -268,7 +268,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClient(host, port, &http.Client{
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
