@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/helios/schema"
+	"github.com/stevenferrer/solr-go/schema"
 )
 
 func TestRetrieveSchema(t *testing.T) {

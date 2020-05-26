@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	. "github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/query"
+	. "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/query"
 )
 
 func TestJSONClient(t *testing.T) {

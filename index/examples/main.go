@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/index"
+	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/index"
 )
 
 func main() {
@@ -63,20 +63,20 @@ func main() {
 		index.AddCommand{
 			CommitWithin: 5000,
 			Overwrite:    true,
-			Doc: helios.M{
+			Doc: solr.M{
 				"id":   "1",
 				"name": "Milana Vino",
 			},
 		},
 		index.AddCommand{
-			Doc: helios.M{
+			Doc: solr.M{
 				"id":   "2",
 				"name": "Daisy Keech",
 			},
 		},
 
 		index.AddCommand{
-			Doc: helios.M{
+			Doc: solr.M{
 				"id":   "3",
 				"name": "Charley Jordan",
 			},

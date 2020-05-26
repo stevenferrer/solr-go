@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	"github.com/stevenferrer/helios"
+	solr "github.com/stevenferrer/solr-go"
 )
 
 // Client is the contract for interacting with Solr schema API
@@ -218,7 +218,7 @@ func (c client) doMdfy(ctx context.Context, collection, cmd string, body interfa
 	}
 
 	var b []byte
-	b, err = json.Marshal(helios.M{cmd: body})
+	b, err = json.Marshal(solr.M{cmd: body})
 	if err != nil {
 		return errors.Wrap(err, "marshal request")
 	}

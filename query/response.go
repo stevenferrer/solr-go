@@ -1,6 +1,8 @@
 package query
 
-import "github.com/stevenferrer/helios"
+import (
+	solr "github.com/stevenferrer/solr-go"
+)
 
 // Response is a query response
 type Response struct {
@@ -11,10 +13,10 @@ type Response struct {
 
 // ResponseBody is the response body
 type ResponseBody struct {
-	NumFound int        `json:"numFound,omitempty"`
-	Start    int        `json:"start,omitempty"`
-	MaxScore float64    `json:"maxScore,omitempty"`
-	Docs     []helios.M `json:"docs,omitempty"`
+	NumFound int      `json:"numFound,omitempty"`
+	Start    int      `json:"start,omitempty"`
+	MaxScore float64  `json:"maxScore,omitempty"`
+	Docs     []solr.M `json:"docs,omitempty"`
 }
 
 // ResponseHeader is a response header

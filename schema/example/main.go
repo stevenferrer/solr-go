@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios/schema"
+	"github.com/stevenferrer/solr-go/schema"
 )
 
 func retrievingSchema() {

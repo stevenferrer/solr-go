@@ -1,4 +1,4 @@
-module github.com/stevenferrer/helios
+module github.com/stevenferrer/solr-go
 
 go 1.14
 

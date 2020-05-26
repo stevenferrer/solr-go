@@ -9,12 +9,12 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	"github.com/stevenferrer/helios"
+	solr "github.com/stevenferrer/solr-go"
 )
 
 // JSONClient is a contract for interacting with Apache Solr JSON Request API
 type JSONClient interface {
-	Query(ctx context.Context, collection string, m helios.M) (*Response, error)
+	Query(ctx context.Context, collection string, m solr.M) (*Response, error)
 }
 
 type jsonClient struct {
@@ -35,7 +35,7 @@ func NewJSONClient(host string, port int, httpClient *http.Client) JSONClient {
 	}
 }
 
-func (c jsonClient) Query(ctx context.Context, collection string, m helios.M) (*Response, error) {
+func (c jsonClient) Query(ctx context.Context, collection string, m solr.M) (*Response, error) {
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/query",
 		c.proto, c.host, c.port, collection))
 	if err != nil {

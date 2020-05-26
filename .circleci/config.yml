@@ -7,7 +7,7 @@ jobs:
     docker:
       - image: circleci/golang:1.14
 
-    working_directory: /go/src/github.com/stevenferrer/helios
+    working_directory: /go/src/github.com/stevenferrer/solr-go
     steps:
       - checkout
 

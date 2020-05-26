@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/query"
+	solr "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/query"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 
 	// Simple query string
 	resp, err := queryClient.Query(context.Background(),
-		collection, helios.M{"query": "name:iPod"},
+		collection, solr.M{"query": "name:iPod"},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -33,9 +33,9 @@ func main() {
 
 	// Full-expanded JSON object
 	resp, err = queryClient.Query(context.Background(),
-		collection, helios.M{
-			"query": helios.M{
-				"lucene": helios.M{
+		collection, solr.M{
+			"query": solr.M{
+				"lucene": solr.M{
 					"df":    "name",
 					"query": "iPod",
 				},
@@ -50,11 +50,11 @@ func main() {
 	_ = resp
 
 	// Complex queries
-	resp, err = queryClient.Query(context.Background(), collection, helios.M{
-		"query": helios.M{
-			"boost": helios.M{
-				"query": helios.M{
-					"lucene": helios.M{
+	resp, err = queryClient.Query(context.Background(), collection, solr.M{
+		"query": solr.M{
+			"boost": solr.M{
+				"query": solr.M{
+					"lucene": solr.M{
 						"df":    "name",
 						"query": "iPod",
 					},

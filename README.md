@@ -25,7 +25,7 @@ solr-go contains set of packages for interacting with [Apache Solr](https://luce
 1. Download the module/package using `go get`
 
 ```sh
-$ go get github.com/stevenferrer/helios
+$ go get github.com/stevenferrer/solr-go
 ```
 
 2. Import the package that you need. For example, the query package
@@ -33,8 +33,8 @@ $ go get github.com/stevenferrer/helios
 ```go
 import (
 	// optional to include the convenience type "M"
-	"github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/query"
+	"github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/query"
 )
 ```
 
@@ -101,8 +101,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/index"
+	"github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/index"
 )
 
 func main() {
@@ -205,8 +205,8 @@ import (
 	"net/http"
 	"time"
 
-	. "github.com/stevenferrer/helios"
-	"github.com/stevenferrer/helios/query"
+	. "github.com/stevenferrer/solr-go"
+	"github.com/stevenferrer/solr-go/query"
 )
 
 func main() {
@@ -284,7 +284,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios/schema"
+	"github.com/stevenferrer/solr-go/schema"
 )
 
 func main() {
@@ -362,7 +362,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/stevenferrer/helios/schema"
+	"github.com/stevenferrer/solr-go/schema"
 )
 
 func main() {

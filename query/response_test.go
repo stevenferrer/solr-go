@@ -3,7 +3,7 @@ package query_test
 import (
 	"testing"
 
-	"github.com/stevenferrer/helios/query"
+	"github.com/stevenferrer/solr-go/query"
 	"github.com/stretchr/testify/assert"
 )
 

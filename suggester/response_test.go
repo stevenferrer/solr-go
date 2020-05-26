@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/stevenferrer/helios/suggester"
+	"github.com/stevenferrer/solr-go/suggester"
 	"github.com/stretchr/testify/assert"
 )
 
