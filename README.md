@@ -1,6 +1,6 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/helios)](https://goreportcard.com/report/github.com/stevenferrer/helios)
-[![CircleCI](https://circleci.com/gh/stevenferrer/helios.svg?style=shield)](https://circleci.com/gh/stevenferrer/helios)
-[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/helios/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/helios?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/solr-go)](https://goreportcard.com/report/github.com/stevenferrer/solr-go)
+[![CircleCI](https://circleci.com/gh/stevenferrer/solr-go.svg?style=shield)](https://circleci.com/gh/stevenferrer/solr-go)
+[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/solr-go/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/solr-go?branch=master)
 
 # solr-go
 
