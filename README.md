@@ -2,13 +2,13 @@
 [![CircleCI](https://circleci.com/gh/stevenferrer/helios.svg?style=shield)](https://circleci.com/gh/stevenferrer/helios)
 [![Coverage Status](https://coveralls.io/repos/github/stevenferrer/helios/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/helios?branch=master)
 
-# Helios
+# solr-go
 
-Helios contains set of packages for interacting with [Apache Solr](https://lucene.apache.org/solr/).
+solr-go contains set of packages for interacting with [Apache Solr](https://lucene.apache.org/solr/).
 
 ## Contents
 
-- [Helios](#helios)
+- [solr-go](#solr-go)
   - [Contents](#contents)
   - [Installation and usage](#installation)
   - [Features and todo](#features-and-todo)
