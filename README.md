@@ -10,17 +10,17 @@ solr-go contains set of packages for interacting with [Apache Solr](https://luce
 
 - [solr-go](#solr-go)
   - [Contents](#contents)
-  - [Installation and usage](#installation)
-  - [Features and todo](#features-and-todo)
+  - [Installation and usage](#installation-and-usage)
+  - [Features](#features)
   - [Contributing](#contributing)
 
 ## Installation and usage
 
 TODO
 
-## Features and TODO
+## Features
 
-- [x] [Schema API](https://lucene.apache.org/solr/guide/8_5/schema-api.html) client
+- [x] [Schema API client](https://lucene.apache.org/solr/guide/8_5/schema-api.html) client
   - [x] [Modify schema](https://lucene.apache.org/solr/guide/8_5/schema-api.html#modify-the-schema)
   - [x] [Retrieve schema information](https://lucene.apache.org/solr/guide/8_5/schema-api.html#retrieve-schema-information)
   - [x] Example
@@ -36,13 +36,13 @@ TODO
   - [x] Example
 - [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
   - [ ] Example
-- [x] Suggester Client
+- [x] Suggester client
 - [x] Unified solr client
-- [ ] Config API ??
-- [ ] Example application
-- [ ] Basic Auth
-- [ ] Improve documentation and create an awesome logo :)
-
+- [ ] Collections API client
+- [ ] Configset API client
+- [ ] Config API client
+- [ ] Basic auth support
+- [ ] Documentation
 
 ## Contributing
 
