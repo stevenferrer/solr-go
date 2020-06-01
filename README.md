@@ -4,7 +4,7 @@
 
 # solr-go
 
-solr-go contains set of packages for interacting with [Apache Solr](https://lucene.apache.org/solr/).
+[Solr](https://lucene.apache.org/solr/) client for [Go](http://go.dev/).
 
 ## Contents
 
