@@ -283,6 +283,98 @@ func TestJSONClient(t *testing.T) {
 		})
 		a.NoError(err)
 		a.NotNil(resp)
+	})
 
+	t.Run("multi-select facet", func(t *testing.T) {
+		a := assert.New(t)
+
+		rec, err := recorder.New("fixtures/multi-select-facet")
+		require.NoError(t, err)
+		defer rec.Stop()
+
+		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			Timeout:   timeout,
+			Transport: rec,
+		})
+
+		var resp *query.Response
+		resp, err = client.Query(ctx, "multi-select", M{
+			"queries": M{
+				"child.query": "scope:sku",
+				"child.fq": []string{
+					"{!tag=color}color:black OR color:blue",
+					"{!tag=size}size:L OR size:M",
+				},
+				"parent.fq": "scope:product",
+			},
+			"query": "{!parent tag=top filters=$child.fq which=$parent.fq v=$child.query}",
+			"filter": []string{
+				"{!tag=top}category:clothes",
+			},
+			"fields": "*",
+			"facet": M{
+				"colors": M{
+					"domain": M{
+						"excludeTags": "top",
+						"filter": []string{
+							"{!filters param=$child.fq  excludeTags=color v=$child.query}",
+							"{!child of=$parent.fq filters=$fq v=$parent.fq}",
+						},
+					},
+					"type":  "terms",
+					"field": "color",
+					"limit": -1,
+					"facet": M{
+						"productCount": "uniqueBlock(_root_)",
+					},
+				},
+
+				"sizes": M{
+					"domain": M{
+						"excludeTags": "top",
+						"filter": []string{
+							"{!filters param=$child.fq excludeTags=size v=$child.query}",
+							"{!child of=$parent.fq filters=$fq v=$parent.fq}",
+						},
+					},
+					"type":  "terms",
+					"field": "size",
+					"limit": -1,
+					"facet": M{
+						"productCount": "uniqueBlock(_root_)",
+					},
+				},
+
+				"categories": M{
+					"type":  "terms",
+					"field": "category",
+					"limit": -1,
+					"facet": M{
+						"productCount": "uniqueBlock(_root_)",
+					},
+				},
+
+				"brands": M{
+					"type":  "terms",
+					"field": "brand",
+					"limit": -1,
+					"facet": M{
+						"productCount": "uniqueBlock(_root_)",
+					},
+				},
+				"product_types": M{
+					"type":  "terms",
+					"field": "product_type",
+					"limit": -1,
+					"facet": M{
+						"productCount": "uniqueBlock(_root_)",
+					},
+				},
+			},
+		})
+		a.NoError(err)
+		a.NotNil(resp)
+
+		a.Len(resp.Facets, 6)
 	})
 }

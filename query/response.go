@@ -8,6 +8,7 @@ import (
 type Response struct {
 	ResponseHeader ResponseHeader `json:"responseHeader"`
 	Response       ResponseBody   `json:"response,omitempty"`
+	Facets         types.M        `json:"facets,omitempty"`
 	Error          *Error         `json:"error,omitempty"`
 }
 
