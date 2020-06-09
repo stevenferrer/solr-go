@@ -22,6 +22,9 @@ func TestRetrieveSchema(t *testing.T) {
 	host := "localhost"
 	port := 8983
 
+	// only for covering
+	_ = schema.NewClient(host, port)
+
 	t.Run("get schema", func(t *testing.T) {
 		t.Run("ok", func(t *testing.T) {
 			a := assert.New(t)

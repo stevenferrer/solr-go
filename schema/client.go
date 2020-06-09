@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/stevenferrer/solr-go/types"
 )
 
 // Client is the contract for interacting with Solr schema API
@@ -232,7 +231,7 @@ func (c client) doMdfy(ctx context.Context, collection, cmd string, body interfa
 	}
 
 	var b []byte
-	b, err = json.Marshal(types.M{cmd: body})
+	b, err = json.Marshal(map[string]interface{}{cmd: body})
 	if err != nil {
 		return errors.Wrap(err, "marshal request")
 	}

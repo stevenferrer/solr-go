@@ -5,8 +5,9 @@ import (
 	"log"
 
 	"github.com/stevenferrer/solr-go/index"
-	"github.com/stevenferrer/solr-go/types"
 )
+
+type M map[string]interface{}
 
 func main() {
 	// Initialize index client
@@ -14,21 +15,7 @@ func main() {
 	port := 8983
 	indexClient := index.NewJSONClient(host, port)
 
-	var doc = struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}{
-		ID:   "1",
-		Name: "Milana Vino",
-	}
-
 	collection := "gettingstarted"
-
-	// Indexing a document
-	err := indexClient.AddSingle(context.Background(), collection, doc)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// Indexing multiple documents
 	var docs = []struct {
@@ -41,7 +28,7 @@ func main() {
 		},
 		{
 			ID:   "2",
-			Name: "Charlie Jordan",
+			Name: "Charly Jordan",
 		},
 		{
 			ID:   "3",
@@ -49,7 +36,7 @@ func main() {
 		},
 	}
 
-	err = indexClient.AddMultiple(context.Background(), collection, docs)
+	err := indexClient.AddDocs(context.Background(), collection, docs)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,22 +46,22 @@ func main() {
 		index.AddCommand{
 			CommitWithin: 5000,
 			Overwrite:    true,
-			Doc: types.M{
+			Doc: M{
 				"id":   "1",
 				"name": "Milana Vino",
 			},
 		},
 		index.AddCommand{
-			Doc: types.M{
+			Doc: M{
 				"id":   "2",
 				"name": "Daisy Keech",
 			},
 		},
 
 		index.AddCommand{
-			Doc: types.M{
+			Doc: M{
 				"id":   "3",
-				"name": "Charlie Jordan",
+				"name": "Charly Jordan",
 			},
 		},
 		index.DelByIDsCommand{

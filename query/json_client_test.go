@@ -11,8 +11,9 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/stevenferrer/solr-go/query"
-	. "github.com/stevenferrer/solr-go/types"
 )
+
+type M map[string]interface{}
 
 func TestJSONClient(t *testing.T) {
 	ctx := context.Background()
@@ -20,6 +21,9 @@ func TestJSONClient(t *testing.T) {
 	host := "localhost"
 	port := 8983
 	timeout := time.Second * 60
+
+	// only for covering
+	_ = query.NewJSONClient(host, port)
 
 	// Test examples are extracted from Apache Solr website
 	// https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html

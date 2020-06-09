@@ -1,23 +1,19 @@
 package query
 
-import (
-	"github.com/stevenferrer/solr-go/types"
-)
-
 // Response is a query response
 type Response struct {
-	ResponseHeader ResponseHeader `json:"responseHeader"`
-	Response       ResponseBody   `json:"response,omitempty"`
-	Facets         types.M        `json:"facets,omitempty"`
-	Error          *Error         `json:"error,omitempty"`
+	ResponseHeader ResponseHeader         `json:"responseHeader"`
+	Response       ResponseBody           `json:"response,omitempty"`
+	Facets         map[string]interface{} `json:"facets,omitempty"`
+	Error          *Error                 `json:"error,omitempty"`
 }
 
 // ResponseBody is the response body
 type ResponseBody struct {
-	NumFound int       `json:"numFound,omitempty"`
-	Start    int       `json:"start,omitempty"`
-	MaxScore float64   `json:"maxScore,omitempty"`
-	Docs     []types.M `json:"docs,omitempty"`
+	NumFound int                      `json:"numFound,omitempty"`
+	Start    int                      `json:"start,omitempty"`
+	MaxScore float64                  `json:"maxScore,omitempty"`
+	Docs     []map[string]interface{} `json:"docs,omitempty"`
 }
 
 // ResponseHeader is a response header

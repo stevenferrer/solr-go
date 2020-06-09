@@ -33,6 +33,7 @@ TODO
   - [ ] XML client ??
   - [ ] CSV client ??
 - [x] [JSON query API client](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
+  - [x] Facets
   - [x] Example
 - [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
   - [ ] Example

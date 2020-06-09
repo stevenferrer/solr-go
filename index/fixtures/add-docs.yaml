@@ -2,20 +2,20 @@
 version: 1
 interactions:
 - request:
-    body: '{"add":{"commitWithin":5000,"doc":{"id":"1","name":"Milana Vino"},"overwrite":true},"add":{"doc":{"id":"2","name":"Daisy
-      Keech"}},"add":{"doc":{"id":"3","name":"Charley Jordan"}},"delete":["2"],"delete":{"query":"*:*"}}'
+    body: '[{"id":"1","name":"Milana Vino"},{"id":"2","name":"Charly Jordan"},{"id":"3","name":"Daisy
+      Keech"}]'
     form: {}
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/gettingstarted/update?commit=true
+    url: http://localhost:8983/solr/gettingstarted/update
     method: POST
   response:
     body: |
       {
         "responseHeader":{
           "status":0,
-          "QTime":458}}
+          "QTime":282}}
     headers:
       Content-Length:
       - "57"

@@ -2,22 +2,23 @@
 version: 1
 interactions:
 - request:
-    body: '{"id":"1","name":"Milana Vino"}'
+    body: '{"add":{"commitWithin":5000,"doc":{"id":"1","name":"Milana Vino"},"overwrite":true},"add":{"doc":{"id":"2","name":"Daisy
+      Keech"}},"add":{"doc":{"id":"3","name":"Charley Jordan"}},"delete":["2"],"delete":{"query":"*:*"}}'
     form: {}
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/gettingstarted/update/json/docs?commit=true
+    url: http://localhost:8983/solr/gettingstarted/update
     method: POST
   response:
     body: |
       {
         "responseHeader":{
           "status":0,
-          "QTime":1040}}
+          "QTime":642}}
     headers:
       Content-Length:
-      - "58"
+      - "57"
       Content-Security-Policy:
       - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
         font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';

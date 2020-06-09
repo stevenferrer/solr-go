@@ -10,12 +10,11 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/stevenferrer/solr-go/types"
 )
 
 // JSONClient is a contract for interacting with Apache Solr JSON Request API
 type JSONClient interface {
-	Query(ctx context.Context, collection string, m types.M) (*Response, error)
+	Query(ctx context.Context, collection string, q map[string]interface{}) (*Response, error)
 }
 
 type jsonClient struct {
@@ -49,7 +48,7 @@ func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client)
 	}
 }
 
-func (c jsonClient) Query(ctx context.Context, collection string, m types.M) (*Response, error) {
+func (c jsonClient) Query(ctx context.Context, collection string, q map[string]interface{}) (*Response, error) {
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/query",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
@@ -57,7 +56,7 @@ func (c jsonClient) Query(ctx context.Context, collection string, m types.M) (*R
 	}
 
 	var b []byte
-	b, err = json.Marshal(m)
+	b, err = json.Marshal(q)
 	if err != nil {
 		return nil, errors.Wrap(err, "marshal m")
 	}

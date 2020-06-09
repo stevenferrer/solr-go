@@ -16,6 +16,9 @@ func TestClient(t *testing.T) {
 	host := "localhost"
 	port := 8983
 
+	// only for covering
+	_ = NewClient(host, port)
+
 	suggestEndpoint := "suggest"
 
 	t.Run("suggest ok", func(t *testing.T) {

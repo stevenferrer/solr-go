@@ -15,10 +15,9 @@ import (
 
 // JSONClient is a contract for interacting with index API via JSON
 type JSONClient interface {
-	// AddSingle add a single document
-	AddSingle(ctx context.Context, collection string, doc interface{}) error
-	// AddMultiple add multiple documents
-	AddMultiple(ctx context.Context, collection string, docs interface{}) error
+	// AddDocs index multiple documents.
+	// Note: make sure that "docs" is an array
+	AddDocs(ctx context.Context, collection string, docs interface{}) error
 	// UpdateCmds send multiple update commands
 	UpdateCommands(ctx context.Context, collection string, commands ...Commander) error
 }
@@ -54,28 +53,14 @@ func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client)
 	}
 }
 
-func (c jsonClient) AddSingle(ctx context.Context, collection string, doc interface{}) error {
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update/json/docs?commit=true",
+func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interface{}) error {
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
 		return errors.Wrap(err, "parse url")
 	}
 
-	var b []byte
-	b, err = json.Marshal(doc)
-	if err != nil {
-		return errors.Wrap(err, "marshal doc")
-	}
-
-	return c.doUpdt(ctx, theURL.String(), b)
-}
-
-func (c jsonClient) AddMultiple(ctx context.Context, collection string, docs interface{}) error {
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update?commit=true",
-		c.proto, c.host, c.port, collection))
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
+	theURL.Query().Add("commitWithin", "3000")
 
 	var b []byte
 	b, err = json.Marshal(docs)
@@ -91,11 +76,12 @@ func (c jsonClient) UpdateCommands(ctx context.Context, collection string, comma
 		return nil
 	}
 
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update?commit=true",
+	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
 		return errors.Wrap(err, "parse url")
 	}
+	theURL.Query().Add("commitWithin", "3000")
 
 	cmdStrs := []string{}
 	for _, cmd := range commands {
