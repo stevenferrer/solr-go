@@ -14,7 +14,7 @@ import (
 	"github.com/stevenferrer/solr-go/schema"
 )
 
-type M map[string]interface{}
+type M = map[string]interface{}
 
 func TestJSONClient(t *testing.T) {
 	ctx := context.Background()

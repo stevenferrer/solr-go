@@ -7,7 +7,7 @@ import (
 	"github.com/stevenferrer/solr-go/index"
 )
 
-type M map[string]interface{}
+type m = map[string]interface{}
 
 func main() {
 	// Initialize index client
@@ -46,20 +46,20 @@ func main() {
 		index.AddCommand{
 			CommitWithin: 5000,
 			Overwrite:    true,
-			Doc: M{
+			Doc: m{
 				"id":   "1",
 				"name": "Milana Vino",
 			},
 		},
 		index.AddCommand{
-			Doc: M{
+			Doc: m{
 				"id":   "2",
 				"name": "Daisy Keech",
 			},
 		},
 
 		index.AddCommand{
-			Doc: M{
+			Doc: m{
 				"id":   "3",
 				"name": "Charly Jordan",
 			},

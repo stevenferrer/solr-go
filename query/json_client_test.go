@@ -13,7 +13,7 @@ import (
 	"github.com/stevenferrer/solr-go/query"
 )
 
-type M map[string]interface{}
+type M = map[string]interface{}
 
 func TestJSONClient(t *testing.T) {
 	ctx := context.Background()

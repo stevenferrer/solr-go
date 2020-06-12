@@ -7,7 +7,7 @@ import (
 	"github.com/stevenferrer/solr-go/query"
 )
 
-type M map[string]interface{}
+type m = map[string]interface{}
 
 func main() {
 	// Initialize JSON query client
@@ -19,7 +19,7 @@ func main() {
 
 	// Simple query string
 	resp, err := queryClient.Query(context.Background(),
-		collection, M{"query": "name:iPod"},
+		collection, m{"query": "name:iPod"},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -30,9 +30,9 @@ func main() {
 
 	// Full-expanded JSON object
 	resp, err = queryClient.Query(context.Background(),
-		collection, M{
-			"query": M{
-				"lucene": M{
+		collection, m{
+			"query": m{
+				"lucene": m{
 					"df":    "name",
 					"query": "iPod",
 				},
@@ -47,11 +47,11 @@ func main() {
 	_ = resp
 
 	// Complex queries
-	resp, err = queryClient.Query(context.Background(), collection, M{
-		"query": M{
-			"boost": M{
-				"query": M{
-					"lucene": M{
+	resp, err = queryClient.Query(context.Background(), collection, m{
+		"query": m{
+			"boost": m{
+				"query": m{
+					"lucene": m{
 						"df":    "name",
 						"query": "iPod",
 					},

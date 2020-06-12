@@ -17,6 +17,7 @@ import (
 type JSONClient interface {
 	// AddDocs index multiple documents.
 	// Note: make sure that "docs" is an array
+	// TODO: improve this interface
 	AddDocs(ctx context.Context, collection string, docs interface{}) error
 	// UpdateCmds send multiple update commands
 	UpdateCommands(ctx context.Context, collection string, commands ...Commander) error
