@@ -26,7 +26,6 @@ TODO
   - [x] Example
 - [ ] Index API
   - [x] JSON client
-    - [x] [Add single document](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-a-single-json-document)
     - [x] [Add multiple documents](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-multiple-json-documents)
     - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
 	- [x] Example
