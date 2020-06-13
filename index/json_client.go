@@ -21,6 +21,8 @@ type JSONClient interface {
 	AddDocs(ctx context.Context, collection string, docs interface{}) error
 	// UpdateCmds send multiple update commands
 	UpdateCommands(ctx context.Context, collection string, commands ...Commander) error
+
+	Commit(ctx context.Context, collection string) error
 }
 
 type jsonClient struct {
@@ -54,14 +56,21 @@ func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client)
 	}
 }
 
-func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interface{}) error {
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
+func (c jsonClient) buildURL(collection string) (*url.URL, error) {
+	u, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
-		return errors.Wrap(err, "parse url")
+		return nil, errors.Wrap(err, "parse url")
 	}
 
-	theURL.Query().Add("commitWithin", "3000")
+	return u, nil
+}
+
+func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interface{}) error {
+	theURL, err := c.buildURL(collection)
+	if err != nil {
+		return errors.Wrap(err, "build url")
+	}
 
 	var b []byte
 	b, err = json.Marshal(docs)
@@ -69,7 +78,7 @@ func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interfa
 		return errors.Wrap(err, "marshal docs")
 	}
 
-	return c.doUpdt(ctx, theURL.String(), b)
+	return c.update(ctx, theURL.String(), b)
 }
 
 func (c jsonClient) UpdateCommands(ctx context.Context, collection string, commands ...Commander) error {
@@ -77,12 +86,10 @@ func (c jsonClient) UpdateCommands(ctx context.Context, collection string, comma
 		return nil
 	}
 
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
-		c.proto, c.host, c.port, collection))
+	theURL, err := c.buildURL(collection)
 	if err != nil {
-		return errors.Wrap(err, "parse url")
+		return errors.Wrap(err, "build url")
 	}
-	theURL.Query().Add("commitWithin", "3000")
 
 	cmdStrs := []string{}
 	for _, cmd := range commands {
@@ -95,19 +102,22 @@ func (c jsonClient) UpdateCommands(ctx context.Context, collection string, comma
 	}
 
 	cmdBody := "{" + strings.Join(cmdStrs, ",") + "}"
-	return c.doUpdt(ctx, theURL.String(), []byte(cmdBody))
+	return c.update(ctx, theURL.String(), []byte(cmdBody))
 }
 
-func (c jsonClient) doUpdt(ctx context.Context, urlStr string, body []byte) error {
+func (c jsonClient) update(ctx context.Context, urlStr string, body []byte) error {
 	httpReq, err := http.NewRequestWithContext(ctx,
 		http.MethodPost, urlStr, bytes.NewReader(body))
 	if err != nil {
 		return errors.Wrap(err, "new http request")
 	}
-	httpReq.Header.Add("content-type", "application/json")
 
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
+	return c.doReq(ctx, httpReq)
+}
+
+func (c jsonClient) doReq(ctx context.Context, httpReq *http.Request) error {
+	httpReq.Header.Add("content-type", "application/json")
+	httpResp, err := c.httpClient.Do(httpReq)
 	if err != nil {
 		return errors.Wrap(err, "http do request")
 	}
@@ -123,4 +133,23 @@ func (c jsonClient) doUpdt(ctx context.Context, urlStr string, body []byte) erro
 	}
 
 	return nil
+}
+
+func (c jsonClient) Commit(ctx context.Context, collection string) error {
+	theURL, err := c.buildURL(collection)
+	if err != nil {
+		return errors.Wrap(err, "build url")
+	}
+
+	q := theURL.Query()
+	q.Add("commit", "true")
+	theURL.RawQuery = q.Encode()
+
+	httpReq, err := http.NewRequestWithContext(ctx,
+		http.MethodGet, theURL.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "new http request")
+	}
+
+	return c.doReq(ctx, httpReq)
 }

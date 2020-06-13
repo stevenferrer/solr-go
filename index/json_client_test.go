@@ -27,7 +27,7 @@ func TestJSONClient(t *testing.T) {
 	assert.NoError(t, err)
 
 	// only for covering
-	_ = schema.NewClient(host, port)
+	_ = index.NewJSONClient(host, port)
 
 	schemaClient := schema.NewClientWithHTTPClient(host, port, &http.Client{
 		Timeout:   timeout,
@@ -62,6 +62,9 @@ func TestJSONClient(t *testing.T) {
 				Transport: rec,
 			})
 
+			err = client.UpdateCommands(ctx, collection)
+			a.NoError(err)
+
 			var docs = []struct {
 				ID   string `json:"id"`
 				Name string `json:"name"`
@@ -81,6 +84,8 @@ func TestJSONClient(t *testing.T) {
 			}
 
 			err = client.AddDocs(ctx, collection, docs)
+			a.NoError(err)
+			err = client.Commit(ctx, collection)
 			a.NoError(err)
 		})
 
@@ -135,6 +140,8 @@ func TestJSONClient(t *testing.T) {
 					Query: "*:*",
 				},
 			)
+			a.NoError(err)
+			err = client.Commit(ctx, collection)
 			a.NoError(err)
 		})
 

@@ -15,7 +15,7 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":282}}
+          "QTime":137}}
     headers:
       Content-Length:
       - "57"
@@ -25,6 +25,48 @@ interactions:
         style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: ""
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/update?commit=true
+    method: GET
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":1214}}
+    headers:
+      Cache-Control:
+      - no-cache, no-store
+      Content-Length:
+      - "58"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
+        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
+        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      Etag:
+      - '"172ad393043"'
+      Expires:
+      - Sat, 01 Jan 2000 01:00:00 GMT
+      Last-Modified:
+      - Sat, 13 Jun 2020 10:28:25 GMT
+      Pragma:
+      - no-cache
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:

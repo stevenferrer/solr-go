@@ -36,10 +36,11 @@ func main() {
 		},
 	}
 
-	err := indexClient.AddDocs(context.Background(), collection, docs)
-	if err != nil {
-		log.Fatal(err)
-	}
+	ctx := context.Background()
+	err := indexClient.AddDocs(ctx, collection, docs)
+	checkErr(err)
+	err = indexClient.Commit(ctx, collection)
+	checkErr(err)
 
 	// Sending multiple update commands
 	err = indexClient.UpdateCommands(context.Background(), collection,
@@ -71,6 +72,11 @@ func main() {
 			Query: "*:*",
 		},
 	)
+	checkErr(err)
+	err = indexClient.Commit(ctx, collection)
+}
+
+func checkErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
