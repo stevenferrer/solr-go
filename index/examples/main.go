@@ -18,7 +18,7 @@ func main() {
 	collection := "gettingstarted"
 
 	// Indexing multiple documents
-	var docs = []struct {
+	var names = []struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
 	}{
@@ -36,14 +36,19 @@ func main() {
 		},
 	}
 
+	docs := index.NewDocs()
+	for _, name := range names {
+		docs.AddDoc(name)
+	}
+
 	ctx := context.Background()
-	err := indexClient.AddDocs(ctx, collection, docs)
+	err := indexClient.AddDocuments(ctx, collection, docs)
 	checkErr(err)
 	err = indexClient.Commit(ctx, collection)
 	checkErr(err)
 
 	// Sending multiple update commands
-	err = indexClient.UpdateCommands(context.Background(), collection,
+	err = indexClient.SendCommands(context.Background(), collection,
 		index.AddCommand{
 			CommitWithin: 5000,
 			Overwrite:    true,
@@ -65,10 +70,10 @@ func main() {
 				"name": "Charly Jordan",
 			},
 		},
-		index.DelByIDsCommand{
+		index.DeleteByIDsCommand{
 			IDs: []string{"2"},
 		},
-		index.DelByQryCommand{
+		index.DeleteByQueryCommand{
 			Query: "*:*",
 		},
 	)

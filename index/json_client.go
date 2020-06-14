@@ -13,15 +13,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-// JSONClient is a contract for interacting with index API via JSON
+// JSONClient is a contract for interacting with index API via JSON API
 type JSONClient interface {
-	// AddDocs index multiple documents.
-	// Note: make sure that "docs" is an array
-	// TODO: improve this interface
-	AddDocs(ctx context.Context, collection string, docs interface{}) error
-	// UpdateCmds send multiple update commands
-	UpdateCommands(ctx context.Context, collection string, commands ...Commander) error
-
+	// AddDocuments adds documents to the index
+	AddDocuments(ctx context.Context, collection string, docs *Docs) error
+	// SendCommands sends update commands
+	SendCommands(ctx context.Context, collection string, commands ...Commander) error
+	// Commit sends a commit request
 	Commit(ctx context.Context, collection string) error
 }
 
@@ -66,14 +64,14 @@ func (c jsonClient) buildURL(collection string) (*url.URL, error) {
 	return u, nil
 }
 
-func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interface{}) error {
+func (c jsonClient) AddDocuments(ctx context.Context, collection string, docs *Docs) error {
 	theURL, err := c.buildURL(collection)
 	if err != nil {
 		return errors.Wrap(err, "build url")
 	}
 
 	var b []byte
-	b, err = json.Marshal(docs)
+	b, err = docs.Marshal()
 	if err != nil {
 		return errors.Wrap(err, "marshal docs")
 	}
@@ -81,7 +79,7 @@ func (c jsonClient) AddDocs(ctx context.Context, collection string, docs interfa
 	return c.update(ctx, theURL.String(), b)
 }
 
-func (c jsonClient) UpdateCommands(ctx context.Context, collection string, commands ...Commander) error {
+func (c jsonClient) SendCommands(ctx context.Context, collection string, commands ...Commander) error {
 	if len(commands) == 0 {
 		return nil
 	}
@@ -95,7 +93,7 @@ func (c jsonClient) UpdateCommands(ctx context.Context, collection string, comma
 	for _, cmd := range commands {
 		cmdStr, err := cmd.Command()
 		if err != nil {
-			return errors.Wrap(err, "format commad")
+			return errors.Wrap(err, "build commad")
 		}
 
 		cmdStrs = append(cmdStrs, cmdStr)

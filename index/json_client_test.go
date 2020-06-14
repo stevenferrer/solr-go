@@ -2,6 +2,7 @@ package index_test
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"testing"
 	"time"
@@ -16,12 +17,20 @@ import (
 
 type M = map[string]interface{}
 
+type errCmd struct{}
+
+func (c errCmd) Command() (string, error) {
+	return "", errors.New("an error")
+}
+
 func TestJSONClient(t *testing.T) {
 	ctx := context.Background()
 	collection := "gettingstarted"
 	host := "localhost"
 	port := 8983
 	timeout := time.Second * 60
+
+	problematicString := "wtf:\\//\\::"
 
 	r, err := recorder.New("fixtures/init-schema")
 	assert.NoError(t, err)
@@ -62,10 +71,7 @@ func TestJSONClient(t *testing.T) {
 				Transport: rec,
 			})
 
-			err = client.UpdateCommands(ctx, collection)
-			a.NoError(err)
-
-			var docs = []struct {
+			var names = []struct {
 				ID   string `json:"id"`
 				Name string `json:"name"`
 			}{
@@ -83,7 +89,12 @@ func TestJSONClient(t *testing.T) {
 				},
 			}
 
-			err = client.AddDocs(ctx, collection, docs)
+			docs := index.NewDocs()
+			for _, name := range names {
+				docs.AddDoc(name)
+			}
+
+			err = client.AddDocuments(ctx, collection, docs)
 			a.NoError(err)
 			err = client.Commit(ctx, collection)
 			a.NoError(err)
@@ -91,8 +102,12 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClientWithHTTPClient("wtf:\\:\\", port, &http.Client{})
-				err := client.AddDocs(ctx, "wtf:\\//\\::", nil)
+
+				client := index.NewJSONClientWithHTTPClient(problematicString, port, &http.Client{})
+				err := client.AddDocuments(ctx, problematicString, nil)
+				assert.Error(t, err)
+
+				err = client.Commit(ctx, problematicString)
 				assert.Error(t, err)
 			})
 		})
@@ -111,7 +126,11 @@ func TestJSONClient(t *testing.T) {
 				Transport: rec,
 			})
 
-			err = client.UpdateCommands(ctx, collection,
+			// for covering
+			err = client.SendCommands(ctx, collection)
+			a.NoError(err)
+
+			err = client.SendCommands(ctx, collection,
 				index.AddCommand{
 					CommitWithin: 5000,
 					Overwrite:    true,
@@ -126,17 +145,16 @@ func TestJSONClient(t *testing.T) {
 						"name": "Daisy Keech",
 					},
 				},
-
 				index.AddCommand{
 					Doc: M{
 						"id":   "3",
 						"name": "Charley Jordan",
 					},
 				},
-				index.DelByIDsCommand{
+				index.DeleteByIDsCommand{
 					IDs: []string{"2"},
 				},
-				index.DelByQryCommand{
+				index.DeleteByQueryCommand{
 					Query: "*:*",
 				},
 			)
@@ -147,8 +165,14 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClientWithHTTPClient("wtf:\\:\\", port, &http.Client{})
-				err := client.UpdateCommands(ctx, "wtf:\\//\\::", index.AddCommand{})
+				client := index.NewJSONClientWithHTTPClient(problematicString, port, &http.Client{})
+				err := client.SendCommands(ctx, problematicString, index.AddCommand{})
+				assert.Error(t, err)
+			})
+
+			t.Run("build command error", func(t *testing.T) {
+				client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{})
+				err := client.SendCommands(ctx, collection, errCmd{})
 				assert.Error(t, err)
 			})
 		})
