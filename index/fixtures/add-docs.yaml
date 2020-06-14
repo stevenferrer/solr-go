@@ -2,8 +2,7 @@
 version: 1
 interactions:
 - request:
-    body: '[{"id":"1","name":"Milana Vino"},{"id":"2","name":"Charly Jordan"},{"id":"3","name":"Daisy
-      Keech"}]'
+    body: '[{"id":"1","name":"Milana Vino"},{"id":"2","name":"Charly Jordan"},{"id":"3","name":"Daisy Keech"}]'
     form: {}
     headers:
       Content-Type:
@@ -15,14 +14,12 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":137}}
+          "QTime":96}}
     headers:
       Content-Length:
-      - "57"
+      - "56"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:
@@ -47,24 +44,22 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":1214}}
+          "QTime":691}}
     headers:
       Cache-Control:
       - no-cache, no-store
       Content-Length:
-      - "58"
+      - "57"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       Etag:
-      - '"172ad393043"'
+      - '"172b15912bf"'
       Expires:
       - Sat, 01 Jan 2000 01:00:00 GMT
       Last-Modified:
-      - Sat, 13 Jun 2020 10:28:25 GMT
+      - Sun, 14 Jun 2020 05:41:44 GMT
       Pragma:
       - no-cache
       X-Content-Type-Options:

@@ -50,7 +50,7 @@ func TestCommands(t *testing.T) {
 	})
 
 	t.Run("delete by query command", func(t *testing.T) {
-		delByQryCmds := []index.DelByQryCommand{
+		delByQryCmds := []index.DeleteByQueryCommand{
 			{
 				Query: "*:*",
 			},
@@ -72,7 +72,7 @@ func TestCommands(t *testing.T) {
 	})
 
 	t.Run("delete by ids command", func(t *testing.T) {
-		delByQryCmds := []index.DelByIDsCommand{
+		delByQryCmds := []index.DeleteByIDsCommand{
 			{
 				IDs: []string{"ID1", "ID2"},
 			},

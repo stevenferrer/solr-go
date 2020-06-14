@@ -10,14 +10,14 @@ import (
 
 // Commander is a contract for an update command
 type Commander interface {
-	// Command returns an update command string
+	// Command builds the command
 	Command() (string, error)
 }
 
 // AddCommand is an add command
 type AddCommand struct {
-	// CommitWithin option to add the document within the
-	// specified number of milliseconds
+	// CommitWithin option to add the document within the specified
+	// number of milliseconds
 	CommitWithin int
 	// Overwrite indicates if the unique key constraints should be
 	// checked to overwrite previous versions of the same document
@@ -48,13 +48,13 @@ func (c AddCommand) Command() (string, error) {
 	return "\"add\"" + ":" + string(b), nil
 }
 
-// DelByQryCommand is a delete by query command
-type DelByQryCommand struct {
+// DeleteByQueryCommand is a delete-by-query command
+type DeleteByQueryCommand struct {
 	Query string
 }
 
 // Command formats delete by query command
-func (c DelByQryCommand) Command() (string, error) {
+func (c DeleteByQueryCommand) Command() (string, error) {
 	cmd := map[string]interface{}{
 		"query": c.Query,
 	}
@@ -67,13 +67,13 @@ func (c DelByQryCommand) Command() (string, error) {
 	return "\"delete\"" + ":" + string(b), nil
 }
 
-// DelByIDsCommand is a delete by list of ids command
-type DelByIDsCommand struct {
+// DeleteByIDsCommand is a delete by list of ids command
+type DeleteByIDsCommand struct {
 	IDs []string
 }
 
-// Command formats delete by ids command
-func (c DelByIDsCommand) Command() (string, error) {
+// Command builds the delete-by-ids command
+func (c DeleteByIDsCommand) Command() (string, error) {
 	ids := []string{}
 	for _, id := range c.IDs {
 		ids = append(ids, fmt.Sprintf("%q", id))
