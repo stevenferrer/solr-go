@@ -2,18 +2,20 @@ package query
 
 // Response is a query response
 type Response struct {
-	ResponseHeader ResponseHeader         `json:"responseHeader"`
-	Response       ResponseBody           `json:"response,omitempty"`
-	Facets         map[string]interface{} `json:"facets,omitempty"`
-	Error          *Error                 `json:"error,omitempty"`
+	ResponseHeader ResponseHeader `json:"responseHeader"`
+	Response       ResponseBody   `json:"response,omitempty"`
+	// TODO: Extract/unmarshal facet data via tag e.g. solr:"count", solr:"val", etc.
+	Facets map[string]interface{} `json:"facets,omitempty"`
+	Error  *Error                 `json:"error,omitempty"`
 }
 
 // ResponseBody is the response body
 type ResponseBody struct {
-	NumFound int                      `json:"numFound,omitempty"`
-	Start    int                      `json:"start,omitempty"`
-	MaxScore float64                  `json:"maxScore,omitempty"`
-	Docs     []map[string]interface{} `json:"docs,omitempty"`
+	NumFound int     `json:"numFound,omitempty"`
+	Start    int     `json:"start,omitempty"`
+	MaxScore float64 `json:"maxScore,omitempty"`
+	// TODO: Extract/unmarshal facet data via tag e.g. solr:"title", solr:"desc", etc.
+	Docs []map[string]interface{} `json:"docs,omitempty"`
 }
 
 // ResponseHeader is a response header
