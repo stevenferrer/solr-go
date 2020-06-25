@@ -2,11 +2,11 @@ package query
 
 // Query is a query
 type Query struct {
-	facets  map[string]*Facet
 	qs      string
 	queries map[string]interface{}
 	filters []string
 	fields  []string
+	facets  map[string]*Facet
 }
 
 // NewQuery is a factory for Query
