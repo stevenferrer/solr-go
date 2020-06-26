@@ -38,9 +38,10 @@ TODO
   - [ ] Example
 - [x] Suggester client
 - [x] Unified solr client
+- [ ] Config API client
 - [ ] Collections API client
 - [ ] Configset API client
-- [ ] Config API client
+- [ ] SolrCloud support (V2 API)
 - [ ] Basic auth support
 - [ ] Documentation
 
