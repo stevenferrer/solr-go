@@ -31,8 +31,8 @@ func main() {
 ```
 
 ## Notes
+* I'm using my project as the testbed for this module
 * This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
-* Currently being used in my project
 * Tested on [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
 
 ## Contents
