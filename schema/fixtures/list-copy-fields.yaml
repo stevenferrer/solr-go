@@ -14,14 +14,12 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":630}}
+          "QTime":1871}}
     headers:
       Content-Length:
-      - "57"
+      - "58"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:
@@ -46,14 +44,12 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":423}}
+          "QTime":1363}}
     headers:
       Content-Length:
-      - "57"
+      - "58"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:
@@ -78,7 +74,7 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":0},
+          "QTime":3},
         "copyFields":[{
             "source":"my_field",
             "dest":"_text_"}]}
@@ -86,9 +82,7 @@ interactions:
       Content-Length:
       - "125"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:

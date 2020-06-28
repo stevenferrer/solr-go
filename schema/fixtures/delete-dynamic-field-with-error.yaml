@@ -2,7 +2,7 @@
 version: 1
 interactions:
 - request:
-    body: '{"delete-dynamic-field":{}}'
+    body: '{"delete-dynamic-field":{"name":""}}'
     form: {}
     headers:
       Content-Type:
@@ -20,17 +20,15 @@ interactions:
             "error-class","org.apache.solr.api.ApiBag$ExceptionWithErrObject",
             "root-error-class","org.apache.solr.api.ApiBag$ExceptionWithErrObject"],
           "details":[{
-              "delete-dynamic-field":{},
-              "errorMessages":["'name' is a required field"]}],
+              "delete-dynamic-field":{"name":""},
+              "errorMessages":["The dynamic field '' is not present in this schema, and so cannot be deleted.\n"]}],
           "msg":"error processing commands",
           "code":400}}
     headers:
       Content-Length:
-      - "404"
+      - "466"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:

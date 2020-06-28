@@ -1,12 +1,10 @@
-.PHONY: test
-test: 
-	go test -v -cover ./...
+SOLR_INST ?="solr-go-test" 
+COLLECTION ?= "gettingstarted"
 
 .PHONY: solr
-solr:
-	docker rm -f solr-test || true
-	docker run -d -p 8983:8983 --name solr-test solr:latest solr-precreate gettingstarted
+solr: stop-solr
+	docker run -d -p 8983:8983 --name $(SOLR_INST) solr:latest solr-precreate $(COLLECTION)
 
 .PHONY: stop-solr
 stop-solr:
-	docker rm -f solr-test || true
+	docker rm -f $(SOLR_INST) || true

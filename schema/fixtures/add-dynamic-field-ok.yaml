@@ -2,7 +2,7 @@
 version: 1
 interactions:
 - request:
-    body: '{"add-dynamic-field":{"name":"*_wtf","stored":true,"type":"string"}}'
+    body: '{"add-dynamic-field":{"name":"*_wtf","type":"string","stored":true}}'
     form: {}
     headers:
       Content-Type:
@@ -14,14 +14,12 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":512}}
+          "QTime":987}}
     headers:
       Content-Length:
       - "57"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:

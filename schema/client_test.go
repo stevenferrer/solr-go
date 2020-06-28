@@ -316,8 +316,14 @@ func TestModifySchema(t *testing.T) {
 				// with 2 analyzers
 				IndexAnalyzer: &schema.Analyzer{
 					Tokenizer: &schema.Tokenizer{
-						Class:     "solr.PathHierarchyTokenizerFactory",
-						Delimeter: "/",
+						Class: "solr.StandardTokenizerFactory",
+					},
+					Filters: []schema.Filter{
+						{
+							Class:       "solr.EdgeNGramFilterFactory",
+							MinGramSize: 1,
+							MaxGramSize: 100,
+						},
 					},
 				},
 				QueryAnalyzer: &schema.Analyzer{
@@ -327,7 +333,6 @@ func TestModifySchema(t *testing.T) {
 				},
 			},
 		},
-
 		{
 			name:    "replace field type with error",
 			command: "replace-field-type",

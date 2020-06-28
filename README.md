@@ -2,21 +2,65 @@
 [![CircleCI](https://circleci.com/gh/stevenferrer/solr-go.svg?style=shield)](https://circleci.com/gh/stevenferrer/solr-go)
 [![Coverage Status](https://coveralls.io/repos/github/stevenferrer/solr-go/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/solr-go?branch=master)
 
-# solr-go
+# Solr-Go
 
-[Solr](https://lucene.apache.org/solr/) client for [Go](http://go.dev/).
+[Solr](https://lucene.apache.org/solr/) client for [Go](http://go.dev/). 
+
+```go
+
+import (
+    "context"
+    // Import the package that you need
+    solrquery "github.com/stevenferrer/solr-go/query"
+)
+
+func main() {
+    // Initialize the query client
+    queryClient := solrquery.NewClient("localhost", 8983)
+
+    // Start querying!
+    queryResp, err := queryClient.Query(
+        context.Background(),
+        "techproducts", // name of your collection
+        map[string]interface{}{
+            "query": "{!lucene df=name v=iPod}",
+        },
+    )
+    ...
+}
+```
+
+## Notes
+* This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
+* Currently being used in my project
+* Tested on [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
 
 ## Contents
 
-- [solr-go](#solr-go)
+- [Solr-Go](#solr-go)
+  - [Notes](#notes)
   - [Contents](#contents)
-  - [Installation and usage](#installation-and-usage)
+  - [Installation](#installation)
+  - [Usage](#usage)
   - [Features](#features)
   - [Contributing](#contributing)
 
-## Installation and usage
+## Installation
 
-TODO
+You can include it in your *go.mod* by running in your terminal (assuming you're inside the project directory):
+
+```console
+$ go get github.com/stevenferrer/solr-go
+```
+
+## Usage
+
+Detailed documentation shall follow. For now you can start looking at the examples inside each package directory.
+
+* [Index API example](./index/examples/main.go)
+* [Query API example](./query/example/main.go)
+* [Schema API example](./schema/example/main.go)
+* Suggester API example - TODO
 
 ## Features
 
@@ -46,4 +90,4 @@ TODO
 
 ## Contributing
 
-This is a work in-progres, any contributions are very welcome!
+This is a **work in-progress**, any contributions are very welcome!

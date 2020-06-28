@@ -2,7 +2,7 @@
 version: 1
 interactions:
 - request:
-    body: '{"add-field-type":{"class":"solr.TextField","indexAnalyzer":{"tokenizer":{"class":"solr.PathHierarchyTokenizerFactory","delimiter":"/"}},"name":"myNewTextField","queryAnalyzer":{"tokenizer":{"class":"solr.KeywordTokenizerFactory"}}}}'
+    body: '{"add-field-type":{"name":"myNewTextField","class":"solr.TextField","indexAnalyzer":{"tokenizer":{"class":"solr.StandardTokenizerFactory"},"filters":[{"class":"solr.EdgeNGramFilterFactory","minGramSize":1,"maxGramSize":100}]},"queryAnalyzer":{"tokenizer":{"class":"solr.KeywordTokenizerFactory"}}}}'
     form: {}
     headers:
       Content-Type:
@@ -14,14 +14,12 @@ interactions:
       {
         "responseHeader":{
           "status":0,
-          "QTime":921}}
+          "QTime":1553}}
     headers:
       Content-Length:
-      - "57"
+      - "58"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:
