@@ -139,7 +139,7 @@ func modifyingSchema() {
 	err = schemaClient.AddFieldType(context.Background(), collection, schema.FieldType{
 		Name:  "myNewTextField",
 		Class: "solr.TextField",
-		IndexAnalyzier: &schema.Analyzer{
+		IndexAnalyzer: &schema.Analyzer{
 			Tokenizer: &schema.Tokenizer{
 				Class:     "solr.PathHierarchyTokenizerFactory",
 				Delimeter: "/",

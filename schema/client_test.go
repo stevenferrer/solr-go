@@ -313,7 +313,8 @@ func TestModifySchema(t *testing.T) {
 			body: schema.FieldType{
 				Name:  "myNewTextField",
 				Class: "solr.TextField",
-				IndexAnalyzier: &schema.Analyzer{
+				// with 2 analyzers
+				IndexAnalyzer: &schema.Analyzer{
 					Tokenizer: &schema.Tokenizer{
 						Class:     "solr.PathHierarchyTokenizerFactory",
 						Delimeter: "/",
@@ -340,6 +341,8 @@ func TestModifySchema(t *testing.T) {
 				Name:                 "myNewTextField",
 				Class:                "solr.TextField",
 				PositionIncrementGap: "100",
+				// with 1 analyzer, will be applied to both
+				// index and query analyzer
 				Analyzer: &schema.Analyzer{
 					Tokenizer: &schema.Tokenizer{
 						Class: "solr.StandardTokenizerFactory",

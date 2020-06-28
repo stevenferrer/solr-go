@@ -45,7 +45,7 @@ type FieldType struct {
 	SubFieldSuffix            string    `json:"subFieldSuffix,omitempty"`
 	Dimension                 string    `json:"dimension,omitempty"`
 	Analyzer                  *Analyzer `json:"analyzer,omitempty"`
-	IndexAnalyzier            *Analyzer `json:"indexAnalyzer,omitempty"`
+	IndexAnalyzer             *Analyzer `json:"indexAnalyzer,omitempty"`
 	QueryAnalyzer             *Analyzer `json:"queryAnalyzer,omitempty"`
 }
 
