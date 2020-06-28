@@ -14,7 +14,7 @@ interactions:
       {
         "responseHeader":{
           "status":400,
-          "QTime":1},
+          "QTime":7},
         "error":{
           "metadata":[
             "error-class","org.apache.solr.api.ApiBag$ExceptionWithErrObject",
@@ -29,9 +29,7 @@ interactions:
       Content-Length:
       - "443"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/plain;charset=utf-8
       X-Content-Type-Options:

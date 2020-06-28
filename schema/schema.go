@@ -13,7 +13,7 @@ type Schema struct {
 // FieldType is a field type
 type FieldType struct {
 	Name                      string    `json:"name"`
-	Class                     string    `json:"class"`
+	Class                     string    `json:"class,omitempty"`
 	PositionIncrementGap      string    `json:"positionIncrementGap,omitempty"`
 	AutoGeneratePhraseQueries string    `json:"autoGeneratePhraseQueries,omitempty"`
 	SynonymQueryStyle         string    `json:"synonymQueryStyle,omitempty"`
@@ -96,12 +96,14 @@ type Filter struct {
 	Pattern             string `json:"pattern,omitempty"`
 	PreserveOriginal    string `json:"preserveOriginal,omitempty"`
 	Replace             string `json:"replace,omitempty"`
+	MinGramSize         int    `json:"minGramSize,omitempty"`
+	MaxGramSize         int    `json:"maxGramSize,omitempty"`
 }
 
 // Field is a field
 type Field struct {
 	Name                 string `json:"name"`
-	Type                 string `json:"type"`
+	Type                 string `json:"type,omitempty"`
 	DocValues            bool   `json:"docValues,omitempty"`
 	Indexed              bool   `json:"indexed,omitempty"`
 	Stored               bool   `json:"stored,omitempty"`
