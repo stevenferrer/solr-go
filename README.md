@@ -22,7 +22,7 @@ func main() {
     queryResp, err := queryClient.Query(
         context.Background(),
         "techproducts", // name of your collection
-        map[string]interface{}{
+        map[string]string{
             "query": "{!lucene df=name v=iPod}",
         },
     )
@@ -30,24 +30,35 @@ func main() {
 }
 ```
 
-## Notes
-* I'm using my project as the testbed for this module
-* This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
-* Tested on [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
-
 ## Contents
 
 - [Solr-Go](#solr-go)
-  - [Notes](#notes)
   - [Contents](#contents)
+  - [Goals](#goals)
+  - [Notes](#notes)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Features](#features)
   - [Contributing](#contributing)
 
-## Installation
 
-You can include it in your *go.mod* by running in your terminal (assuming you're inside the project directory):
+## Goals
+
+The goal of this project is to support the majority of operations in Solr via API.
+
+* Basic operations: querying, indexing, auto-suggest etc.
+* Admin operations:
+  * [Schema API](https://lucene.apache.org/solr/guide/8_5/schema-api.html)
+  * [Config API](https://lucene.apache.org/solr/guide/8_5/config-api.html)
+  * [Configset API](https://lucene.apache.org/solr/guide/8_5/configsets-api.html)
+
+## Notes
+
+* This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
+* I'm currently using my project as the testbed for this module
+* Tested on [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
+
+## Installation
 
 ```console
 $ go get github.com/stevenferrer/solr-go
@@ -55,7 +66,7 @@ $ go get github.com/stevenferrer/solr-go
 
 ## Usage
 
-Detailed documentation shall follow. For now you can start looking at the examples inside each package directory.
+A detailed documentation shall follow after *v1*. For now you can start looking at the *tests* or *examples* inside each package directory.
 
 * [Index API example](./index/examples/main.go)
 * [Query API example](./query/example/main.go)
