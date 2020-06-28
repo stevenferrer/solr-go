@@ -34,29 +34,17 @@ func main() {
 
 - [Solr-Go](#solr-go)
   - [Contents](#contents)
-  - [Goals](#goals)
   - [Notes](#notes)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Features](#features)
   - [Contributing](#contributing)
 
-
-## Goals
-
-The goal of this project is to support the majority of operations in Solr via API.
-
-* Basic operations: querying, indexing, auto-suggest etc.
-* Admin operations:
-  * [Schema API](https://lucene.apache.org/solr/guide/8_5/schema-api.html)
-  * [Config API](https://lucene.apache.org/solr/guide/8_5/config-api.html)
-  * [Configset API](https://lucene.apache.org/solr/guide/8_5/configsets-api.html)
-
 ## Notes
 
 * This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
 * I'm currently using my project as the testbed for this module
-* Tested on [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
+* Tested using [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
 
 ## Installation
 
@@ -93,7 +81,7 @@ A detailed documentation shall follow after *v1*. For now you can start looking 
   - [ ] Example
 - [x] Suggester client
 - [x] Unified solr client
-- [ ] Config API client
+- [x] Config API client
 - [ ] Collections API client
 - [ ] Configset API client
 - [ ] SolrCloud support (V2 API)

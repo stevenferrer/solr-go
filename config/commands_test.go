@@ -31,4 +31,23 @@ func TestCommands(t *testing.T) {
 			assert.Equal(t, expected, got)
 		})
 	})
+
+	t.Run("component commands", func(t *testing.T) {
+		// TODO: add table test for all command types
+		addReqHandlerCommand := solrconfig.NewComponentCommand(
+			solrconfig.AddRequestHandler,
+			map[string]interface{}{
+				"name":      "/mypath",
+				"class":     "solr.DumpRequestHandler",
+				"defaults":  map[string]interface{}{"x": "y", "a": "b", "rows": 10},
+				"useParams": "x",
+			},
+		)
+
+		got, err := addReqHandlerCommand.Command()
+		require.NoError(t, err)
+
+		expected := `"add-requesthandler": {"class":"solr.DumpRequestHandler","defaults":{"a":"b","rows":10,"x":"y"},"name":"/mypath","useParams":"x"}`
+		assert.Equal(t, expected, got)
+	})
 }
