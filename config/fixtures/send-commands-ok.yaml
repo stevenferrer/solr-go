@@ -1,0 +1,34 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"set-property": {"updateHandler.autoCommit.maxTime":15000},"add-searchcomponent": {"class":"solr.SuggestComponent","name":"suggest","suggester":{"dictionaryImpl":"DocumentDictionaryFactory","field":"_text_","lookupImpl":"FuzzyLookupFactory","name":"mySuggester","suggestAnalyzerFieldType":"text_general"}},"add-requesthandler": {"class":"solr.SearchHandler","components":["suggest"],"defaults":{"suggest":true,"suggest.count":10,"suggest.dictionary":"mySuggester"},"name":"/suggest","startup":"lazy"}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/config
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":836},
+        "WARNING":"This response format is experimental.  It is likely to change in the future."}
+    headers:
+      Content-Length:
+      - "149"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

@@ -1,0 +1,52 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"add-searchcomponent": {"class":"solr.SuggestComponent","name":"suggest","suggester":{"dictionaryImpl":"DocumentDictionaryFactory-BLAH-BLAH","field":"_text_","lookupImpl":"FuzzyLookupFactory-BLAH-BLAH","name":"mySuggester","suggestAnalyzerFieldType":"text_general"}}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/config
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":400,
+          "QTime":5},
+        "errorMessages":["error processing commands\n"],
+        "WARNING":"This response format is experimental.  It is likely to change in the future.",
+        "error":{
+          "metadata":[
+            "error-class","org.apache.solr.api.ApiBag$ExceptionWithErrObject",
+            "root-error-class","org.apache.solr.api.ApiBag$ExceptionWithErrObject"],
+          "details":[{
+              "add-searchcomponent":{
+                "class":"solr.SuggestComponent",
+                "name":"suggest",
+                "suggester":{
+                  "dictionaryImpl":"DocumentDictionaryFactory-BLAH-BLAH",
+                  "field":"_text_",
+                  "lookupImpl":"FuzzyLookupFactory-BLAH-BLAH",
+                  "name":"mySuggester",
+                  "suggestAnalyzerFieldType":"text_general"}},
+              "errorMessages":[" 'suggest' already exists . Do an 'update-searchcomponent' , if you want to change it "]}],
+          "msg":"error processing commands",
+          "code":400}}
+    headers:
+      Content-Length:
+      - "945"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 400 Bad Request
+    code: 400
+    duration: ""
