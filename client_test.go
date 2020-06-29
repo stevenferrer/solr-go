@@ -20,4 +20,5 @@ func TestNewClient(t *testing.T) {
 	assert.NotNil(t, client.Query())
 	assert.NotNil(t, client.Schema())
 	assert.NotNil(t, client.Suggester())
+	assert.NotNil(t, client.Config())
 }

@@ -1,6 +1,7 @@
 package solr
 
 import (
+	"github.com/stevenferrer/solr-go/config"
 	"github.com/stevenferrer/solr-go/index"
 	"github.com/stevenferrer/solr-go/query"
 	"github.com/stevenferrer/solr-go/schema"
@@ -13,6 +14,7 @@ type Client interface {
 	Query() query.JSONClient
 	Schema() schema.Client
 	Suggester() suggester.Client
+	Config() config.Client
 }
 
 type client struct {
@@ -20,6 +22,7 @@ type client struct {
 	queryClient     query.JSONClient
 	schemaClient    schema.Client
 	suggesterClient suggester.Client
+	configClient    config.Client
 }
 
 // NewClient is a factory for solr Client
@@ -29,6 +32,7 @@ func NewClient(host string, port int) Client {
 		queryClient:     query.NewJSONClient(host, port),
 		schemaClient:    schema.NewClient(host, port),
 		suggesterClient: suggester.NewClient(host, port),
+		configClient:    config.New(host, port),
 	}
 }
 
@@ -46,4 +50,8 @@ func (c *client) Schema() schema.Client {
 
 func (c *client) Suggester() suggester.Client {
 	return c.suggesterClient
+}
+
+func (c *client) Config() config.Client {
+	return c.configClient
 }
