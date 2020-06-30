@@ -68,7 +68,7 @@ A detailed documentation shall follow after *v1*. For now you can start looking 
   - [x] [Retrieve schema information](https://lucene.apache.org/solr/guide/8_5/schema-api.html#retrieve-schema-information)
   - [x] Example
 - [ ] Index API
-  - [x] JSON client
+  - [x] [JSON client](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html)
     - [x] [Add multiple documents](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-multiple-json-documents)
     - [x] [Send update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
 	- [x] Example
@@ -79,13 +79,13 @@ A detailed documentation shall follow after *v1*. For now you can start looking 
   - [x] Example
 - [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
   - [ ] Example
-- [x] Suggester client
+- [x] [Suggester client](https://lucene.apache.org/solr/guide/8_5/suggester.html)
   - [ ] Example
-- [x] Config API client
+- [x] [Config API client](https://lucene.apache.org/solr/guide/8_5/config-api.html)
   - [ ] Example
-- [ ] Collections API client
+- [ ] [Collections API client](https://lucene.apache.org/solr/guide/8_5/collections-api.html)
   - [ ] Example
-- [ ] Configset API client
+- [ ] [Configset API client](https://lucene.apache.org/solr/guide/8_5/configsets-api.html)
   - [ ] Example
 - [x] Unified solr client
 - [ ] SolrCloud support (V2 API)
