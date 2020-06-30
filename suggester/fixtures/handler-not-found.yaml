@@ -7,7 +7,7 @@ interactions:
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/gettingstarted//not-exists?suggest=true&suggest.q=milana&suggest.count=10&suggest.build=true
+    url: http://localhost:8983/solr/gettingstarted/not-exists?suggest=true&suggest.build=true&suggest.count=10&suggest.q=milana
     method: GET
   response:
     body: |
@@ -18,7 +18,7 @@ interactions:
       </head>
       <body><h2>HTTP ERROR 404 Not Found</h2>
       <table>
-      <tr><th>URI:</th><td>/solr/gettingstarted//not-exists</td></tr>
+      <tr><th>URI:</th><td>/solr/gettingstarted/not-exists</td></tr>
       <tr><th>STATUS:</th><td>404</td></tr>
       <tr><th>MESSAGE:</th><td>Not Found</td></tr>
       <tr><th>SERVLET:</th><td>default</td></tr>
@@ -30,7 +30,7 @@ interactions:
       Cache-Control:
       - must-revalidate,no-cache,no-store
       Content-Length:
-      - "389"
+      - "388"
       Content-Security-Policy:
       - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:

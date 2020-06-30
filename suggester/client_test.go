@@ -54,7 +54,7 @@ func TestClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := suggester.NewCustomClient(host, port, "/not-exists",
+			client := suggester.NewCustomClient(host, port, "not-exists",
 				&http.Client{
 					Timeout:   time.Second * 60,
 					Transport: rec,

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -88,10 +87,8 @@ func (c client) Suggest(ctx context.Context, collection string, params Params) (
 		return nil, errors.New("query is required")
 	}
 
-	paramList := buildParams(params)
-
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/%s?%s", c.proto,
-		c.host, c.port, collection, c.endpoint, strings.Join(paramList, "&")))
+		c.host, c.port, collection, c.endpoint, buildURLParams(params)))
 	if err != nil {
 		return nil, errors.Wrap(err, "parse url")
 	}

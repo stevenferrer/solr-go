@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_buildParams(t *testing.T) {
-	params := buildParams(Params{
-		Query:        "elec",
-		Dictionaries: []string{"mySuggester"},
+func TestBuildURLParams(t *testing.T) {
+	got := buildURLParams(Params{
+		Query:        "electronic dev",
+		Dictionaries: []string{"default", "customDict"},
 		Count:        10,
 		Cfq:          "memory",
 		Build:        true,
@@ -18,5 +18,6 @@ func Test_buildParams(t *testing.T) {
 		ReloadAll:    true,
 	})
 
-	assert.Len(t, params, 9)
+	expect := `suggest=true&suggest.build=true&suggest.buildAll=true&suggest.cfg=memory&suggest.count=10&suggest.dictionary=default&suggest.dictionary=customDict&suggest.q=electronic+dev&suggest.reload=true&suggest.reloadAll=true`
+	assert.Equal(t, expect, got)
 }

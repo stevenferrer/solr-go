@@ -1,47 +1,43 @@
 package suggester
 
 import (
-	"fmt"
 	"net/url"
+	"strconv"
 )
 
-func buildParams(p Params) []string {
-	params := []string{}
+func buildURLParams(p Params) string {
+	params := url.Values{}
 
-	enc := func(s string) string {
-		return url.QueryEscape(s)
-	}
-
-	params = append(params, "suggest=true",
-		fmt.Sprintf("suggest.q=%s", enc(p.Query)))
+	params.Add("suggest", "true")
+	params.Add("suggest.q", p.Query)
 
 	for _, dict := range p.Dictionaries {
-		params = append(params, fmt.Sprintf("suggest.dictionary=%s", enc(dict)))
+		params.Add("suggest.dictionary", dict)
 	}
 
 	if p.Count > 0 {
-		params = append(params, fmt.Sprintf("suggest.count=%d", p.Count))
+		params.Add("suggest.count", strconv.Itoa(p.Count))
 	}
 
 	if p.Cfq != "" {
-		params = append(params, fmt.Sprintf("suggest.cfg=%s", enc(p.Cfq)))
+		params.Add("suggest.cfg", p.Cfq)
 	}
 
 	if p.Build {
-		params = append(params, "suggest.build=true")
+		params.Add("suggest.build", "true")
 	}
 
 	if p.Reload {
-		params = append(params, "suggest.reload=true")
+		params.Add("suggest.reload", "true")
 	}
 
 	if p.BuildAll {
-		params = append(params, "suggest.buildAll=true")
+		params.Add("suggest.buildAll", "true")
 	}
 
 	if p.ReloadAll {
-		params = append(params, "suggest.reloadAll=true")
+		params.Add("suggest.reloadAll", "true")
 	}
 
-	return params
+	return params.Encode()
 }

@@ -7,14 +7,14 @@ interactions:
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/gettingstarted/suggest?suggest=true&suggest.q=milana+vino&suggest.count=10&suggest.build=true
+    url: http://localhost:8983/solr/gettingstarted/suggest?suggest=true&suggest.build=true&suggest.count=10&suggest.q=milana+vino
     method: GET
   response:
     body: |
       {
         "responseHeader":{
           "status":0,
-          "QTime":316},
+          "QTime":324},
         "command":"build",
         "suggest":{"default":{
             "milana vino":{
