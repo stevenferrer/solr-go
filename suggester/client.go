@@ -88,7 +88,7 @@ func (c client) Suggest(ctx context.Context, collection string, params Params) (
 	}
 
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/%s?%s", c.proto,
-		c.host, c.port, collection, c.endpoint, buildURLParams(params)))
+		c.host, c.port, collection, c.endpoint, buildParams(params)))
 	if err != nil {
 		return nil, errors.Wrap(err, "parse url")
 	}
