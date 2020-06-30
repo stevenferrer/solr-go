@@ -23,7 +23,7 @@ func TestJSONClient(t *testing.T) {
 	timeout := time.Second * 60
 
 	// only for covering
-	_ = query.NewJSONClient(host, port)
+	_ = query.NewClient(host, port)
 
 	// Test examples are extracted from Apache Solr website
 	// https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html
@@ -36,7 +36,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			client := query.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -49,14 +49,14 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("parse url error", func(t *testing.T) {
 			a := assert.New(t)
-			client := query.NewJSONClientWithHTTPClient("wtf:\\//wtf::", port, &http.Client{})
+			client := query.NewCustomClient("wtf:\\//wtf::", port, &http.Client{})
 			_, err := client.Query(ctx, collection, M{})
 			a.Error(err)
 		})
 
 		t.Run("request error", func(t *testing.T) {
 			a := assert.New(t)
-			client := query.NewJSONClientWithHTTPClient(host, 1234, &http.Client{})
+			client := query.NewCustomClient(host, 1234, &http.Client{})
 			_, err := client.Query(ctx, collection, M{})
 			a.Error(err)
 		})
@@ -69,7 +69,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -89,7 +89,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -109,7 +109,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -135,7 +135,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			client := query.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -160,7 +160,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			client := query.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -191,7 +191,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -220,7 +220,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -245,7 +245,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -272,7 +272,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -296,7 +296,7 @@ func TestJSONClient(t *testing.T) {
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		client := query.NewJSONClientWithHTTPClient(host, port, &http.Client{
+		client := query.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})

@@ -82,8 +82,8 @@ func NewClient(host string, port int) Client {
 	}
 }
 
-// NewClientWithHTTPClient is a factory for schema API client with custom http client
-func NewClientWithHTTPClient(host string, port int, httpClient *http.Client) Client {
+// NewCustomClient is a factory for schema API client with custom http client
+func NewCustomClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
 	return &client{host: host, port: port,
 		proto: proto, httpClient: httpClient,

@@ -33,7 +33,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -45,7 +45,7 @@ func TestRetrieveSchema(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.GetSchema(ctx, collection)
 				assert.Error(t, err)
@@ -61,7 +61,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -73,7 +73,7 @@ func TestRetrieveSchema(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.ListFields(ctx, collection)
 				assert.Error(t, err)
@@ -89,7 +89,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -100,7 +100,7 @@ func TestRetrieveSchema(t *testing.T) {
 		})
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.GetField(ctx, collection, "_text_")
 				assert.Error(t, err)
@@ -116,7 +116,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -128,7 +128,7 @@ func TestRetrieveSchema(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.ListDynamicFields(ctx, collection)
 				assert.Error(t, err)
@@ -144,7 +144,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -156,7 +156,7 @@ func TestRetrieveSchema(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.ListFieldTypes(ctx, collection)
 				assert.Error(t, err)
@@ -172,7 +172,7 @@ func TestRetrieveSchema(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := schema.NewClientWithHTTPClient(host, port, &http.Client{
+			client := schema.NewCustomClient(host, port, &http.Client{
 				Timeout:   time.Second * 60,
 				Transport: rec,
 			})
@@ -198,7 +198,7 @@ func TestRetrieveSchema(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url", func(t *testing.T) {
-				client := schema.NewClientWithHTTPClient("wtf\\:\\wtf", port, &http.Client{})
+				client := schema.NewCustomClient("wtf\\:\\wtf", port, &http.Client{})
 
 				_, err := client.ListCopyFields(ctx, collection)
 				assert.Error(t, err)
@@ -417,7 +417,7 @@ func TestModifySchema(t *testing.T) {
 				Transport: r,
 			}
 
-			client := schema.NewClientWithHTTPClient("localhost", 8983, httpClient)
+			client := schema.NewCustomClient("localhost", 8983, httpClient)
 
 			switch tc.command {
 			case "add-field":

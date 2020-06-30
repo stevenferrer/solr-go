@@ -1,0 +1,184 @@
+---
+version: 1
+interactions:
+- request:
+    body: '{"add-field-type":{"name":"text_suggest","class":"solr.TextField","positionIncrementGap":"100","indexAnalyzer":{"tokenizer":{"class":"solr.StandardTokenizerFactory"},"filters":[{"class":"solr.LowerCaseFilterFactory"},{"class":"solr.EdgeNGramFilterFactory","minGramSize":1,"maxGramSize":100}]},"queryAnalyzer":{"tokenizer":{"class":"solr.KeywordTokenizerFactory"},"filters":[{"class":"solr.LowerCaseFilterFactory"}]}}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/schema
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":837}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: '{"add-field":{"name":"name","type":"text_general","indexed":true,"stored":true}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/schema
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":559}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: '{"add-field":{"name":"suggest","type":"text_suggest","indexed":true,"stored":true}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/schema
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":500}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: '{"add-copy-field":{"source":"name","dest":"suggest"}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/schema
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":507}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: '[{"id":"1","name":"Milana Vino"},{"id":"2","name":"Charly Jordan"},{"id":"3","name":"Daisy Keech"}]'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/update
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":108}}
+    headers:
+      Content-Length:
+      - "57"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""
+- request:
+    body: '{"add-searchcomponent": {"class":"solr.SuggestComponent","name":"suggest","suggester":{"dictionaryImpl":"DocumentDictionaryFactory","field":"suggest","lookupImpl":"FuzzyLookupFactory","name":"default","suggestAnalyzerFieldType":"text_suggest"}},"add-requesthandler": {"class":"solr.SearchHandler","components":["suggest"],"defaults":{"suggest":true,"suggest.count":10,"suggest.dictionary":"default"},"name":"/suggest","startup":"lazy"}}'
+    form: {}
+    headers:
+      Content-Type:
+      - application/json
+    url: http://localhost:8983/solr/gettingstarted/config
+    method: POST
+  response:
+    body: |
+      {
+        "responseHeader":{
+          "status":0,
+          "QTime":2055},
+        "WARNING":"This response format is experimental.  It is likely to change in the future."}
+    headers:
+      Content-Length:
+      - "150"
+      Content-Security-Policy:
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      Content-Type:
+      - text/plain;charset=utf-8
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+    status: 200 OK
+    code: 200
+    duration: ""

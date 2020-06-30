@@ -1,6 +1,8 @@
 package solr
 
 import (
+	"net/http"
+
 	"github.com/stevenferrer/solr-go/config"
 	"github.com/stevenferrer/solr-go/index"
 	"github.com/stevenferrer/solr-go/query"
@@ -10,37 +12,48 @@ import (
 
 // Client is a unified solr client
 type Client interface {
-	Index() index.JSONClient
-	Query() query.JSONClient
+	Index() index.Client
+	Query() query.Client
 	Schema() schema.Client
 	Suggester() suggester.Client
 	Config() config.Client
 }
 
 type client struct {
-	indexClient     index.JSONClient
-	queryClient     query.JSONClient
+	indexClient     index.Client
+	queryClient     query.Client
 	schemaClient    schema.Client
 	suggesterClient suggester.Client
 	configClient    config.Client
 }
 
-// NewClient is a factory for solr Client
+// NewClient is a factory for solr unified client
 func NewClient(host string, port int) Client {
 	return &client{
-		indexClient:     index.NewJSONClient(host, port),
-		queryClient:     query.NewJSONClient(host, port),
+		indexClient:     index.NewClient(host, port),
+		queryClient:     query.NewClient(host, port),
 		schemaClient:    schema.NewClient(host, port),
 		suggesterClient: suggester.NewClient(host, port),
-		configClient:    config.New(host, port),
+		configClient:    config.NewClient(host, port),
 	}
 }
 
-func (c *client) Index() index.JSONClient {
+// NewCustomClient is a factory for solr unified client with custom options
+func NewCustomClient(host string, port int, httpClient *http.Client) Client {
+	return &client{
+		indexClient:     index.NewCustomClient(host, port, httpClient),
+		queryClient:     query.NewCustomClient(host, port, httpClient),
+		schemaClient:    schema.NewCustomClient(host, port, httpClient),
+		suggesterClient: suggester.NewCustomClient(host, port, "suggest", httpClient),
+		configClient:    config.NewCustomClient(host, port, httpClient),
+	}
+}
+
+func (c *client) Index() index.Client {
 	return c.indexClient
 }
 
-func (c *client) Query() query.JSONClient {
+func (c *client) Query() query.Client {
 	return c.queryClient
 }
 

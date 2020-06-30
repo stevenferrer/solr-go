@@ -23,7 +23,7 @@ func (c errCmd) Command() (string, error) {
 	return "", errors.New("an error")
 }
 
-func TestJSONClient(t *testing.T) {
+func TestClient(t *testing.T) {
 	ctx := context.Background()
 	collection := "gettingstarted"
 	host := "localhost"
@@ -36,9 +36,9 @@ func TestJSONClient(t *testing.T) {
 	assert.NoError(t, err)
 
 	// only for covering
-	_ = index.NewJSONClient(host, port)
+	_ = index.NewClient(host, port)
 
-	schemaClient := schema.NewClientWithHTTPClient(host, port, &http.Client{
+	schemaClient := schema.NewCustomClient(host, port, &http.Client{
 		Timeout:   timeout,
 		Transport: r,
 	})
@@ -66,7 +66,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			client := index.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -103,7 +103,7 @@ func TestJSONClient(t *testing.T) {
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
 
-				client := index.NewJSONClientWithHTTPClient(problematicString, port, &http.Client{})
+				client := index.NewCustomClient(problematicString, port, &http.Client{})
 				err := client.AddDocuments(ctx, problematicString, nil)
 				assert.Error(t, err)
 
@@ -121,7 +121,7 @@ func TestJSONClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{
+			client := index.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -165,13 +165,13 @@ func TestJSONClient(t *testing.T) {
 
 		t.Run("error", func(t *testing.T) {
 			t.Run("parse url error", func(t *testing.T) {
-				client := index.NewJSONClientWithHTTPClient(problematicString, port, &http.Client{})
+				client := index.NewCustomClient(problematicString, port, &http.Client{})
 				err := client.SendCommands(ctx, problematicString, index.AddCommand{})
 				assert.Error(t, err)
 			})
 
 			t.Run("build command error", func(t *testing.T) {
-				client := index.NewJSONClientWithHTTPClient(host, port, &http.Client{})
+				client := index.NewCustomClient(host, port, &http.Client{})
 				err := client.SendCommands(ctx, collection, errCmd{})
 				assert.Error(t, err)
 			})

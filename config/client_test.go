@@ -21,14 +21,14 @@ func TestClient(t *testing.T) {
 	timeout := time.Second * 6
 
 	// only for covering
-	_ = solrconfig.New(host, port)
+	_ = solrconfig.NewClient(host, port)
 
 	t.Run("retrieve config", func(t *testing.T) {
 		rec, err := recorder.New("fixtures/retrieve-config")
 		require.NoError(t, err)
 		defer rec.Stop()
 
-		configClient := solrconfig.NewWithHTTPClient(host, port, &http.Client{
+		configClient := solrconfig.NewCustomClient(host, port, &http.Client{
 			Timeout:   timeout,
 			Transport: rec,
 		})
@@ -45,7 +45,7 @@ func TestClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			configClient := solrconfig.NewWithHTTPClient(host, port, &http.Client{
+			configClient := solrconfig.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})
@@ -96,7 +96,7 @@ func TestClient(t *testing.T) {
 			require.NoError(t, err)
 			defer rec.Stop()
 
-			configClient := solrconfig.NewWithHTTPClient(host, port, &http.Client{
+			configClient := solrconfig.NewCustomClient(host, port, &http.Client{
 				Timeout:   timeout,
 				Transport: rec,
 			})

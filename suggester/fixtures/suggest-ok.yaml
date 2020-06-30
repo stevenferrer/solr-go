@@ -7,42 +7,27 @@ interactions:
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/techproducts/suggest?suggest=true&suggest.q=elec&suggest.dictionary=mySuggester&suggest.count=10&suggest.build=true
+    url: http://localhost:8983/solr/gettingstarted/suggest?suggest=true&suggest.q=milana+vino&suggest.count=10&suggest.build=true
     method: GET
   response:
     body: |
       {
         "responseHeader":{
-          "zkConnected":true,
           "status":0,
-          "QTime":111},
+          "QTime":316},
         "command":"build",
-        "suggest":{"mySuggester":{
-            "elec":{
-              "numFound":4,
+        "suggest":{"default":{
+            "milana vino":{
+              "numFound":1,
               "suggestions":[{
-                  "term":"electronics and computer1",
-                  "weight":2199,
-                  "payload":""},
-                {
-                  "term":"electronics",
-                  "weight":649,
-                  "payload":""},
-                {
-                  "term":"electronics",
-                  "weight":479,
-                  "payload":""},
-                {
-                  "term":"electronics and stuff2",
-                  "weight":279,
+                  "term":"Milana Vino",
+                  "weight":0,
                   "payload":""}]}}}}
     headers:
       Content-Length:
-      - "607"
+      - "261"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - application/json;charset=utf-8
       X-Content-Type-Options:

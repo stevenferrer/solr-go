@@ -1,6 +1,7 @@
 package solr_test
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,4 +22,6 @@ func TestNewClient(t *testing.T) {
 	assert.NotNil(t, client.Schema())
 	assert.NotNil(t, client.Suggester())
 	assert.NotNil(t, client.Config())
+
+	client = solr.NewCustomClient(host, port, &http.Client{})
 }

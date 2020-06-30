@@ -13,8 +13,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// JSONClient is a contract for interacting with index API via JSON API
-type JSONClient interface {
+// Client is a contract for interacting with index API via JSON API
+type Client interface {
 	// AddDocuments adds documents to the index
 	AddDocuments(ctx context.Context, collection string, docs *Docs) error
 	// SendCommands sends update commands
@@ -23,17 +23,17 @@ type JSONClient interface {
 	Commit(ctx context.Context, collection string) error
 }
 
-type jsonClient struct {
+type client struct {
 	host       string
 	port       int
 	proto      string
 	httpClient *http.Client
 }
 
-// NewJSONClient is a factory or JSON index client
-func NewJSONClient(host string, port int) JSONClient {
+// NewClient is a factory or JSON index client
+func NewClient(host string, port int) Client {
 	proto := "http"
-	return &jsonClient{
+	return &client{
 		host:  host,
 		port:  port,
 		proto: proto,
@@ -43,10 +43,10 @@ func NewJSONClient(host string, port int) JSONClient {
 	}
 }
 
-// NewJSONClientWithHTTPClient is a factory or JSON index client with custom http client
-func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client) JSONClient {
+// NewCustomClient is a factory or JSON index client with custom options
+func NewCustomClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
-	return &jsonClient{
+	return &client{
 		host:       host,
 		port:       port,
 		proto:      proto,
@@ -54,7 +54,7 @@ func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client)
 	}
 }
 
-func (c jsonClient) buildURL(collection string) (*url.URL, error) {
+func (c client) buildURL(collection string) (*url.URL, error) {
 	u, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/update",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
@@ -64,7 +64,7 @@ func (c jsonClient) buildURL(collection string) (*url.URL, error) {
 	return u, nil
 }
 
-func (c jsonClient) AddDocuments(ctx context.Context, collection string, docs *Docs) error {
+func (c client) AddDocuments(ctx context.Context, collection string, docs *Docs) error {
 	theURL, err := c.buildURL(collection)
 	if err != nil {
 		return errors.Wrap(err, "build url")
@@ -79,7 +79,7 @@ func (c jsonClient) AddDocuments(ctx context.Context, collection string, docs *D
 	return c.update(ctx, theURL.String(), b)
 }
 
-func (c jsonClient) SendCommands(ctx context.Context, collection string, commands ...Commander) error {
+func (c client) SendCommands(ctx context.Context, collection string, commands ...Commander) error {
 	if len(commands) == 0 {
 		return nil
 	}
@@ -103,7 +103,7 @@ func (c jsonClient) SendCommands(ctx context.Context, collection string, command
 	return c.update(ctx, theURL.String(), []byte(cmdBody))
 }
 
-func (c jsonClient) update(ctx context.Context, urlStr string, body []byte) error {
+func (c client) update(ctx context.Context, urlStr string, body []byte) error {
 	httpReq, err := http.NewRequestWithContext(ctx,
 		http.MethodPost, urlStr, bytes.NewReader(body))
 	if err != nil {
@@ -113,7 +113,7 @@ func (c jsonClient) update(ctx context.Context, urlStr string, body []byte) erro
 	return c.doReq(ctx, httpReq)
 }
 
-func (c jsonClient) doReq(ctx context.Context, httpReq *http.Request) error {
+func (c client) doReq(ctx context.Context, httpReq *http.Request) error {
 	httpReq.Header.Add("content-type", "application/json")
 	httpResp, err := c.httpClient.Do(httpReq)
 	if err != nil {
@@ -133,7 +133,7 @@ func (c jsonClient) doReq(ctx context.Context, httpReq *http.Request) error {
 	return nil
 }
 
-func (c jsonClient) Commit(ctx context.Context, collection string) error {
+func (c client) Commit(ctx context.Context, collection string) error {
 	theURL, err := c.buildURL(collection)
 	if err != nil {
 		return errors.Wrap(err, "build url")

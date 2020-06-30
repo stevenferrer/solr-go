@@ -13,7 +13,7 @@ func main() {
 	// Initialize index client
 	host := "localhost"
 	port := 8983
-	indexClient := index.NewJSONClient(host, port)
+	indexClient := index.NewClient(host, port)
 
 	collection := "gettingstarted"
 

@@ -7,7 +7,7 @@ interactions:
     headers:
       Content-Type:
       - application/json
-    url: http://localhost:8983/solr/techproducts//not-exists?suggest=true&suggest.q=elec&suggest.dictionary=mySuggester&suggest.count=10&suggest.build=true
+    url: http://localhost:8983/solr/gettingstarted//not-exists?suggest=true&suggest.q=milana&suggest.count=10&suggest.build=true
     method: GET
   response:
     body: |
@@ -18,7 +18,7 @@ interactions:
       </head>
       <body><h2>HTTP ERROR 404 Not Found</h2>
       <table>
-      <tr><th>URI:</th><td>/solr/techproducts//not-exists</td></tr>
+      <tr><th>URI:</th><td>/solr/gettingstarted//not-exists</td></tr>
       <tr><th>STATUS:</th><td>404</td></tr>
       <tr><th>MESSAGE:</th><td>Not Found</td></tr>
       <tr><th>SERVLET:</th><td>default</td></tr>
@@ -30,11 +30,9 @@ interactions:
       Cache-Control:
       - must-revalidate,no-cache,no-store
       Content-Length:
-      - "387"
+      - "389"
       Content-Security-Policy:
-      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self';
-        font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self';
-        style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
+      - default-src 'none'; base-uri 'none'; connect-src 'self'; form-action 'self'; font-src 'self'; frame-ancestors 'none'; img-src 'self'; media-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; worker-src 'self';
       Content-Type:
       - text/html;charset=iso-8859-1
       X-Content-Type-Options:

@@ -13,7 +13,7 @@ func main() {
 	// Initialize JSON query client
 	host := "localhost"
 	port := 8983
-	queryClient := query.NewJSONClient(host, port)
+	queryClient := query.NewClient(host, port)
 
 	collection := "techproducts"
 

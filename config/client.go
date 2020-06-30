@@ -26,8 +26,8 @@ type client struct {
 	httpClient *http.Client
 }
 
-// New is a factory for config client
-func New(host string, port int) Client {
+// NewClient is a factory for config client
+func NewClient(host string, port int) Client {
 	proto := "http"
 	return &client{
 		host:  host,
@@ -39,8 +39,8 @@ func New(host string, port int) Client {
 	}
 }
 
-// NewWithHTTPClient is a factory for config client
-func NewWithHTTPClient(host string, port int, httpClient *http.Client) Client {
+// NewCustomClient is a factory for config client with customization options
+func NewCustomClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
 	return &client{
 		host:       host,

@@ -14,7 +14,36 @@ import (
 
 // Client is the suggester client
 type Client interface {
-	Suggest(context.Context, Request) (*Response, error)
+	Suggest(ctx context.Context, collection string, params Params) (*Response, error)
+}
+
+// Params is the suggester parameters
+type Params struct {
+	// Dictionaries is the name of the dictionary
+	// component configured in the search component
+	Dictionaries []string
+
+	// Query is the query to use for suggestion lookups
+	Query string
+
+	// Count is the number of suggestions to return
+	Count int
+
+	// ContextFilterQuery  is a context filter query used to filter
+	// suggestsion based on the context field, if supported by the suggester
+	Cfq string
+
+	// Build If true, it will build the suggester index
+	Build,
+
+	// Reload If true, it will reload the suggester index.
+	Reload,
+
+	// BuildAll If true, it will build all suggester indexes.
+	BuildAll,
+
+	// ReloadAll If true, it will reload all suggester indexes.
+	ReloadAll bool
 }
 
 type client struct {
@@ -29,7 +58,6 @@ type client struct {
 // Client with default configurations
 func NewClient(host string, port int) Client {
 	proto := "http"
-
 	return &client{
 		host:     host,
 		port:     port,
@@ -55,15 +83,15 @@ func NewCustomClient(host string, port int,
 	}
 }
 
-func (c client) Suggest(ctx context.Context, req Request) (*Response, error) {
-	if req.Params.Query == "" {
+func (c client) Suggest(ctx context.Context, collection string, params Params) (*Response, error) {
+	if params.Query == "" {
 		return nil, errors.New("query is required")
 	}
 
-	params := buildParams(req.Params)
+	paramList := buildParams(params)
 
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/%s?%s", c.proto,
-		c.host, c.port, req.Collection, c.endpoint, strings.Join(params, "&")))
+		c.host, c.port, collection, c.endpoint, strings.Join(paramList, "&")))
 	if err != nil {
 		return nil, errors.Wrap(err, "parse url")
 	}
@@ -92,41 +120,4 @@ func (c client) Suggest(ctx context.Context, req Request) (*Response, error) {
 	}
 
 	return &resp, nil
-}
-
-func buildParams(p Params) []string {
-	params := []string{}
-
-	params = append(params, "suggest=true",
-		fmt.Sprintf("suggest.q=%s", p.Query))
-
-	for _, dict := range p.Dictionaries {
-		params = append(params, fmt.Sprintf("suggest.dictionary=%s", dict))
-	}
-
-	if p.Count > 0 {
-		params = append(params, fmt.Sprintf("suggest.count=%d", p.Count))
-	}
-
-	if p.Cfq != "" {
-		params = append(params, fmt.Sprintf("suggest.cfg=%s", p.Cfq))
-	}
-
-	if p.Build {
-		params = append(params, "suggest.build=true")
-	}
-
-	if p.Reload {
-		params = append(params, "suggest.reload=true")
-	}
-
-	if p.BuildAll {
-		params = append(params, "suggest.buildAll=true")
-	}
-
-	if p.ReloadAll {
-		params = append(params, "suggest.reloadAll=true")
-	}
-
-	return params
 }

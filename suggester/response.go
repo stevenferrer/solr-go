@@ -17,6 +17,7 @@ type ResponseHeader struct {
 // SuggestBody is the suggest body
 // Key: Suggester dictionary
 // Value: SuggestTerm
+// TODO: add helper methods to access the terms
 type SuggestBody map[string]SuggestTerm
 
 // SuggestTerm is suggest term

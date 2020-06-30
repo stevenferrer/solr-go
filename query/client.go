@@ -12,22 +12,23 @@ import (
 	"github.com/pkg/errors"
 )
 
-// JSONClient is a contract for interacting with Apache Solr JSON Request API
-type JSONClient interface {
-	Query(ctx context.Context, collection string, q map[string]interface{}) (*Response, error)
+// Client is a contract for querying with solr via JSON request API
+type Client interface {
+	Query(ctx context.Context, collection string,
+		query map[string]interface{}) (*Response, error)
 }
 
-type jsonClient struct {
+type client struct {
 	host       string
 	port       int
 	proto      string
 	httpClient *http.Client
 }
 
-// NewJSONClient is a factory for JSON query client
-func NewJSONClient(host string, port int) JSONClient {
+// NewClient is a factory for query client
+func NewClient(host string, port int) Client {
 	proto := "http"
-	return &jsonClient{
+	return &client{
 		host:  host,
 		port:  port,
 		proto: proto,
@@ -37,10 +38,10 @@ func NewJSONClient(host string, port int) JSONClient {
 	}
 }
 
-// NewJSONClientWithHTTPClient is a factory for JSON query client with custom http client
-func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client) JSONClient {
+// NewCustomClient is a factory for JSON query client with custom http client
+func NewCustomClient(host string, port int, httpClient *http.Client) Client {
 	proto := "http"
-	return &jsonClient{
+	return &client{
 		host:       host,
 		port:       port,
 		proto:      proto,
@@ -48,7 +49,8 @@ func NewJSONClientWithHTTPClient(host string, port int, httpClient *http.Client)
 	}
 }
 
-func (c jsonClient) Query(ctx context.Context, collection string, q map[string]interface{}) (*Response, error) {
+func (c client) Query(ctx context.Context, collection string,
+	query map[string]interface{}) (*Response, error) {
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/query",
 		c.proto, c.host, c.port, collection))
 	if err != nil {
@@ -56,9 +58,9 @@ func (c jsonClient) Query(ctx context.Context, collection string, q map[string]i
 	}
 
 	var b []byte
-	b, err = json.Marshal(q)
+	b, err = json.Marshal(query)
 	if err != nil {
-		return nil, errors.Wrap(err, "marshal m")
+		return nil, errors.Wrap(err, "marshal query")
 	}
 
 	httpReq, err := http.NewRequestWithContext(ctx,

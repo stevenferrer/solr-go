@@ -70,20 +70,24 @@ A detailed documentation shall follow after *v1*. For now you can start looking 
 - [ ] Index API
   - [x] JSON client
     - [x] [Add multiple documents](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#adding-multiple-json-documents)
-    - [x] [Multiple update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
+    - [x] [Send update commands](https://lucene.apache.org/solr/guide/8_5/uploading-data-with-index-handlers.html#sending-json-update-commands) 
 	- [x] Example
   - [ ] XML client ??
   - [ ] CSV client ??
 - [x] [JSON query API client](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
-  - [x] Facets
+  - [x] Facet
   - [x] Example
 - [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
   - [ ] Example
 - [x] Suggester client
-- [x] Unified solr client
+  - [ ] Example
 - [x] Config API client
+  - [ ] Example
 - [ ] Collections API client
+  - [ ] Example
 - [ ] Configset API client
+  - [ ] Example
+- [x] Unified solr client
 - [ ] SolrCloud support (V2 API)
 - [ ] Basic auth support
 - [ ] Documentation
