@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func buildURLParams(p Params) string {
+func buildParams(p Params) string {
 	params := url.Values{}
 
 	params.Add("suggest", "true")

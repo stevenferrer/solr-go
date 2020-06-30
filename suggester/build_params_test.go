@@ -6,8 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestBuildURLParams(t *testing.T) {
-	got := buildURLParams(Params{
+func Test_buildParams(t *testing.T) {
+	got := buildParams(Params{
 		Query:        "electronic dev",
 		Dictionaries: []string{"default", "customDict"},
 		Count:        10,
