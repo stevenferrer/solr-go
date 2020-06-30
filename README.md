@@ -74,10 +74,10 @@ A detailed documentation shall follow after *v1*. For now you can start looking 
 	- [x] Example
   - [ ] XML client ??
   - [ ] CSV client ??
-- [x] [JSON query API client](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html) client
+- [x] [JSON query API client](https://lucene.apache.org/solr/guide/8_5/json-query-dsl.html)
   - [x] Facet
   - [x] Example
-- [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser) client ??
+- [ ] [Standard query API client](https://lucene.apache.org/solr/guide/8_5/the-standard-query-parser.html#the-standard-query-parser)??
   - [ ] Example
 - [x] [Suggester client](https://lucene.apache.org/solr/guide/8_5/suggester.html)
   - [ ] Example
