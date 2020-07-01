@@ -43,7 +43,7 @@ func main() {
 ## Notes
 
 * This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
-* I'm currently using my project as the testbed for this module
+* I'm currently using this module my projects
 * Tested using [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
 
 ## Installation
