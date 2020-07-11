@@ -35,6 +35,7 @@ func main() {
 - [Solr-Go](#solr-go)
   - [Contents](#contents)
   - [Notes](#notes)
+  - [Projects using it](#projects-using-it)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Features](#features)
@@ -45,6 +46,10 @@ func main() {
 * This is a *WORK IN-PROGRESS*, API might change a lot before *v1*
 * I'm currently using this module in my projects
 * Tested using [Solr 8.5](https://lucene.apache.org/solr/guide/8_5/)
+
+## Projects using it
+
+- [Multi-select facet using Solr, Vue and Go](https://github.com/stevenferrer/multi-select-facet)
 
 ## Installation
 
