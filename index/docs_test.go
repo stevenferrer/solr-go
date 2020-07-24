@@ -3,7 +3,7 @@ package index_test
 import (
 	"testing"
 
-	"github.com/stevenferrer/solr-go/index"
+	"github.com/sf9v/solr-go/index"
 	"github.com/stretchr/testify/assert"
 )
 

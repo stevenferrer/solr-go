@@ -3,11 +3,11 @@ package solr
 import (
 	"net/http"
 
-	"github.com/stevenferrer/solr-go/config"
-	"github.com/stevenferrer/solr-go/index"
-	"github.com/stevenferrer/solr-go/query"
-	"github.com/stevenferrer/solr-go/schema"
-	"github.com/stevenferrer/solr-go/suggester"
+	"github.com/sf9v/solr-go/config"
+	"github.com/sf9v/solr-go/index"
+	"github.com/sf9v/solr-go/query"
+	"github.com/sf9v/solr-go/schema"
+	"github.com/sf9v/solr-go/suggester"
 )
 
 // Client is a unified solr client

@@ -3,7 +3,7 @@ package query_test
 import (
 	"testing"
 
-	"github.com/stevenferrer/solr-go/query"
+	"github.com/sf9v/solr-go/query"
 	"github.com/stretchr/testify/assert"
 )
 

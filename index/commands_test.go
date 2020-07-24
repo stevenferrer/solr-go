@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/solr-go/index"
+	"github.com/sf9v/solr-go/index"
 )
 
 func TestCommands(t *testing.T) {

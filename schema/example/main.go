@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/stevenferrer/solr-go/schema"
+	"github.com/sf9v/solr-go/schema"
 )
 
 func retrievingSchema() {

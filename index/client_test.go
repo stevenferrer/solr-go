@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/solr-go/index"
-	"github.com/stevenferrer/solr-go/schema"
+	"github.com/sf9v/solr-go/index"
+	"github.com/sf9v/solr-go/schema"
 )
 
 type M = map[string]interface{}

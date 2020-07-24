@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/solr-go/query"
+	"github.com/sf9v/solr-go/query"
 )
 
 type M = map[string]interface{}

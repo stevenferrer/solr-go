@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	solr "github.com/stevenferrer/solr-go"
+	solr "github.com/sf9v/solr-go"
 )
 
 func TestNewClient(t *testing.T) {

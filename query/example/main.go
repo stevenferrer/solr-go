@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/stevenferrer/solr-go/query"
+	"github.com/sf9v/solr-go/query"
 )
 
 type m = map[string]interface{}

@@ -1,6 +1,4 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/solr-go)](https://goreportcard.com/report/github.com/stevenferrer/solr-go)
-[![CircleCI](https://circleci.com/gh/stevenferrer/solr-go.svg?style=shield)](https://circleci.com/gh/stevenferrer/solr-go)
-[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/solr-go/badge.svg?branch=master)](https://coveralls.io/github/stevenferrer/solr-go?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go)
 
 # Solr-Go
 
@@ -11,7 +9,7 @@
 import (
     "context"
     // Import the package that you need
-    solrquery "github.com/stevenferrer/solr-go/query"
+    solrquery "github.com/sf9v/solr-go/query"
 )
 
 func main() {
@@ -49,12 +47,12 @@ func main() {
 
 ## Projects using it
 
-- [Multi-select facet using Solr, Vue and Go](https://github.com/stevenferrer/multi-select-facet)
+- [Multi-select facet using Solr, Vue and Go](https://github.com/sf9v/multi-select-facet)
 
 ## Installation
 
 ```console
-$ go get github.com/stevenferrer/solr-go
+$ go get github.com/sf9v/solr-go
 ```
 
 ## Usage

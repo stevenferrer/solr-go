@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/stevenferrer/solr-go/schema"
+	"github.com/sf9v/solr-go/schema"
 )
 
 func TestRetrieveSchema(t *testing.T) {

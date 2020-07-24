@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	solrconfig "github.com/stevenferrer/solr-go/config"
+	solrconfig "github.com/sf9v/solr-go/config"
 )
 
 func TestClient(t *testing.T) {
