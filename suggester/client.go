@@ -83,10 +83,6 @@ func NewCustomClient(host string, port int,
 }
 
 func (c client) Suggest(ctx context.Context, collection string, params Params) (*Response, error) {
-	if params.Query == "" {
-		return nil, errors.New("query is required")
-	}
-
 	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/%s?%s", c.proto,
 		c.host, c.port, collection, c.endpoint, buildParams(params)))
 	if err != nil {
