@@ -120,9 +120,9 @@ func (c *AddSuggesterCommand) Command() (string, error) {
 			return "", errors.Wrap(err, "marshal dict")
 		}
 
-		suggesters = append(suggesters, `"suggester":`+string(b))
+		suggesters = append(suggesters, string(b))
 	}
 
-	return fmt.Sprintf(`"%s":{"name":"%s","class":"solr.SuggestComponent",%s}`,
-		AddSearchComponent, c.name, strings.Join(suggesters, ", ")), nil
+	return fmt.Sprintf(`"%s":{"name":"%s","class":"solr.SuggestComponent","suggester":[%s]}`,
+		AddSearchComponent, c.name, strings.Join(suggesters, ",")), nil
 }

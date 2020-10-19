@@ -75,7 +75,7 @@ func TestCommands(t *testing.T) {
 		got, err := addSuggester.Command()
 		require.NoError(t, err)
 
-		expected := `"add-searchcomponent":{"name":"suggest","class":"solr.SuggestComponent","suggester":{"dictionaryImpl":"DocumentDictionaryFactory","field":"_nameSuggest_","lookupImpl":"AnalyzingInfixLookupFactory","name":"names","suggestAnalyzerFieldType":"suggest_text","weightField":"price"}, "suggester":{"dictionaryImpl":"DocumentDictionaryFactory","field":"_tagSuggest_","lookupImpl":"AnalyzingInfixLookupFactory","name":"tags","suggestAnalyzerFieldType":"suggest_text","weightField":"price"}}`
+		expected := `"add-searchcomponent":{"name":"suggest","class":"solr.SuggestComponent","suggester":[{"dictionaryImpl":"DocumentDictionaryFactory","field":"_nameSuggest_","lookupImpl":"AnalyzingInfixLookupFactory","name":"names","suggestAnalyzerFieldType":"suggest_text","weightField":"price"},{"dictionaryImpl":"DocumentDictionaryFactory","field":"_tagSuggest_","lookupImpl":"AnalyzingInfixLookupFactory","name":"tags","suggestAnalyzerFieldType":"suggest_text","weightField":"price"}]}`
 		assert.Equal(t, expected, got)
 	})
 }
