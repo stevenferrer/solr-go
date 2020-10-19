@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -25,6 +26,7 @@ func NewSetPropCommand(prop string, val interface{}) Commander {
 	return SetPropCommand{prop: prop, val: val}
 }
 
+// Command implements Commander
 func (c SetPropCommand) Command() (string, error) {
 	m := map[string]interface{}{c.prop: c.val}
 	b, err := json.Marshal(m)
@@ -46,6 +48,7 @@ func NewUnsetPropCommand(prop string) Commander {
 	return UnsetPropCommand{prop: prop}
 }
 
+// Command implements Commander
 func (c UnsetPropCommand) Command() (string, error) {
 	return fmt.Sprintf(`"unset-property": %q`, c.prop), nil
 }
@@ -84,6 +87,7 @@ func NewComponentCommand(commandType CommandType, body map[string]interface{}) C
 	}
 }
 
+// Command implements Commander
 func (c *ComponentCommand) Command() (string, error) {
 	b, err := json.Marshal(c.Body)
 	if err != nil {
@@ -91,4 +95,34 @@ func (c *ComponentCommand) Command() (string, error) {
 	}
 
 	return fmt.Sprintf(`"%s": `+string(b), c.CommandType), nil
+}
+
+// AddSuggesterCommand adds a suggester component
+type AddSuggesterCommand struct {
+	name  string
+	dicts []map[string]interface{}
+}
+
+// NewAddSuggesterCommand is a factory for add suggester command
+func NewAddSuggesterCommand(name string, dicts ...map[string]interface{}) Commander {
+	return &AddSuggesterCommand{
+		name:  name,
+		dicts: dicts,
+	}
+}
+
+// Command implements Commander
+func (c *AddSuggesterCommand) Command() (string, error) {
+	suggesters := []string{}
+	for _, dict := range c.dicts {
+		b, err := json.Marshal(dict)
+		if err != nil {
+			return "", errors.Wrap(err, "marshal dict")
+		}
+
+		suggesters = append(suggesters, `"suggester":`+string(b))
+	}
+
+	return fmt.Sprintf(`"%s":{"name":"%s","class":"solr.SuggestComponent",%s}`,
+		AddSearchComponent, c.name, strings.Join(suggesters, ", ")), nil
 }
