@@ -1,10 +1,11 @@
-SOLR_INST ?="solr-go-test" 
+PODMAN ?= "podman"
+SOLR ?="solr-go" 
 COLLECTION ?= "gettingstarted"
 
 .PHONY: solr
 solr: stop-solr
-	docker run -d -p 8983:8983 --name $(SOLR_INST) solr:latest solr-precreate $(COLLECTION)
+	$(PODMAN) run -d -p 8983:8983 --name $(SOLR) solr:latest solr-precreate $(COLLECTION)
 
 .PHONY: stop-solr
 stop-solr:
-	docker rm -f $(SOLR_INST) || true
+	$(PODMAN) rm -f $(SOLR_INST) || true
