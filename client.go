@@ -11,28 +11,24 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Client is an abstraction of a solr client
-// e.g. standard, json api or solr cloud (v2 api)
+// Client is an abstraction of a solr client e.g. standard, json api or solr cloud (v2 api)
 type Client interface {
-	Query(ctx context.Context, collection string, query *QueryBuilder) (*QueryResponse, error)
+	Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error)
 }
 
-// JSONClient is a solr client that uses the JSON API
+// JSONClient is a client for interacting with Apache Solr using via JSON API
 type JSONClient struct {
-	proto      string
-	host       string
-	port       int
+	// baseURL is the base url of the solr instance
+	baseURL    string
 	httpClient *http.Client
 }
 
 var _ Client = (*JSONClient)(nil)
 
 // NewJSONClient returns a new JSONClient
-func NewJSONClient(host string, port int) *JSONClient {
+func NewJSONClient(baseURL string) *JSONClient {
 	return &JSONClient{
-		proto:      "http",
-		host:       host,
-		port:       port,
+		baseURL:    baseURL,
 		httpClient: http.DefaultClient,
 	}
 }
@@ -43,43 +39,40 @@ func (c *JSONClient) WithHTTPClient(httpClient *http.Client) *JSONClient {
 	return c
 }
 
-// Query is used for searching/querying
-func (c *JSONClient) Query(ctx context.Context, collection string,
-	qb *QueryBuilder) (*QueryResponse, error) {
-	theURL, err := url.Parse(fmt.Sprintf("%s://%s:%d/solr/%s/query",
-		c.proto, c.host, c.port, collection))
+// Query calls the query endpoint with the provided query
+func (c *JSONClient) Query(
+	ctx context.Context,
+	collection string,
+	q *Query,
+) (*QueryResponse, error) {
+	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, errors.Wrap(err, "build request url")
 	}
 
-	q, err := qb.Build()
+	bq, err := q.BuildJSON()
 	if err != nil {
-		return nil, errors.Wrap(err, "build query")
-	}
-
-	var b []byte
-	b, err = json.Marshal(q)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshal query")
+		return nil, errors.Wrap(err, "build query body")
 	}
 
 	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, theURL.String(), bytes.NewReader(b))
+		http.MethodPost, theURL.String(), bytes.NewReader(bq))
 	if err != nil {
 		return nil, errors.Wrap(err, "new http request")
 	}
-	httpReq.Header.Add("content-type", "application/json")
+	httpReq.Header.Add("Content-Type", "application/json")
 
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, errors.Wrap(err, "http do request")
+		return nil, errors.Wrap(err, "do http request")
 	}
 
 	var resp QueryResponse
 	err = json.NewDecoder(httpResp.Body).Decode(&resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
+		return nil, errors.Wrap(err, "decode response body")
 	}
 
 	if httpResp.StatusCode > http.StatusOK {

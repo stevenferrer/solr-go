@@ -7,13 +7,13 @@ import (
 )
 
 // QueryParser is an abstraction of a query parser
-// e.g. standard, dismax, edismax, boost etc.
+// e.g. standard (lucene), dismax, edismax, boost, block join etc.
 type QueryParser interface {
-	// BuildQuery builds the query from the specified parameters
-	BuildQuery() (string, error)
+	// BuildParser builds the query from the specified parameters
+	BuildParser() (string, error)
 }
 
-// StandardQueryParser is a standard query parser
+// StandardQueryParser is a standard query parser a.k.a. lucene
 type StandardQueryParser struct {
 	// standard q parser params
 	// reference: https://lucene.apache.org/solr/guide/8_7/the-standard-q-parser.html
@@ -25,13 +25,13 @@ type StandardQueryParser struct {
 
 var _ QueryParser = (*StandardQueryParser)(nil)
 
-// NewStandardQueryParser returns a new StandardQueryParser
+// NewStandardQueryParser returns a new StdQueryParser
 func NewStandardQueryParser(q string) *StandardQueryParser {
 	return &StandardQueryParser{q: q}
 }
 
-// BuildQuery builds the query parser
-func (qp *StandardQueryParser) BuildQuery() (string, error) {
+// BuildParser builds the query parser
+func (qp *StandardQueryParser) BuildParser() (string, error) {
 	if qp.q == "" {
 		return "", errors.New("'q' parameter is required")
 	}
@@ -96,8 +96,8 @@ type DisMaxQueryParser struct {
 
 var _ QueryParser = (*DisMaxQueryParser)(nil)
 
-// BuildQuery implements the QueryParserInterface
-func (qp *DisMaxQueryParser) BuildQuery() (string, error) {
+// BuildParser implements the QueryParserInterface
+func (qp *DisMaxQueryParser) BuildParser() (string, error) {
 	if qp.q == "" {
 		return "", errors.New("'q' parameter is required")
 	}
