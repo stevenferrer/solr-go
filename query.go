@@ -35,7 +35,7 @@ type Query struct {
 	// facet query
 	// https://lucene.apache.org/solr/guide/8_7/faceting.html
 	// https://lucene.apache.org/solr/guide/8_7/json-facet-api.html
-	facets Facets
+	facets []Faceter
 
 	// additional queries
 	// https://lucene.apache.org/solr/guide/8_7/json-query-dsl.html#additional-queries
@@ -78,6 +78,15 @@ func (q *Query) BuildJSON() ([]byte, error) {
 
 	if q.fields != "" {
 		qm["fields"] = q.fields
+	}
+
+	if len(q.facets) > 0 {
+		facets := M{}
+		for _, facet := range q.facets {
+			facets[facet.Name()] = facet.BuildFacet()
+		}
+
+		qm["facet"] = facets
 	}
 
 	b, err := json.Marshal(qm)
@@ -125,7 +134,7 @@ func (q *Query) WithQueryParser(qp QueryParser) *Query {
 }
 
 // WithFacets sets the facet query
-func (q *Query) WithFacets(facets Facets) *Query {
+func (q *Query) WithFacets(facets ...Faceter) *Query {
 	q.facets = facets
 	return q
 }

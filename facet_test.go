@@ -13,14 +13,17 @@ func TestFacets(t *testing.T) {
 			WithQuery("popularity:[8 TO 10]")
 		facet := solr.NewTermsFacet("categories").
 			WithField("cat").WithLimit(5).
+			WithOffset(1).WithSort("price asc").
 			AddToFacet("average_price", "avg(price)").
 			AddNestedFacet(nestedFacet)
 		got := facet.BuildFacet()
 
 		expect := solr.M{
-			"type":  "terms",
-			"field": "cat",
-			"limit": 5,
+			"type":   "terms",
+			"field":  "cat",
+			"limit":  5,
+			"offset": 1,
+			"sort":   "price asc",
 			"facet": solr.M{
 				"average_price": "avg(price)",
 				"high_popularity": solr.M{

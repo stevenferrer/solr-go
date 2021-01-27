@@ -34,6 +34,10 @@ func TestQuery(t *testing.T) {
 				},
 			},
 		}).
+		WithFacets(
+			solr.NewTermsFacet("categories").
+				WithField("cat").WithLimit(10),
+		).
 		WithSort("score").
 		WithOffset(1).
 		WithLimit(10).
@@ -41,6 +45,6 @@ func TestQuery(t *testing.T) {
 		WithFields("name price").
 		BuildJSON()
 	a.NoError(err)
-	expect := `{"fields":"name price","filter":"inStock:true","limit":10,"offset":1,"queries":{"query_filters":[{"#size_tag":{"field":{"f":"size","query":"XL"}}},{"#color_tag":{"field":{"f":"color","query":"Red"}}}]},"query":"{!dismax}solr rocks","sort":"score"}`
+	expect := `{"facet":{"categories":{"field":"cat","limit":10,"type":"terms"}},"fields":"name price","filter":"inStock:true","limit":10,"offset":1,"queries":{"query_filters":[{"#size_tag":{"field":{"f":"size","query":"XL"}}},{"#color_tag":{"field":{"f":"color","query":"Red"}}}]},"query":"{!dismax}solr rocks","sort":"score"}`
 	a.Equal(expect, string(got))
 }

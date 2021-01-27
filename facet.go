@@ -1,8 +1,5 @@
 package solr
 
-// Facets is a collection of facets
-type Facets []Faceter
-
 // Faceter is an abstraction of a facet
 // e.g. terms, query, stats, heatmap etc.
 type Faceter interface {
@@ -174,6 +171,4 @@ type RangeFacet struct {
 	include string
 	ranges  string
 	facet   M
-	// Nested facets
-	facets Facets
 }
