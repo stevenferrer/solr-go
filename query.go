@@ -43,8 +43,8 @@ type Query struct {
 }
 
 // NewQuery returns a new Query
-func NewQuery(qp QueryParser) *Query {
-	return &Query{qp: qp}
+func NewQuery() *Query {
+	return &Query{}
 }
 
 // BuildJSON builds the query to JSON

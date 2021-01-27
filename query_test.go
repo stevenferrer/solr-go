@@ -10,9 +10,10 @@ import (
 
 func TestQuery(t *testing.T) {
 	a := assert.New(t)
-	qp := solr.NewDisMaxQueryParser("solr rocks")
-	got, err := solr.NewQuery(nil).
-		WithQueryParser(qp).
+	got, err := solr.NewQuery().
+		WithQueryParser(
+			solr.NewDisMaxQueryParser("solr rocks"),
+		).
 		WithQueries(solr.M{
 			"query_filters": []solr.M{
 				{

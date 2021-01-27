@@ -30,8 +30,10 @@ func TestJSONClient(t *testing.T) {
 		WithHTTPClient(&http.Client{
 			Timeout: 60 * time.Second,
 		})
-	qp := solr.NewDisMaxQueryParser("apple pie")
-	q := solr.NewQuery(qp)
+	q := solr.NewQuery().
+		WithQueryParser(
+			solr.NewDisMaxQueryParser("apple pie"),
+		)
 
 	_, err := client.Query(context.Background(), collection, q)
 	a.NoError(err)
