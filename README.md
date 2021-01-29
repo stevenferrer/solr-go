@@ -4,7 +4,7 @@
 
 # Solr-go
 
-A collection of tools for interacting with [Apache Solr](https://lucene.apache.org/solr) in [Go](https://golang.org/).
+A [Solr](https://lucene.apache.org/solr) client in [Go](https://golang.org/).
 
 ## Contributing
 

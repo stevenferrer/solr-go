@@ -29,16 +29,15 @@ func TestJSONClient(t *testing.T) {
 		httpmock.RegisterResponder(
 			http.MethodPost,
 			baseURL+"/solr/"+collection+"/query",
-			newMatchResponder(mockBody, solr.M{}),
+			newResponder(mockBody, solr.M{}),
 		)
 
 		client := solr.NewJSONClient(baseURL).
 			WithHTTPClient(&http.Client{
 				Timeout: 10 * time.Second,
 			})
-		q := solr.NewQuery().WithQueryParser(
-			solr.NewDisMaxQueryParser("apple pie"),
-		)
+		q := solr.NewQuery().QueryParser(
+			solr.NewDisMaxQueryParser("apple pie"))
 
 		_, err := client.Query(ctx, collection, q)
 		assert.NoError(t, err)
@@ -49,7 +48,7 @@ func TestJSONClient(t *testing.T) {
 		httpmock.RegisterResponder(
 			http.MethodPost,
 			baseURL+"/solr/"+collection+"/update",
-			newMatchResponder(mockBody, solr.M{}),
+			newResponder(mockBody, solr.M{}),
 		)
 
 		httpmock.RegisterResponder(
@@ -92,7 +91,7 @@ func TestJSONClient(t *testing.T) {
 	})
 }
 
-func newMatchResponder(body string, mockResp interface{}) httpmock.Responder {
+func newResponder(body string, mockResp interface{}) httpmock.Responder {
 	var mockBody interface{}
 	err := json.Unmarshal([]byte(body), &mockBody)
 	if err != nil {

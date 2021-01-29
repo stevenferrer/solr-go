@@ -68,32 +68,32 @@ func (f *TermsFacet) BuildFacet() M {
 	return m
 }
 
-// WithField sets the field param
-func (f *TermsFacet) WithField(field string) *TermsFacet {
+// Field sets the field param
+func (f *TermsFacet) Field(field string) *TermsFacet {
 	f.field = field
 	return f
 }
 
-// WithOffset sets the offset param
-func (f *TermsFacet) WithOffset(offset int) *TermsFacet {
+// Offset sets the offset param
+func (f *TermsFacet) Offset(offset int) *TermsFacet {
 	f.offset = offset
 	return f
 }
 
-// WithLimit sets the limit param
-func (f *TermsFacet) WithLimit(limit int) *TermsFacet {
+// Limit sets the limit param
+func (f *TermsFacet) Limit(limit int) *TermsFacet {
 	f.limit = limit
 	return f
 }
 
-// WithSort sets the sort param
-func (f *TermsFacet) WithSort(sort string) *TermsFacet {
+// Sort sets the sort param
+func (f *TermsFacet) Sort(sort string) *TermsFacet {
 	f.sort = sort
 	return f
 }
 
-// AddNestedFacet adds a nested facet
-func (f *TermsFacet) AddNestedFacet(facet Faceter) *TermsFacet {
+// AddFacet adds a nested facet
+func (f *TermsFacet) AddFacet(facet Faceter) *TermsFacet {
 	f.facet[facet.Name()] = facet.BuildFacet()
 	return f
 }
@@ -142,14 +142,14 @@ func (f *QueryFacet) Name() string {
 	return f.name
 }
 
-// WithQuery sets the q param
-func (f *QueryFacet) WithQuery(q string) *QueryFacet {
+// Query sets the q param
+func (f *QueryFacet) Query(q string) *QueryFacet {
 	f.q = q
 	return f
 }
 
-// AddNestedFacet adds a nested facet
-func (f *QueryFacet) AddNestedFacet(facet Faceter) *QueryFacet {
+// AddFacet adds a nested facet
+func (f *QueryFacet) AddFacet(facet Faceter) *QueryFacet {
 	f.facet[facet.Name()] = facet.BuildFacet()
 	return f
 }

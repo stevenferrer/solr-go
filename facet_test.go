@@ -10,12 +10,11 @@ import (
 func TestFacets(t *testing.T) {
 	t.Run("terms facet", func(t *testing.T) {
 		nestedFacet := solr.NewQueryFacet("high_popularity").
-			WithQuery("popularity:[8 TO 10]")
+			Query("popularity:[8 TO 10]")
 		facet := solr.NewTermsFacet("categories").
-			WithField("cat").WithLimit(5).
-			WithOffset(1).WithSort("price asc").
+			Field("cat").Limit(5).Offset(1).Sort("price asc").
 			AddToFacet("average_price", "avg(price)").
-			AddNestedFacet(nestedFacet)
+			AddFacet(nestedFacet)
 		got := facet.BuildFacet()
 
 		expect := solr.M{
@@ -39,11 +38,11 @@ func TestFacets(t *testing.T) {
 
 	t.Run("query facet", func(f *testing.T) {
 		nestedFacet := solr.NewTermsFacet("categories").
-			WithField("cat").WithLimit(5)
+			Field("cat").Limit(5)
 		facet := solr.NewQueryFacet("high_popularity").
-			WithQuery("popularity:[8 TO 10]").
+			Query("popularity:[8 TO 10]").
 			AddToFacet("average_price", "avg(price)").
-			AddNestedFacet(nestedFacet)
+			AddFacet(nestedFacet)
 		got := facet.BuildFacet()
 
 		expect := solr.M{

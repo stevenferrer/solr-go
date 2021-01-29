@@ -54,20 +54,20 @@ func (qp *StandardQueryParser) BuildParser() (string, error) {
 	return fmt.Sprintf("{!%s}%s", strings.Join(kv, " "), qp.q), nil
 }
 
-// WithQ sets the query
-func (qp *StandardQueryParser) WithQ(q string) *StandardQueryParser {
+// Q sets the query param
+func (qp *StandardQueryParser) Q(q string) *StandardQueryParser {
 	qp.q = q
 	return qp
 }
 
-// WithOp sets the default operator
-func (qp *StandardQueryParser) WithOp(op string) *StandardQueryParser {
+// Op sets the default operator
+func (qp *StandardQueryParser) Op(op string) *StandardQueryParser {
 	qp.op = op
 	return qp
 }
 
-// WithDf sets the default field
-func (qp *StandardQueryParser) WithDf(df string) *StandardQueryParser {
+// Df sets the default field
+func (qp *StandardQueryParser) Df(df string) *StandardQueryParser {
 	qp.df = df
 	return qp
 }
@@ -147,14 +147,14 @@ func NewDisMaxQueryParser(q string) *DisMaxQueryParser {
 	return &DisMaxQueryParser{q: q}
 }
 
-// WithQ sets the query param
-func (qp *DisMaxQueryParser) WithQ(q string) *DisMaxQueryParser {
+// Q sets the query param
+func (qp *DisMaxQueryParser) Q(q string) *DisMaxQueryParser {
 	qp.q = q
 	return qp
 }
 
-// WithAlt sets the q.alt param
-func (qp *DisMaxQueryParser) WithAlt(alt string) *DisMaxQueryParser {
+// Alt sets the q.alt param
+func (qp *DisMaxQueryParser) Alt(alt string) *DisMaxQueryParser {
 	qp.alt = alt
 	return qp
 }
@@ -165,44 +165,44 @@ func (qp *DisMaxQueryParser) WithQf(qf string) *DisMaxQueryParser {
 	return qp
 }
 
-// WithMm sets the minimum should match param
-func (qp *DisMaxQueryParser) WithMm(mm string) *DisMaxQueryParser {
+// Mm sets the minimum should match param
+func (qp *DisMaxQueryParser) Mm(mm string) *DisMaxQueryParser {
 	qp.mm = mm
 	return qp
 }
 
-// WithPf sets the phrase field param
-func (qp *DisMaxQueryParser) WithPf(pf string) *DisMaxQueryParser {
+// Pf sets the phrase field param
+func (qp *DisMaxQueryParser) Pf(pf string) *DisMaxQueryParser {
 	qp.pf = pf
 	return qp
 }
 
-// WithPs sets the phrase slop param
-func (qp *DisMaxQueryParser) WithPs(ps string) *DisMaxQueryParser {
+// Ps sets the phrase slop param
+func (qp *DisMaxQueryParser) Ps(ps string) *DisMaxQueryParser {
 	qp.ps = ps
 	return qp
 }
 
-// WithQs sets the query slop param
-func (qp *DisMaxQueryParser) WithQs(qs string) *DisMaxQueryParser {
+// Qs sets the query slop param
+func (qp *DisMaxQueryParser) Qs(qs string) *DisMaxQueryParser {
 	qp.qs = qs
 	return qp
 }
 
-// WithTie sets the tie breaker param param
-func (qp *DisMaxQueryParser) WithTie(tie string) *DisMaxQueryParser {
+// Tie sets the tie breaker param param
+func (qp *DisMaxQueryParser) Tie(tie string) *DisMaxQueryParser {
 	qp.tie = tie
 	return qp
 }
 
-// WithBq sets the boost query param
-func (qp *DisMaxQueryParser) WithBq(bq string) *DisMaxQueryParser {
+// Bq sets the boost query param
+func (qp *DisMaxQueryParser) Bq(bq string) *DisMaxQueryParser {
 	qp.bq = bq
 	return qp
 }
 
-// WithBf sets the boost function param
-func (qp *DisMaxQueryParser) WithBf(bf string) *DisMaxQueryParser {
+// Bf sets the boost function param
+func (qp *DisMaxQueryParser) Bf(bf string) *DisMaxQueryParser {
 	qp.bf = bf
 	return qp
 }

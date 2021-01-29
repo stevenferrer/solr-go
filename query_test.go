@@ -11,10 +11,10 @@ import (
 func TestQuery(t *testing.T) {
 	a := assert.New(t)
 	got, err := solr.NewQuery().
-		WithQueryParser(
+		QueryParser(
 			solr.NewDisMaxQueryParser("solr rocks"),
 		).
-		WithQueries(solr.M{
+		Queries(solr.M{
 			"query_filters": []solr.M{
 				{
 					"#size_tag": solr.M{
@@ -34,15 +34,15 @@ func TestQuery(t *testing.T) {
 				},
 			},
 		}).
-		WithFacets(
+		Facets(
 			solr.NewTermsFacet("categories").
-				WithField("cat").WithLimit(10),
+				Field("cat").Limit(10),
 		).
-		WithSort("score").
-		WithOffset(1).
-		WithLimit(10).
-		WithFilter("inStock:true").
-		WithFields("name price").
+		Sort("score").
+		Offset(1).
+		Limit(10).
+		Filter("inStock:true").
+		Fields("name price").
 		BuildJSON()
 	a.NoError(err)
 	expect := `{"facet":{"categories":{"field":"cat","limit":10,"type":"terms"}},"fields":"name price","filter":"inStock:true","limit":10,"offset":1,"queries":{"query_filters":[{"#size_tag":{"field":{"f":"size","query":"XL"}}},{"#color_tag":{"field":{"f":"color","query":"Red"}}}]},"query":"{!dismax}solr rocks","sort":"score"}`

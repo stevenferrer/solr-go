@@ -97,50 +97,50 @@ func (q *Query) BuildJSON() ([]byte, error) {
 	return b, nil
 }
 
-// WithSort sets the sort param
-func (q *Query) WithSort(sort string) *Query {
+// Sort sets the sort param
+func (q *Query) Sort(sort string) *Query {
 	q.sort = sort
 	return q
 }
 
-// WithOffset sets the offset param
-func (q *Query) WithOffset(offset int) *Query {
+// Offset sets the offset param
+func (q *Query) Offset(offset int) *Query {
 	q.offset = offset
 	return q
 }
 
-// WithLimit sets the limit param
-func (q *Query) WithLimit(limit int) *Query {
+// Limit sets the limit param
+func (q *Query) Limit(limit int) *Query {
 	q.limit = limit
 	return q
 }
 
-// WithFilter sets the filter param
-func (q *Query) WithFilter(filter string) *Query {
+// Filter sets the filter param
+func (q *Query) Filter(filter string) *Query {
 	q.filter = filter
 	return q
 }
 
-// WithFields sets the fields param
-func (q *Query) WithFields(fields string) *Query {
+// Fields sets the fields param
+func (q *Query) Fields(fields string) *Query {
 	q.fields = fields
 	return q
 }
 
-// WithQueryParser sets the query parser
-func (q *Query) WithQueryParser(qp QueryParser) *Query {
+// QueryParser sets the query parser
+func (q *Query) QueryParser(qp QueryParser) *Query {
 	q.qp = qp
 	return q
 }
 
-// WithFacets sets the facet query
-func (q *Query) WithFacets(facets ...Faceter) *Query {
+// Facets sets the facet query
+func (q *Query) Facets(facets ...Faceter) *Query {
 	q.facets = facets
 	return q
 }
 
-// WithQueries sets the additional queries
-func (q *Query) WithQueries(queries M) *Query {
+// Queries sets the additional queries
+func (q *Query) Queries(queries M) *Query {
 	q.queries = queries
 	return q
 }
