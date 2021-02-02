@@ -1,4 +1,4 @@
 package solr
 
-// M is an alias map of interface
+// M is an alias for map of interface
 type M map[string]interface{}

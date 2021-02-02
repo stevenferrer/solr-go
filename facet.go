@@ -5,7 +5,7 @@ package solr
 type Faceter interface {
 	// BuildFacet builds the facet
 	BuildFacet() M
-	// Name gives the name of the facet
+	// Name returns the name of the facet
 	Name() string
 }
 
