@@ -22,4 +22,11 @@ type Client interface {
 	ReplaceFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error
 	AddCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error
 	DeleteCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error
+
+	SetProperties(ctx context.Context, collection string, properties ...CommonProperty) error
+	UnsetProperty(ctx context.Context, collection string, property CommonProperty) error
+
+	AddComponent(ctx context.Context, collection string, component Component) error
+	UpdateComponent(ctx context.Context, collection string, component Component) error
+	DeleteComponent(ctx context.Context, collection string, component Component) error
 }

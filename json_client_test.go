@@ -25,6 +25,11 @@ func TestJSONClient(t *testing.T) {
 	baseURL := "https://solr.example.com"
 	collection := "products"
 
+	client := solr.NewJSONClient(baseURL).
+		WithHTTPClient(&http.Client{
+			Timeout: 10 * time.Second,
+		})
+
 	t.Run("query", func(t *testing.T) {
 		mockBody := `{"query":"{!dismax}apple pie"}`
 		httpmock.RegisterResponder(
@@ -33,10 +38,6 @@ func TestJSONClient(t *testing.T) {
 			newResponder(mockBody, solr.M{}),
 		)
 
-		client := solr.NewJSONClient(baseURL).
-			WithHTTPClient(&http.Client{
-				Timeout: 10 * time.Second,
-			})
 		q := solr.NewQuery().QueryParser(
 			solr.NewDisMaxQueryParser("apple pie"))
 
@@ -64,11 +65,6 @@ func TestJSONClient(t *testing.T) {
 				return httpmock.NewJsonResponse(http.StatusOK, solr.M{})
 			},
 		)
-
-		client := solr.NewJSONClient(baseURL).
-			WithHTTPClient(&http.Client{
-				Timeout: 10 * time.Second,
-			})
 
 		doc1 := solr.Document{
 			"id":   1,
@@ -100,8 +96,6 @@ func TestJSONClient(t *testing.T) {
 				newResponder(mockBody, solr.M{}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
-
 			fields := []solr.Field{
 				{
 					Name: "foo",
@@ -124,8 +118,6 @@ func TestJSONClient(t *testing.T) {
 				newResponder(mockBody, solr.M{}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
-
 			fields := []solr.Field{
 				{
 					Name: "foo",
@@ -145,8 +137,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			fields := []solr.Field{
 				{
@@ -169,8 +159,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			fields := []solr.Field{
 				{
@@ -196,8 +184,6 @@ func TestJSONClient(t *testing.T) {
 				newResponder(mockBody, solr.M{}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
-
 			fields := []solr.Field{
 				{
 					Name: "*_foo",
@@ -217,8 +203,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			fields := []solr.Field{
 				{
@@ -241,8 +225,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			fieldTypes := []solr.FieldType{
 				{
@@ -273,8 +255,6 @@ func TestJSONClient(t *testing.T) {
 				newResponder(mockBody, solr.M{}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
-
 			fieldTypes := []solr.FieldType{
 				{
 					Name: "myNewTextField",
@@ -291,8 +271,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			fieldTypes := []solr.FieldType{
 				{
@@ -318,8 +296,6 @@ func TestJSONClient(t *testing.T) {
 				newResponder(mockBody, solr.M{}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
-
 			copyFields := []solr.CopyField{
 				{
 					Source: "shelf",
@@ -341,8 +317,6 @@ func TestJSONClient(t *testing.T) {
 				baseURL+"/solr/"+collection+"/schema",
 				newResponder(mockBody, solr.M{}),
 			)
-
-			client := solr.NewJSONClient(baseURL)
 
 			copyFields := []solr.CopyField{
 				{
@@ -366,10 +340,95 @@ func TestJSONClient(t *testing.T) {
 				}),
 			)
 
-			client := solr.NewJSONClient(baseURL)
 			fields := []solr.Field{{Name: "foo"}}
 			err := client.AddFields(ctx, collection, fields...)
 			assert.Error(t, err)
+		})
+	})
+
+	t.Run("config", func(t *testing.T) {
+		t.Run("set property", func(t *testing.T) {
+			mockBody := `{"set-property":{"updater.autoCommit.maxTime":15000}}`
+			httpmock.RegisterResponder(
+				http.MethodPost,
+				baseURL+"/solr/"+collection+"/config",
+				newResponder(mockBody, solr.M{}),
+			)
+
+			err := client.SetProperties(ctx, collection, solr.CommonProperty{
+				Name:  "updater.autoCommit.maxTime",
+				Value: 15000,
+			})
+			assert.NoError(t, err)
+		})
+
+		t.Run("unset property", func(t *testing.T) {
+			mockBody := `{"unset-property":"updater.autoCommit.maxTime"}`
+			httpmock.RegisterResponder(
+				http.MethodPost,
+				baseURL+"/solr/"+collection+"/config",
+				newResponder(mockBody, solr.M{}),
+			)
+
+			err := client.UnsetProperty(ctx, collection, solr.CommonProperty{
+				Name: "updater.autoCommit.maxTime",
+			})
+			assert.NoError(t, err)
+		})
+
+		t.Run("add component", func(t *testing.T) {
+			mockBody := `{"add-requesthandler":{"class":"solr.DumpRequestHandler","defaults":{"a":"b","rows":10,"x":"y"},"name":"/mypath","useParams":"x"}}`
+			httpmock.RegisterResponder(
+				http.MethodPost,
+				baseURL+"/solr/"+collection+"/config",
+				newResponder(mockBody, solr.M{}),
+			)
+
+			err := client.AddComponent(ctx, collection, solr.Component{
+				Type:  solr.RequestHandler,
+				Name:  "/mypath",
+				Class: "solr.DumpRequestHandler",
+				Values: solr.M{
+					"defaults":  solr.M{"x": "y", "a": "b", "rows": 10},
+					"useParams": "x",
+				},
+			})
+			assert.NoError(t, err)
+		})
+
+		t.Run("update component", func(t *testing.T) {
+			mockBody := `{"update-requesthandler":{"class":"solr.DumpRequestHandler","defaults":{"rows":"20","x":"new value for x"},"name":"/mypath","useParams":"x"}}`
+			httpmock.RegisterResponder(
+				http.MethodPost,
+				baseURL+"/solr/"+collection+"/config",
+				newResponder(mockBody, solr.M{}),
+			)
+
+			err := client.UpdateComponent(ctx, collection, solr.Component{
+				Type:  solr.RequestHandler,
+				Name:  "/mypath",
+				Class: "solr.DumpRequestHandler",
+				Values: solr.M{
+					"defaults":  solr.M{"x": "new value for x", "rows": "20"},
+					"useParams": "x",
+				},
+			})
+			assert.NoError(t, err)
+		})
+
+		t.Run("delete component", func(t *testing.T) {
+			mockBody := `{"delete-requesthandler":"/mypath"}`
+			httpmock.RegisterResponder(
+				http.MethodPost,
+				baseURL+"/solr/"+collection+"/config",
+				newResponder(mockBody, solr.M{}),
+			)
+
+			err := client.DeleteComponent(ctx, collection, solr.Component{
+				Type: solr.RequestHandler,
+				Name: "/mypath",
+			})
+			assert.NoError(t, err)
 		})
 	})
 }

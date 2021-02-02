@@ -60,7 +60,7 @@ func (c *JSONClient) Query(
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, errors.Wrap(err, "do http request")
+		return nil, errors.Wrap(err, "send http request")
 	}
 
 	var resp QueryResponse
@@ -102,7 +102,7 @@ func (c *JSONClient) Update(
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, errors.Wrap(err, "do http request")
+		return nil, errors.Wrap(err, "send http request")
 	}
 
 	var resp UpdateResponse
@@ -138,7 +138,7 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
 	if err != nil {
-		return errors.Wrap(err, "do http request")
+		return errors.Wrap(err, "send http request")
 	}
 
 	var resp UpdateResponse
@@ -210,18 +210,27 @@ func (c *JSONClient) DeleteCopyFields(ctx context.Context, collection string, co
 }
 
 func (c *JSONClient) modifySchema(ctx context.Context, collection, command string, body interface{}) error {
-	urll, err := url.Parse(fmt.Sprintf("%s/solr/%s/schema", c.baseURL, collection))
+	urlStr := fmt.Sprintf("%s/solr/%s/schema", c.baseURL, collection)
+	return c.commonRequest(ctx, urlStr, M{command: body})
+}
+
+func (c *JSONClient) commonRequest(
+	ctx context.Context,
+	urlStr string,
+	reqBody interface{},
+) error {
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		return errors.Wrap(err, "build request url")
+		errors.Wrap(err, "parse request url")
 	}
 
-	b, err := json.Marshal(M{command: body})
+	b, err := json.Marshal(reqBody)
 	if err != nil {
 		return errors.Wrap(err, "marshal request")
 	}
 
 	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, urll.String(), bytes.NewReader(b))
+		http.MethodPost, theURL.String(), bytes.NewReader(b))
 	if err != nil {
 		return errors.Wrap(err, "new http request")
 	}
@@ -230,7 +239,7 @@ func (c *JSONClient) modifySchema(ctx context.Context, collection, command strin
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
 	if err != nil {
-		return errors.Wrap(err, "do http request")
+		return errors.Wrap(err, "send http request")
 	}
 
 	var resp BaseResponse
@@ -244,4 +253,54 @@ func (c *JSONClient) modifySchema(ctx context.Context, collection, command strin
 	}
 
 	return nil
+}
+
+// SetProperties sets the common config properties
+func (c *JSONClient) SetProperties(ctx context.Context, collection string, properties ...CommonProperty) error {
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	m := M{}
+	for _, prop := range properties {
+		m[prop.Name] = prop.Value
+	}
+
+	return c.commonRequest(ctx, urlStr, M{"set-property": m})
+}
+
+// UnsetProperty unsets a common config property
+func (c *JSONClient) UnsetProperty(ctx context.Context, collection string, property CommonProperty) error {
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	return c.commonRequest(ctx, urlStr, M{"unset-property": property.Name})
+}
+
+// AddComponent adds a component
+func (c *JSONClient) AddComponent(ctx context.Context, collection string, component Component) error {
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	command := "add-" + component.Type.String()
+
+	m := M{"name": component.Name, "class": component.Class}
+	for k, v := range component.Values {
+		m[k] = v
+	}
+
+	return c.commonRequest(ctx, urlStr, M{command: m})
+}
+
+// UpdateComponent updates a component
+func (c *JSONClient) UpdateComponent(ctx context.Context, collection string, component Component) error {
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	command := "update-" + component.Type.String()
+
+	m := M{"name": component.Name, "class": component.Class}
+	for k, v := range component.Values {
+		m[k] = v
+	}
+
+	return c.commonRequest(ctx, urlStr, M{command: m})
+}
+
+// DeleteComponent deletes a component
+func (c *JSONClient) DeleteComponent(ctx context.Context, collection string, component Component) error {
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	command := "delete-" + component.Type.String()
+	return c.commonRequest(ctx, urlStr, M{command: component.Name})
 }
