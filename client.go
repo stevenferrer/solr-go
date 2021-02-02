@@ -29,4 +29,6 @@ type Client interface {
 	AddComponent(ctx context.Context, collection string, component Component) error
 	UpdateComponent(ctx context.Context, collection string, component Component) error
 	DeleteComponent(ctx context.Context, collection string, component Component) error
+
+	Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error)
 }

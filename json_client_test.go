@@ -431,6 +431,21 @@ func TestJSONClient(t *testing.T) {
 			assert.NoError(t, err)
 		})
 	})
+
+	t.Run("suggest", func(t *testing.T) {
+		responder, err := httpmock.NewJsonResponder(http.StatusOK, solr.SuggestResponse{})
+		require.NoError(t, err)
+		httpmock.RegisterResponder(
+			http.MethodGet,
+			baseURL+"/solr/"+collection+"/suggest?suggest=true&suggest.build=true&suggest.dictionary=mySuggester&suggest.q=elec",
+			responder,
+		)
+
+		suggestParams := solr.NewSuggesterParams("suggest").
+			Build().Dictionaries("mySuggester").Query("elec")
+		_, err = client.Suggest(ctx, collection, suggestParams)
+		assert.NoError(t, err)
+	})
 }
 
 func newResponder(body string, mockResp interface{}) httpmock.Responder {

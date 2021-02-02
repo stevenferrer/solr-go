@@ -304,3 +304,37 @@ func (c *JSONClient) DeleteComponent(ctx context.Context, collection string, com
 	command := "delete-" + component.Type.String()
 	return c.commonRequest(ctx, urlStr, M{command: component.Name})
 }
+
+// Suggest queries the suggest endpoint
+func (c *JSONClient) Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error) {
+	theURL, err := url.Parse(fmt.Sprintf("%s/solr/%s/%s", c.baseURL, collection, params.endpoint))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+	theURL.RawQuery = params.BuildParams()
+
+	httpReq, err := http.NewRequestWithContext(ctx,
+		http.MethodGet, theURL.String(), nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "new http request")
+	}
+	httpReq.Header.Add("content-type", "application/json")
+
+	var httpResp *http.Response
+	httpResp, err = c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, errors.Wrap(err, "send http request")
+	}
+
+	var resp SuggestResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return nil, errors.Wrap(err, "decode response")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return nil, resp.Error
+	}
+
+	return &resp, nil
+}
