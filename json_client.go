@@ -153,3 +153,95 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 
 	return nil
 }
+
+// AddFields adds one or more fields
+func (c *JSONClient) AddFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "add-field", fields)
+}
+
+// DeleteFields deletes one or more fields
+func (c *JSONClient) DeleteFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "delete-field", fields)
+}
+
+// ReplaceFields updates one or more fields
+func (c *JSONClient) ReplaceFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "replace-field", fields)
+}
+
+// AddDynamicFields adds on ore more dynamic fields
+func (c *JSONClient) AddDynamicFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "add-dynamic-field", fields)
+}
+
+// DeleteDynamicFields deletes one ore more dynamic fields
+func (c *JSONClient) DeleteDynamicFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "delete-dynamic-field", fields)
+}
+
+// ReplaceDynamicFields updates on or more dynamic fields
+func (c *JSONClient) ReplaceDynamicFields(ctx context.Context, collection string, fields ...Field) error {
+	return c.modifySchema(ctx, collection, "replace-dynamic-field", fields)
+}
+
+// AddFieldTypes adds on more more field types
+func (c *JSONClient) AddFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
+	return c.modifySchema(ctx, collection, "add-field-type", fieldTypes)
+}
+
+// DeleteFieldTypes deletes on or more field types
+func (c *JSONClient) DeleteFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
+	return c.modifySchema(ctx, collection, "delete-field-type", fieldTypes)
+}
+
+// ReplaceFieldTypes updates on or more field types
+func (c *JSONClient) ReplaceFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
+	return c.modifySchema(ctx, collection, "replace-field-type", fieldTypes)
+}
+
+// AddCopyFields adds on ore more copy fields
+func (c *JSONClient) AddCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error {
+	return c.modifySchema(ctx, collection, "add-copy-field", copyFields)
+}
+
+// DeleteCopyFields deletes on more more copy fields
+func (c *JSONClient) DeleteCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error {
+	return c.modifySchema(ctx, collection, "delete-copy-field", copyFields)
+}
+
+func (c *JSONClient) modifySchema(ctx context.Context, collection, command string, body interface{}) error {
+	urll, err := url.Parse(fmt.Sprintf("%s/solr/%s/schema", c.baseURL, collection))
+	if err != nil {
+		return errors.Wrap(err, "build request url")
+	}
+
+	b, err := json.Marshal(M{command: body})
+	if err != nil {
+		return errors.Wrap(err, "marshal request")
+	}
+
+	httpReq, err := http.NewRequestWithContext(ctx,
+		http.MethodPost, urll.String(), bytes.NewReader(b))
+	if err != nil {
+		return errors.Wrap(err, "new http request")
+	}
+	httpReq.Header.Add("Content-Type", "application/json")
+
+	var httpResp *http.Response
+	httpResp, err = c.httpClient.Do(httpReq)
+	if err != nil {
+		return errors.Wrap(err, "do http request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}

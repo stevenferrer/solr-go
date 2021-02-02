@@ -2,8 +2,8 @@ package solr
 
 // BaseResponse is the base response
 type BaseResponse struct {
-	Header ResponseHeader `json:"responseHeader"`
-	Error  *Error         `json:"error,omitempty"`
+	Header *ResponseHeader `json:"responseHeader"`
+	Error  *Error          `json:"error,omitempty"`
 }
 
 // ResponseHeader is a response header
