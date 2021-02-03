@@ -9,34 +9,45 @@ A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 ## Example
 
 ```go
-query := solr.NewQuery().
-    QueryParser(solr.NewDisMaxQueryParser("solr rocks")).
-    Queries(solr.M{
-        "query_filters": []solr.M{
-            {
-                "#size_tag": solr.M{
-                    "field": solr.M{
-                        "f":     "size",
-                        "query": "XL",
-                    },
-                },
-            },
-            {
-                "#color_tag": solr.M{
-                    "field": solr.M{
-                        "f":     "color",
-                        "query": "Red",
-                    },
+// query parser
+queryParser := solr.NewDisMaxQueryParser().
+    Query("'solr rocks'")
+
+// additional queries
+queries := solr.M{
+    "query_filters": []solr.M{
+        {
+            "#size_tag": solr.M{
+                "field": solr.M{
+                    "f":     "size",
+                    "query": "XL",
                 },
             },
         },
-    }).
-    Facets(
-        solr.NewTermsFacet("categories").
-            Field("cat").Limit(10),
-        solr.NewQueryFacet("high_popularity").
-            Query("popularity:[8 TO 10]"),
-    ).
+        {
+            "#color_tag": solr.M{
+                "field": solr.M{
+                    "f":     "color",
+                    "query": "Red",
+                },
+            },
+        },
+    },
+}
+
+// facets
+facets := []solr.Faceter{
+    solr.NewTermsFacet("categories").
+        Field("cat").Limit(10),
+    solr.NewQueryFacet("high_popularity").
+        Query("popularity:[8 TO 10]"),
+}
+
+// query
+query := solr.NewQuery().
+    QueryParser(queryParser).
+    Queries(queries).
+    Facets(facets...).
     Sort("score").
     Offset(1).
     Limit(10).

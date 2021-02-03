@@ -79,7 +79,9 @@ func TestJSONClient(t *testing.T) {
 			"name": "product 3",
 		}
 
-		_, err := client.Update(ctx, collection, doc1, doc2, doc3)
+		docs := []solr.Document{doc1, doc2, doc3}
+
+		_, err := client.Update(ctx, collection, docs...)
 		assert.NoError(t, err)
 
 		err = client.Commit(ctx, collection)
