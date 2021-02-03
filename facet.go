@@ -1,7 +1,7 @@
 package solr
 
 // Faceter is an abstraction of a facet
-// e.g. terms, query, stats, heatmap etc.
+// e.g. terms, query, stats, range, heatmap etc.
 type Faceter interface {
 	// BuildFacet builds the facet
 	BuildFacet() M

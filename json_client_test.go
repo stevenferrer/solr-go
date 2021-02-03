@@ -1,6 +1,7 @@
 package solr_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"io/ioutil"
@@ -38,9 +39,9 @@ func TestJSONClient(t *testing.T) {
 			newResponder(mockBody, solr.M{}),
 		)
 
-		q := solr.NewQuery().QueryParser(solr.NewDisMaxQueryParser().Query("'apple pie'"))
-
-		_, err := client.Query(ctx, collection, q)
+		queryParser := solr.NewDisMaxQueryParser().Query("'apple pie'")
+		query := solr.NewQuery().QueryParser(queryParser)
+		_, err := client.Query(ctx, collection, query)
 		assert.NoError(t, err)
 	})
 
@@ -65,23 +66,26 @@ func TestJSONClient(t *testing.T) {
 			},
 		)
 
-		doc1 := solr.Document{
-			"id":   1,
-			"name": "product 1",
+		docs := []solr.M{
+			{
+				"id":   1,
+				"name": "product 1",
+			},
+			{
+				"id":   2,
+				"name": "product 2",
+			},
+			{
+				"id":   3,
+				"name": "product 3",
+			},
 		}
 
-		doc2 := solr.Document{
-			"id":   2,
-			"name": "product 2",
-		}
-		doc3 := solr.Document{
-			"id":   3,
-			"name": "product 3",
-		}
+		buf := &bytes.Buffer{}
+		err := json.NewEncoder(buf).Encode(docs)
+		assert.NoError(t, err)
 
-		docs := []solr.Document{doc1, doc2, doc3}
-
-		_, err := client.Update(ctx, collection, docs...)
+		_, err = client.Update(ctx, collection, solr.JSON, buf)
 		assert.NoError(t, err)
 
 		err = client.Commit(ctx, collection)

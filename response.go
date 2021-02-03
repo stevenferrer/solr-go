@@ -37,10 +37,10 @@ type QueryResponse struct {
 
 // QueryResponseBody is the query response body
 type QueryResponseBody struct {
-	NumFound  int        `json:"numFound,omitempty"`
-	Start     int        `json:"start,omitempty"`
-	MaxScore  float64    `json:"maxScore,omitempty"`
-	Documents []Document `json:"docs,omitempty"`
+	NumFound  int     `json:"numFound,omitempty"`
+	Start     int     `json:"start,omitempty"`
+	MaxScore  float64 `json:"maxScore,omitempty"`
+	Documents []M     `json:"docs,omitempty"`
 }
 
 // SuggestResponse is the suggester response

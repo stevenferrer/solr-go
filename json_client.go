@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -35,23 +36,20 @@ func (c *JSONClient) WithHTTPClient(httpClient *http.Client) *JSONClient {
 }
 
 // Query is used for querying documents
-func (c *JSONClient) Query(
-	ctx context.Context,
-	collection string,
-	q *Query,
-) (*QueryResponse, error) {
-	urll, err := url.Parse(fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection))
+func (c *JSONClient) Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error) {
+	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, errors.Wrap(err, "build request url")
 	}
 
-	b, err := q.BuildJSON()
+	b, err := query.BuildJSON()
 	if err != nil {
 		return nil, errors.Wrap(err, "build query body")
 	}
 
 	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, urll.String(), bytes.NewReader(b))
+		http.MethodPost, theURL.String(), bytes.NewReader(b))
 	if err != nil {
 		return nil, errors.Wrap(err, "new http request")
 	}
@@ -77,27 +75,19 @@ func (c *JSONClient) Query(
 }
 
 // Update is used for updating/indexing documents
-func (c *JSONClient) Update(
-	ctx context.Context,
-	collection string,
-	documents ...Document,
-) (*UpdateResponse, error) {
-	urll, err := url.Parse(fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection))
+func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error) {
+	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, errors.Wrap(err, "build request url")
 	}
 
-	b, err := json.Marshal(documents)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshal documents")
-	}
-
 	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, urll.String(), bytes.NewReader(b))
+		http.MethodPost, theURL.String(), body)
 	if err != nil {
 		return nil, errors.Wrap(err, "new http request")
 	}
-	httpReq.Header.Add("Content-Type", "application/json")
+	httpReq.Header.Add("Content-Type", ct.String())
 
 	var httpResp *http.Response
 	httpResp, err = c.httpClient.Do(httpReq)
@@ -120,17 +110,18 @@ func (c *JSONClient) Update(
 
 // Commit commits the last update
 func (c *JSONClient) Commit(ctx context.Context, collection string) error {
-	urll, err := url.Parse(fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection))
+	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
 		return errors.Wrap(err, "build request url")
 	}
 
-	q := urll.Query()
+	q := theURL.Query()
 	q.Add("commit", "true")
-	urll.RawQuery = q.Encode()
+	theURL.RawQuery = q.Encode()
 
 	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodGet, urll.String(), nil)
+		http.MethodGet, theURL.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "new http request")
 	}
@@ -141,14 +132,14 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 		return errors.Wrap(err, "send http request")
 	}
 
-	var resp UpdateResponse
-	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	var res UpdateResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&res)
 	if err != nil {
 		return errors.Wrap(err, "decode response body")
 	}
 
 	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return res.Error
 	}
 
 	return nil
@@ -242,14 +233,14 @@ func (c *JSONClient) commonRequest(
 		return errors.Wrap(err, "send http request")
 	}
 
-	var resp BaseResponse
-	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	var res BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&res)
 	if err != nil {
 		return errors.Wrap(err, "decode response body")
 	}
 
 	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return res.Error
 	}
 
 	return nil
@@ -307,7 +298,8 @@ func (c *JSONClient) DeleteComponent(ctx context.Context, collection string, com
 
 // Suggest queries the suggest endpoint
 func (c *JSONClient) Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error) {
-	theURL, err := url.Parse(fmt.Sprintf("%s/solr/%s/%s", c.baseURL, collection, params.endpoint))
+	urlStr := fmt.Sprintf("%s/solr/%s/%s", c.baseURL, collection, params.endpoint)
+	theURL, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, errors.Wrap(err, "parse url")
 	}
@@ -326,15 +318,15 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 		return nil, errors.Wrap(err, "send http request")
 	}
 
-	var resp SuggestResponse
-	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	var res SuggestResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&res)
 	if err != nil {
 		return nil, errors.Wrap(err, "decode response")
 	}
 
 	if httpResp.StatusCode > http.StatusOK {
-		return nil, resp.Error
+		return nil, res.Error
 	}
 
-	return &resp, nil
+	return &res, nil
 }
