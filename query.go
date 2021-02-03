@@ -22,11 +22,11 @@ type Query struct {
 	responseWriter        string // wt
 
 	// supported params in json request api
-	sort   string
-	offset int    // start
-	limit  int    // rows
-	filter string // fq
-	fields string // fl
+	sort    string
+	offset  int      // start
+	limit   int      // rows
+	filters []string // fq
+	fields  []string // fl
 
 	// query parser
 	// https://lucene.apache.org/solr/guide/8_7/query-syntax-and-parsing.html
@@ -49,12 +49,7 @@ func NewQuery() *Query {
 
 // BuildJSON builds the query to JSON
 func (q *Query) BuildJSON() ([]byte, error) {
-	qq, err := q.qp.BuildParser()
-	if err != nil {
-		return nil, errors.Wrap(err, "build parser")
-	}
-
-	qm := M{"query": qq}
+	qm := M{"query": q.qp.BuildParser()}
 
 	if q.queries != nil {
 		qm["queries"] = q.queries
@@ -72,11 +67,11 @@ func (q *Query) BuildJSON() ([]byte, error) {
 		qm["limit"] = q.limit
 	}
 
-	if q.filter != "" {
-		qm["filter"] = q.filter
+	if len(q.filters) > 0 {
+		qm["filter"] = q.filters
 	}
 
-	if q.fields != "" {
+	if len(q.fields) != 0 {
 		qm["fields"] = q.fields
 	}
 
@@ -115,14 +110,14 @@ func (q *Query) Limit(limit int) *Query {
 	return q
 }
 
-// Filter sets the filter param
-func (q *Query) Filter(filter string) *Query {
-	q.filter = filter
+// Filters sets the filter param
+func (q *Query) Filters(filters ...string) *Query {
+	q.filters = filters
 	return q
 }
 
 // Fields sets the fields param
-func (q *Query) Fields(fields string) *Query {
+func (q *Query) Fields(fields ...string) *Query {
 	q.fields = fields
 	return q
 }

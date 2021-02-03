@@ -3,8 +3,9 @@ package solr_test
 import (
 	"testing"
 
-	"github.com/sf9v/solr-go"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/sf9v/solr-go"
 )
 
 func TestSuggesterParams(t *testing.T) {

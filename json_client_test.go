@@ -31,21 +31,20 @@ func TestJSONClient(t *testing.T) {
 		})
 
 	t.Run("query", func(t *testing.T) {
-		mockBody := `{"query":"{!dismax}apple pie"}`
+		mockBody := `{"query":"{!dismax v='apple pie'}"}`
 		httpmock.RegisterResponder(
 			http.MethodPost,
 			baseURL+"/solr/"+collection+"/query",
 			newResponder(mockBody, solr.M{}),
 		)
 
-		q := solr.NewQuery().QueryParser(
-			solr.NewDisMaxQueryParser("apple pie"))
+		q := solr.NewQuery().QueryParser(solr.NewDisMaxQueryParser().Query("'apple pie'"))
 
 		_, err := client.Query(ctx, collection, q)
 		assert.NoError(t, err)
 	})
 
-	t.Run("index", func(t *testing.T) {
+	t.Run("update and commit", func(t *testing.T) {
 		mockBody := `[{"id":1,"name":"product 1"},{"id":2,"name":"product 2"},{"id":3,"name":"product 3"}]`
 		httpmock.RegisterResponder(
 			http.MethodPost,

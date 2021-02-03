@@ -32,13 +32,15 @@ type TermsFacet struct {
 	prelimSort  string
 
 	facet M
+
+	domain M
 }
 
 var _ Faceter = (*TermsFacet)(nil)
 
 // NewTermsFacet returns a new terms facet
 func NewTermsFacet(name string) *TermsFacet {
-	return &TermsFacet{name: name, facet: M{}}
+	return &TermsFacet{name: name, facet: M{}, domain: M{}}
 }
 
 // BuildFacet builds the facet
@@ -63,6 +65,10 @@ func (f *TermsFacet) BuildFacet() M {
 
 	if len(f.facet) > 0 {
 		m["facet"] = f.facet
+	}
+
+	if len(f.domain) > 0 {
+		m["domain"] = f.domain
 	}
 
 	return m
@@ -92,15 +98,24 @@ func (f *TermsFacet) Sort(sort string) *TermsFacet {
 	return f
 }
 
-// AddFacet adds a nested facet
-func (f *TermsFacet) AddFacet(facet Faceter) *TermsFacet {
-	f.facet[facet.Name()] = facet.BuildFacet()
+// AddFacets adds nested facets
+func (f *TermsFacet) AddFacets(facets ...Faceter) *TermsFacet {
+	for _, facet := range facets {
+		f.facet[facet.Name()] = facet.BuildFacet()
+	}
+
 	return f
 }
 
 // AddToFacet adds a key-value pair to the facet map
 func (f *TermsFacet) AddToFacet(key string, value interface{}) *TermsFacet {
 	f.facet[key] = value
+	return f
+}
+
+// AddToDomain adds a key-value pair to the domain map
+func (f *TermsFacet) AddToDomain(key string, value interface{}) *TermsFacet {
+	f.domain[key] = value
 	return f
 }
 

@@ -1,2 +1,2 @@
-// Package solr is a collection of tools for interacting with Apache Solr
+// Package solr is a solr client for Go
 package solr
