@@ -1,10 +1,14 @@
 PODMAN ?= "podman"
 SOLR ?="solr-go" 
-COLLECTION ?= "gettingstarted"
+COLLECTION ?= "searchengines"
 
 .PHONY: unit-test
 unit-test:
 	go test -v -cover -race
+
+.PHONY: integration-test
+integration-test:
+	go test -tags integration -v -cover -race
 
 .PHONY: solr
 solr: stop-solr
@@ -12,4 +16,4 @@ solr: stop-solr
 
 .PHONY: stop-solr
 stop-solr:
-	$(PODMAN) rm -f $(SOLR_INST) || true
+	$(PODMAN) rm -f $(SOLR) || true

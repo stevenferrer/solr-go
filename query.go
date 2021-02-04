@@ -1,11 +1,5 @@
 package solr
 
-import (
-	"encoding/json"
-
-	"github.com/pkg/errors"
-)
-
 // Query is a query
 type Query struct {
 	// common query params
@@ -47,8 +41,8 @@ func NewQuery() *Query {
 	return &Query{}
 }
 
-// BuildJSON builds the query to JSON
-func (q *Query) BuildJSON() ([]byte, error) {
+// BuildQuery builds the query
+func (q *Query) BuildQuery() M {
 	qm := M{"query": q.qp.BuildParser()}
 
 	if q.queries != nil {
@@ -84,12 +78,7 @@ func (q *Query) BuildJSON() ([]byte, error) {
 		qm["facet"] = facets
 	}
 
-	b, err := json.Marshal(qm)
-	if err != nil {
-		return nil, errors.Wrap(err, "json marshal query")
-	}
-
-	return b, nil
+	return qm
 }
 
 // Sort sets the sort param

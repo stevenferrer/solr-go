@@ -12,14 +12,10 @@ const (
 
 // String implements Stringer
 func (ct ContentType) String() string {
-	switch ct {
-	case JSON:
-		return "application/json"
-	case XML:
-		return "application/xml"
-	}
-
-	return "text/plain"
+	return [...]string{
+		"application/json",
+		"application/xml",
+	}[ct]
 }
 
 // M is an alias for map of interface

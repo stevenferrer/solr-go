@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -43,22 +44,15 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 		return nil, errors.Wrap(err, "build request url")
 	}
 
-	b, err := query.BuildJSON()
+	buf := &bytes.Buffer{}
+	err = json.NewEncoder(buf).Encode(query.BuildQuery())
 	if err != nil {
-		return nil, errors.Wrap(err, "build query body")
+		return nil, errors.Wrap(err, "encode query")
 	}
 
-	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, theURL.String(), bytes.NewReader(b))
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), buf)
 	if err != nil {
-		return nil, errors.Wrap(err, "new http request")
-	}
-	httpReq.Header.Add("Content-Type", "application/json")
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return nil, errors.Wrap(err, "send http request")
+		return nil, errors.Wrap(err, "send request")
 	}
 
 	var resp QueryResponse
@@ -82,17 +76,9 @@ func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentTy
 		return nil, errors.Wrap(err, "build request url")
 	}
 
-	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, theURL.String(), body)
+	httpResp, err := c.sendRequestWithContentType(ctx, http.MethodPost, theURL.String(), ct.String(), body)
 	if err != nil {
-		return nil, errors.Wrap(err, "new http request")
-	}
-	httpReq.Header.Add("Content-Type", ct.String())
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return nil, errors.Wrap(err, "send http request")
+		return nil, errors.Wrap(err, "send request")
 	}
 
 	var resp UpdateResponse
@@ -120,16 +106,9 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	q.Add("commit", "true")
 	theURL.RawQuery = q.Encode()
 
-	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodGet, theURL.String(), nil)
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "new http request")
-	}
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return errors.Wrap(err, "send http request")
+		return errors.Wrap(err, "send request")
 	}
 
 	var res UpdateResponse
@@ -202,10 +181,10 @@ func (c *JSONClient) DeleteCopyFields(ctx context.Context, collection string, co
 
 func (c *JSONClient) modifySchema(ctx context.Context, collection, command string, body interface{}) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/schema", c.baseURL, collection)
-	return c.commonRequest(ctx, urlStr, M{command: body})
+	return c.postJSON(ctx, urlStr, M{command: body})
 }
 
-func (c *JSONClient) commonRequest(
+func (c *JSONClient) postJSON(
 	ctx context.Context,
 	urlStr string,
 	reqBody interface{},
@@ -215,22 +194,15 @@ func (c *JSONClient) commonRequest(
 		errors.Wrap(err, "parse request url")
 	}
 
-	b, err := json.Marshal(reqBody)
+	buf := &bytes.Buffer{}
+	err = json.NewEncoder(buf).Encode(reqBody)
 	if err != nil {
-		return errors.Wrap(err, "marshal request")
+		return errors.Wrap(err, "encode request body")
 	}
 
-	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodPost, theURL.String(), bytes.NewReader(b))
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), buf)
 	if err != nil {
-		return errors.Wrap(err, "new http request")
-	}
-	httpReq.Header.Add("Content-Type", "application/json")
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return errors.Wrap(err, "send http request")
+		return errors.Wrap(err, "send request")
 	}
 
 	var res BaseResponse
@@ -254,46 +226,63 @@ func (c *JSONClient) SetProperties(ctx context.Context, collection string, prope
 		m[prop.Name] = prop.Value
 	}
 
-	return c.commonRequest(ctx, urlStr, M{"set-property": m})
+	return c.postJSON(ctx, urlStr, M{"set-property": m})
 }
 
 // UnsetProperty unsets a common config property
 func (c *JSONClient) UnsetProperty(ctx context.Context, collection string, property CommonProperty) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	return c.commonRequest(ctx, urlStr, M{"unset-property": property.Name})
+	return c.postJSON(ctx, urlStr, M{"unset-property": property.Name})
 }
 
-// AddComponent adds a component
-func (c *JSONClient) AddComponent(ctx context.Context, collection string, component Component) error {
+// AddComponents adds a components
+func (c *JSONClient) AddComponents(ctx context.Context, collection string, components ...*Component) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	command := "add-" + component.Type.String()
-
-	m := M{"name": component.Name, "class": component.Class}
-	for k, v := range component.Values {
-		m[k] = v
+	theURL, err := url.Parse(urlStr)
+	if err != nil {
+		return errors.Wrap(err, "parse url")
 	}
 
-	return c.commonRequest(ctx, urlStr, M{command: m})
-}
+	commands := []string{}
+	for _, comp := range components {
+		b, err := json.Marshal(comp.BuildComponent())
+		if err != nil {
+			return errors.Wrap(err, "marshal component config")
+		}
 
-// UpdateComponent updates a component
-func (c *JSONClient) UpdateComponent(ctx context.Context, collection string, component Component) error {
-	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	command := "update-" + component.Type.String()
-
-	m := M{"name": component.Name, "class": component.Class}
-	for k, v := range component.Values {
-		m[k] = v
+		command := fmt.Sprintf("%q:%s", "add-"+comp.ct.String(), string(b))
+		commands = append(commands, command)
 	}
 
-	return c.commonRequest(ctx, urlStr, M{command: m})
+	reqBody := "{" + strings.Join(commands, ",") + "}"
+
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), strings.NewReader(reqBody))
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+
 }
 
-// DeleteComponent deletes a component
-func (c *JSONClient) DeleteComponent(ctx context.Context, collection string, component Component) error {
-	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	command := "delete-" + component.Type.String()
-	return c.commonRequest(ctx, urlStr, M{command: component.Name})
+// UpdateComponents updates a components
+func (c *JSONClient) UpdateComponents(ctx context.Context, collection string, components ...*Component) error {
+	return errors.New("not implemented")
+}
+
+// DeleteComponents deletes a components
+func (c *JSONClient) DeleteComponents(ctx context.Context, collection string, components ...*Component) error {
+	return errors.New("not implemented")
 }
 
 // Suggest queries the suggest endpoint
@@ -305,17 +294,9 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	}
 	theURL.RawQuery = params.BuildParams()
 
-	httpReq, err := http.NewRequestWithContext(ctx,
-		http.MethodGet, theURL.String(), nil)
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "new http request")
-	}
-	httpReq.Header.Add("content-type", "application/json")
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return nil, errors.Wrap(err, "send http request")
+		return nil, errors.Wrap(err, "send request")
 	}
 
 	var res SuggestResponse
@@ -329,4 +310,25 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	}
 
 	return &res, nil
+}
+
+func (c *JSONClient) sendRequest(ctx context.Context, httpMethod, urlStr string, body io.Reader) (*http.Response, error) {
+	return c.sendRequestWithContentType(ctx, httpMethod, urlStr, JSON.String(), body)
+}
+
+func (c *JSONClient) sendRequestWithContentType(ctx context.Context, httpMethod, urlStr, contentType string, body io.Reader) (*http.Response, error) {
+	httpReq, err := http.NewRequestWithContext(ctx,
+		httpMethod, urlStr, body)
+	if err != nil {
+		return nil, errors.Wrap(err, "new http request")
+	}
+	httpReq.Header.Add("Content-Type", contentType)
+
+	var httpResp *http.Response
+	httpResp, err = c.httpClient.Do(httpReq)
+	if err != nil {
+		return nil, errors.Wrap(err, "send http request")
+	}
+
+	return httpResp, nil
 }

@@ -26,9 +26,9 @@ type Client interface {
 
 	SetProperties(ctx context.Context, collection string, properties ...CommonProperty) error
 	UnsetProperty(ctx context.Context, collection string, property CommonProperty) error
-	AddComponent(ctx context.Context, collection string, component Component) error
-	UpdateComponent(ctx context.Context, collection string, component Component) error
-	DeleteComponent(ctx context.Context, collection string, component Component) error
+	AddComponents(ctx context.Context, collection string, component ...*Component) error
+	UpdateComponents(ctx context.Context, collection string, component ...*Component) error
+	DeleteComponents(ctx context.Context, collection string, component ...*Component) error
 
 	Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error)
 }

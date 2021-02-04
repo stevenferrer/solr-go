@@ -18,7 +18,7 @@ import (
 	"github.com/sf9v/solr-go"
 )
 
-func TestJSONClient(t *testing.T) {
+func TestJSONClientMock(t *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -66,23 +66,22 @@ func TestJSONClient(t *testing.T) {
 			},
 		)
 
-		docs := []solr.M{
-			{
-				"id":   1,
-				"name": "product 1",
-			},
-			{
-				"id":   2,
-				"name": "product 2",
-			},
-			{
-				"id":   3,
-				"name": "product 3",
-			},
-		}
-
 		buf := &bytes.Buffer{}
-		err := json.NewEncoder(buf).Encode(docs)
+		err := json.NewEncoder(buf).
+			Encode([]solr.M{
+				{
+					"id":   1,
+					"name": "product 1",
+				},
+				{
+					"id":   2,
+					"name": "product 2",
+				},
+				{
+					"id":   3,
+					"name": "product 3",
+				},
+			})
 		assert.NoError(t, err)
 
 		_, err = client.Update(ctx, collection, solr.JSON, buf)
@@ -381,59 +380,52 @@ func TestJSONClient(t *testing.T) {
 			assert.NoError(t, err)
 		})
 
-		t.Run("add component", func(t *testing.T) {
-			mockBody := `{"add-requesthandler":{"class":"solr.DumpRequestHandler","defaults":{"a":"b","rows":10,"x":"y"},"name":"/mypath","useParams":"x"}}`
+		t.Run("add components", func(t *testing.T) {
+			mockBody := `{"add-searchcomponent":{"class":"solr.SuggestComponent","name":"suggest","suggester":{"dictionaryImpl":"DocumentDictionaryFactory","field":"suggest","lookupImpl":"AnalyzingInfixLookupFactory","name":"default","suggestAnalyzerFieldType":"suggest_text"}},"add-requesthandler":{"class":"solr.SearchHandler","components":["suggest"],"defaults":{"suggest":true,"suggest.count":10,"suggest.dictionary":"default"},"name":"/suggest","startup":"lazy"}}`
 			httpmock.RegisterResponder(
 				http.MethodPost,
 				baseURL+"/solr/"+collection+"/config",
 				newResponder(mockBody, solr.M{}),
 			)
 
-			err := client.AddComponent(ctx, collection, solr.Component{
-				Type:  solr.RequestHandler,
-				Name:  "/mypath",
-				Class: "solr.DumpRequestHandler",
-				Values: solr.M{
-					"defaults":  solr.M{"x": "y", "a": "b", "rows": 10},
-					"useParams": "x",
-				},
-			})
+			suggestComponent := solr.NewComponent(solr.SearchComponent).
+				Name("suggest").
+				Class("solr.SuggestComponent").
+				Config(solr.M{
+					"suggester": solr.M{
+						"name":                     "default",
+						"lookupImpl":               "AnalyzingInfixLookupFactory",
+						"dictionaryImpl":           "DocumentDictionaryFactory",
+						"field":                    "suggest",
+						"suggestAnalyzerFieldType": "suggest_text",
+					},
+				})
+
+			suggestHandler := solr.NewComponent(solr.RequestHandler).
+				Name("/suggest").
+				Class("solr.SearchHandler").
+				Config(solr.M{
+					"startup": "lazy",
+					"defaults": solr.M{
+						"suggest":            true,
+						"suggest.count":      10,
+						"suggest.dictionary": "default",
+					},
+					"components": []string{"suggest"},
+				})
+
+			err := client.AddComponents(ctx, collection, suggestComponent, suggestHandler)
 			assert.NoError(t, err)
 		})
 
-		t.Run("update component", func(t *testing.T) {
-			mockBody := `{"update-requesthandler":{"class":"solr.DumpRequestHandler","defaults":{"rows":"20","x":"new value for x"},"name":"/mypath","useParams":"x"}}`
-			httpmock.RegisterResponder(
-				http.MethodPost,
-				baseURL+"/solr/"+collection+"/config",
-				newResponder(mockBody, solr.M{}),
-			)
-
-			err := client.UpdateComponent(ctx, collection, solr.Component{
-				Type:  solr.RequestHandler,
-				Name:  "/mypath",
-				Class: "solr.DumpRequestHandler",
-				Values: solr.M{
-					"defaults":  solr.M{"x": "new value for x", "rows": "20"},
-					"useParams": "x",
-				},
-			})
-			assert.NoError(t, err)
+		t.Run("update components", func(t *testing.T) {
+			err := client.UpdateComponents(ctx, collection)
+			assert.Error(t, err)
 		})
 
-		t.Run("delete component", func(t *testing.T) {
-			mockBody := `{"delete-requesthandler":"/mypath"}`
-			httpmock.RegisterResponder(
-				http.MethodPost,
-				baseURL+"/solr/"+collection+"/config",
-				newResponder(mockBody, solr.M{}),
-			)
-
-			err := client.DeleteComponent(ctx, collection, solr.Component{
-				Type: solr.RequestHandler,
-				Name: "/mypath",
-			})
-			assert.NoError(t, err)
+		t.Run("delete components", func(t *testing.T) {
+			err := client.DeleteComponents(ctx, collection)
+			assert.Error(t, err)
 		})
 	})
 
