@@ -38,7 +38,7 @@ type TermsFacet struct {
 
 var _ Faceter = (*TermsFacet)(nil)
 
-// NewTermsFacet returns a new terms facet
+// NewTermsFacet returns a new TermsFacet
 func NewTermsFacet(name string) *TermsFacet {
 	return &TermsFacet{name: name, facet: M{}, domain: M{}}
 }
@@ -133,7 +133,7 @@ type QueryFacet struct {
 
 var _ Faceter = (*QueryFacet)(nil)
 
-// NewQueryFacet retuns a new query facet
+// NewQueryFacet retunrs a new QueryFacet
 func NewQueryFacet(name string) *QueryFacet {
 	return &QueryFacet{name: name, facet: M{}}
 }

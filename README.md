@@ -8,6 +8,8 @@ A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
 ## Example
 
+Please see [integration test](integration_test.go) for more examples.
+
 ```go
 // Create a client
 baseURL := "solr.example.com"

@@ -13,7 +13,7 @@ type CollectionParams struct {
 	requestID         string
 }
 
-// NewCollectionParams returns a new Collection
+// NewCollectionParams returns a new CollectionParams
 func NewCollectionParams() *CollectionParams {
 	return &CollectionParams{}
 }
