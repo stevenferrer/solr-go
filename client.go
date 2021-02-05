@@ -1,70 +1,37 @@
 package solr
 
 import (
-	"net/http"
-
-	"github.com/sf9v/solr-go/config"
-	"github.com/sf9v/solr-go/index"
-	"github.com/sf9v/solr-go/query"
-	"github.com/sf9v/solr-go/schema"
-	"github.com/sf9v/solr-go/suggester"
+	"context"
+	"io"
 )
 
-// Client is a unified solr client
+// Client is an a client interface for interacting with Solr
 type Client interface {
-	Index() index.Client
-	Query() query.Client
-	Schema() schema.Client
-	Suggester() suggester.Client
-	Config() config.Client
-}
+	CreateCollection(ctx context.Context, params *CollectionParams) error
+	DeleteCollection(ctx context.Context, params *CollectionParams) error
 
-type client struct {
-	indexClient     index.Client
-	queryClient     query.Client
-	schemaClient    schema.Client
-	suggesterClient suggester.Client
-	configClient    config.Client
-}
+	Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error)
 
-// NewClient is a factory for solr unified client
-func NewClient(host string, port int) Client {
-	return &client{
-		indexClient:     index.NewClient(host, port),
-		queryClient:     query.NewClient(host, port),
-		schemaClient:    schema.NewClient(host, port),
-		suggesterClient: suggester.NewClient(host, port),
-		configClient:    config.NewClient(host, port),
-	}
-}
+	Update(ctx context.Context, collection string, contentType ContentType, body io.Reader) (*UpdateResponse, error)
+	Commit(ctx context.Context, collection string) error
 
-// NewCustomClient is a factory for solr unified client with custom options
-func NewCustomClient(host string, port int, httpClient *http.Client) Client {
-	return &client{
-		indexClient:     index.NewCustomClient(host, port, httpClient),
-		queryClient:     query.NewCustomClient(host, port, httpClient),
-		schemaClient:    schema.NewCustomClient(host, port, httpClient),
-		suggesterClient: suggester.NewCustomClient(host, port, "suggest", httpClient),
-		configClient:    config.NewCustomClient(host, port, httpClient),
-	}
-}
+	AddFields(ctx context.Context, collection string, fields ...Field) error
+	DeleteFields(ctx context.Context, collection string, fields ...Field) error
+	ReplaceFields(ctx context.Context, collection string, fields ...Field) error
+	AddDynamicFields(ctx context.Context, collection string, fields ...Field) error
+	DeleteDynamicFields(ctx context.Context, collection string, fields ...Field) error
+	ReplaceDynamicFields(ctx context.Context, collection string, fields ...Field) error
+	AddFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error
+	DeleteFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error
+	ReplaceFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error
+	AddCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error
+	DeleteCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error
 
-func (c *client) Index() index.Client {
-	return c.indexClient
-}
+	SetProperties(ctx context.Context, collection string, properties ...CommonProperty) error
+	UnsetProperty(ctx context.Context, collection string, property CommonProperty) error
+	AddComponents(ctx context.Context, collection string, component ...*Component) error
+	UpdateComponents(ctx context.Context, collection string, component ...*Component) error
+	DeleteComponents(ctx context.Context, collection string, component ...*Component) error
 
-func (c *client) Query() query.Client {
-	return c.queryClient
-}
-
-func (c *client) Schema() schema.Client {
-	return c.schemaClient
-}
-
-func (c *client) Suggester() suggester.Client {
-	return c.suggesterClient
-}
-
-func (c *client) Config() config.Client {
-	return c.configClient
+	Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error)
 }

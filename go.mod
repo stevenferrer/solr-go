@@ -1,9 +1,9 @@
 module github.com/sf9v/solr-go
 
-go 1.14
+go 1.15
 
 require (
-	github.com/dnaeon/go-vcr v1.1.0
+	github.com/jarcoal/httpmock v1.0.7
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 )

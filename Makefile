@@ -1,10 +1,20 @@
-SOLR_INST ?="solr-go-test" 
-COLLECTION ?= "gettingstarted"
+PODMAN ?= "podman"
+SOLR ?="solr-go" 
 
-.PHONY: solr
-solr: stop-solr
-	docker run -d -p 8983:8983 --name $(SOLR_INST) solr:latest solr-precreate $(COLLECTION)
+.PHONY: unit-test
+unit-test:
+	go test -v -cover -race
+
+.PHONY: integration-test
+integration-test:
+	go test -tags integration -v -cover -race
+
+.PHONY: start-solr
+start-solr: stop-solr
+	$(PODMAN) run -d -p 8983:8983 --name $(SOLR) solr:8.7 solr -c -f
+	$(PODMAN) exec -it $(SOLR) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
 
 .PHONY: stop-solr
 stop-solr:
-	docker rm -f $(SOLR_INST) || true
+	$(PODMAN) rm -f $(SOLR) || true
+
