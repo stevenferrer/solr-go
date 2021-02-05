@@ -6,14 +6,14 @@ type Query struct {
 	// Refer to https://lucene.apache.org/solr/guide/8_7/common-query-parameters.html
 
 	// standard params in v1 api
-	debug                 string
-	explainOther          string
-	timeAllowed           int
-	segmentTerminateEarly bool
-	omitHeader            bool
-	echoParams            string
-	minExactCount         int
-	responseWriter        string // wt
+	// debug                 string
+	// explainOther          string
+	// timeAllowed           int
+	// segmentTerminateEarly bool
+	// omitHeader            bool
+	// echoParams            string
+	// minExactCount         int
+	// responseWriter        string // wt
 
 	// supported params in json request api
 	sort    string

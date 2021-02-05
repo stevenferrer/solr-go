@@ -274,7 +274,7 @@ func (c *JSONClient) postJSON(
 ) error {
 	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		errors.Wrap(err, "parse url")
+		return errors.Wrap(err, "parse url")
 	}
 
 	buf := &bytes.Buffer{}

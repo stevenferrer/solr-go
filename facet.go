@@ -20,16 +20,16 @@ type TermsFacet struct {
 	limit  int
 	sort   string
 
-	overRequest int
-	refine      bool
-	overRefine  int
-	minCount    int
-	missing     bool
-	numBuckets  bool
-	allBuckets  bool
-	prefix      string
-	method      string
-	prelimSort  string
+	// overRequest int
+	// refine      bool
+	// overRefine  int
+	// minCount    int
+	// missing     bool
+	// numBuckets  bool
+	// allBuckets  bool
+	// prefix      string
+	// method      string
+	// prelimSort  string
 
 	facet M
 
@@ -175,15 +175,15 @@ func (f *QueryFacet) AddToFacet(key string, value interface{}) *QueryFacet {
 	return f
 }
 
-// RangeFacet is a range facet
-type RangeFacet struct {
-	field   string
-	start   int
-	end     int
-	gap     int
-	hardend bool
-	other   string
-	include string
-	ranges  string
-	facet   M
-}
+// // RangeFacet is a range facet
+// type RangeFacet struct {
+// 	field   string
+// 	start   int
+// 	end     int
+// 	gap     int
+// 	hardend bool
+// 	other   string
+// 	include string
+// 	ranges  string
+// 	facet   M
+// }
