@@ -46,10 +46,13 @@ func (sp *SuggestParams) BuildParams() string {
 	params := url.Values{}
 
 	params.Add("suggest", "true")
-	params.Add("suggest.q", sp.query)
 
 	for _, dict := range sp.dicts {
 		params.Add("suggest.dictionary", dict)
+	}
+
+	if sp.query != "" {
+		params.Add("suggest.q", sp.query)
 	}
 
 	if sp.count > 0 {

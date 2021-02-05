@@ -8,8 +8,9 @@ type BaseResponse struct {
 
 // ResponseHeader is a response header
 type ResponseHeader struct {
-	Status int `json:"status"`
-	QTime  int `json:"QTime"`
+	ZKConnected bool `json:"zkConnected"`
+	Status      int  `json:"status"`
+	QTime       int  `json:"QTime"`
 }
 
 // Error is a response error

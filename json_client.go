@@ -36,12 +36,64 @@ func (c *JSONClient) WithHTTPClient(httpClient *http.Client) *JSONClient {
 	return c
 }
 
+// CreateCollection creates a collection
+func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&wt=json&"+params.BuildParam(), c.baseURL)
+	theURL, err := url.Parse(urlStr)
+	if err != nil {
+		return errors.Wrap(err, "parse url")
+	}
+
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
+// DeleteCollection deletes a collection
+func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&wt=json&"+params.BuildParam(), c.baseURL)
+	theURL, err := url.Parse(urlStr)
+	if err != nil {
+		return errors.Wrap(err, "parse url")
+	}
+
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
 // Query is used for querying documents
 func (c *JSONClient) Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
 	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		return nil, errors.Wrap(err, "build request url")
+		return nil, errors.Wrap(err, "parse url")
 	}
 
 	buf := &bytes.Buffer{}
@@ -73,7 +125,7 @@ func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentTy
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
 	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		return nil, errors.Wrap(err, "build request url")
+		return nil, errors.Wrap(err, "parse url")
 	}
 
 	httpResp, err := c.sendRequestWithContentType(ctx, http.MethodPost, theURL.String(), ct.String(), body)
@@ -99,7 +151,7 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
 	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		return errors.Wrap(err, "build request url")
+		return errors.Wrap(err, "parse url")
 	}
 
 	q := theURL.Query()
@@ -191,7 +243,7 @@ func (c *JSONClient) postJSON(
 ) error {
 	theURL, err := url.Parse(urlStr)
 	if err != nil {
-		errors.Wrap(err, "parse request url")
+		errors.Wrap(err, "parse url")
 	}
 
 	buf := &bytes.Buffer{}

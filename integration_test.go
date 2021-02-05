@@ -8,9 +8,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/sf9v/solr-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/sf9v/solr-go"
 )
 
 func TestJSONClient(t *testing.T) {
@@ -19,8 +20,14 @@ func TestJSONClient(t *testing.T) {
 	client := solr.NewJSONClient(baseURL)
 	ctx := context.Background()
 
-	// 1. add fields
-	{
+	t.Run("create collection", func(t *testing.T) {
+		collection := solr.NewCollectionParams().Name(collection).
+			NumShards(1).ReplicationFactor(1)
+		err := client.CreateCollection(ctx, collection)
+		require.NoError(t, err)
+	})
+
+	t.Run("initialize schema", func(t *testing.T) {
 		suggestText := solr.FieldType{
 			Name:                 "suggest_text",
 			Class:                "solr.TextField",
@@ -91,9 +98,9 @@ func TestJSONClient(t *testing.T) {
 
 		err = client.AddCopyFields(ctx, collection, copyFields...)
 		require.NoError(t, err)
-	}
-	// 2. add suggester component
-	{
+	})
+
+	t.Run("add suggester component", func(t *testing.T) {
 		suggestComponent := solr.NewComponent(solr.SearchComponent).
 			Name("suggest").
 			Class("solr.SuggestComponent").
@@ -122,9 +129,9 @@ func TestJSONClient(t *testing.T) {
 
 		err := client.AddComponents(ctx, collection, suggestComponent, suggestHandler)
 		require.NoError(t, err)
-	}
-	// 3. index
-	{
+	})
+
+	t.Run("index data", func(t *testing.T) {
 		docs := []solr.M{
 			{
 				"id":   1,
@@ -152,31 +159,32 @@ func TestJSONClient(t *testing.T) {
 
 		err = client.Commit(ctx, collection)
 		require.NoError(t, err)
+	})
 
-		// send a request to build suggestions
-		suggestParams := solr.NewSuggesterParams("suggest").Build()
-		_, err = client.Suggest(ctx, collection, suggestParams)
-		require.NoError(t, err)
-	}
-	// 4. query
-	{
+	t.Run("query all", func(t *testing.T) {
 		queryParser := solr.NewStandardQueryParser().Query("*:*")
 		query := solr.NewQuery().QueryParser(queryParser)
 		queryResp, err := client.Query(ctx, collection, query)
 		require.NoError(t, err)
 		assert.NotNil(t, queryResp)
 		assert.Len(t, queryResp.Response.Documents, 4)
-	}
+	})
 
-	// 5. query suggest endpoint
-	{
+	t.Run("query suggester", func(t *testing.T) {
 		queryStr := "solr"
-		suggestParams := solr.NewSuggesterParams("suggest").Query(queryStr)
+		suggestParams := solr.NewSuggesterParams("suggest").
+			Build().Query(queryStr)
 		suggestResp, err := client.Suggest(ctx, collection, suggestParams)
 		require.NoError(t, err)
 
 		suggest := *suggestResp.Suggest
 		termBody := suggest["default"][queryStr]
 		assert.Len(t, termBody.Suggestions, 1)
-	}
+	})
+
+	t.Run("delete the collection", func(t *testing.T) {
+		collection := solr.NewCollectionParams().Name(collection)
+		err := client.DeleteCollection(ctx, collection)
+		require.NoError(t, err)
+	})
 }

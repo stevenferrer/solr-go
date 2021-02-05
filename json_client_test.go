@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/jarcoal/httpmock"
 	"github.com/pkg/errors"
@@ -26,10 +25,32 @@ func TestJSONClientMock(t *testing.T) {
 	baseURL := "https://solr.example.com"
 	collection := "products"
 
-	client := solr.NewJSONClient(baseURL).
-		WithHTTPClient(&http.Client{
-			Timeout: 10 * time.Second,
+	client := solr.NewJSONClient(baseURL)
+
+	t.Run("collections", func(t *testing.T) {
+		t.Run("create collection", func(t *testing.T) {
+			httpmock.RegisterResponder(
+				http.MethodGet,
+				baseURL+"/solr/admin/collections",
+				func(r *http.Request) (*http.Response, error) {
+					query := "action=CREATE&name=mycollection&numShards=1&replicationFactor=1&wt=json"
+					gotQuery := r.URL.Query().Encode()
+					if gotQuery != query {
+						return nil, errors.Errorf("expecting url query to be %q but got %q", query, gotQuery)
+					}
+
+					return httpmock.NewJsonResponse(http.StatusOK, solr.M{})
+				},
+			)
+
+			collection := solr.NewCollectionParams().
+				Name("mycollection").
+				NumShards(1).
+				ReplicationFactor(1)
+			err := client.CreateCollection(ctx, collection)
+			assert.NoError(t, err)
 		})
+	})
 
 	t.Run("query", func(t *testing.T) {
 		mockBody := `{"query":"{!dismax v='apple pie'}"}`

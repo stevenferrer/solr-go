@@ -5,11 +5,14 @@ import (
 	"io"
 )
 
-// Client is an abstraction of a solr client e.g. standard, json api or v2 api
+// Client is an a client interface for interacting with Solr
 type Client interface {
+	CreateCollection(ctx context.Context, params *CollectionParams) error
+	DeleteCollection(ctx context.Context, params *CollectionParams) error
+
 	Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error)
 
-	Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error)
+	Update(ctx context.Context, collection string, contentType ContentType, body io.Reader) (*UpdateResponse, error)
 	Commit(ctx context.Context, collection string) error
 
 	AddFields(ctx context.Context, collection string, fields ...Field) error
