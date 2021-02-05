@@ -20,7 +20,7 @@ jobs:
 
       - name: Setup Solr
         run: |
-          docker run -d -p 8983:8983 --name solr solr:8.7 solr -c -f
+          docker run -t -d -p 8983:8983 --name solr solr:8.7 solr -c -f
           docker exec -it solr bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
 
       - name: Tests
