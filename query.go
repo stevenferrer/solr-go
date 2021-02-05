@@ -3,9 +3,9 @@ package solr
 // Query is a query
 type Query struct {
 	// common query params
-	// https://lucene.apache.org/solr/guide/8_7/common-query-parameters.html
+	// Refer to https://lucene.apache.org/solr/guide/8_7/common-query-parameters.html
 
-	// params in standard api
+	// standard params in v1 api
 	debug                 string
 	explainOther          string
 	timeAllowed           int
@@ -23,12 +23,11 @@ type Query struct {
 	fields  []string // fl
 
 	// query parser
-	// https://lucene.apache.org/solr/guide/8_7/query-syntax-and-parsing.html
+	// Refer to https://lucene.apache.org/solr/guide/8_7/query-syntax-and-parsing.html
 	qp QueryParser
 
-	// facet query
-	// https://lucene.apache.org/solr/guide/8_7/faceting.html
-	// https://lucene.apache.org/solr/guide/8_7/json-facet-api.html
+	// facets
+	// Refer to https://lucene.apache.org/solr/guide/8_7/json-facet-api.html
 	facets []Faceter
 
 	// additional queries

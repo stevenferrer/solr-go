@@ -12,7 +12,7 @@ Please see [integration test](integration_test.go) for more examples.
 
 ```go
 // Create a client
-baseURL := "solr.example.com"
+baseURL := "http://solr.example.com"
 client := solr.NewJSONClient(baseURL)
 
 // Create a query
