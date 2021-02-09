@@ -3,11 +3,11 @@ SOLR ?="solr-go"
 
 .PHONY: unit-test
 unit-test:
-	go test -v -cover -race
+	go test -v -cover
 
 .PHONY: integration-test
 integration-test:
-	go test -tags integration -v -cover -race
+	go test -tags integration -v -cover
 
 .PHONY: start-solr
 start-solr: stop-solr

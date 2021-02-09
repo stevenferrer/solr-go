@@ -10,15 +10,13 @@ import (
 
 func TestBuildComponent(t *testing.T) {
 	got := solr.NewComponent(solr.SearchComponent).
-		Name("suggest").
-		Class("solr.SearchComponent").
+		Name("suggest").Class("solr.SearchComponent").
 		Config(solr.M{
 			"lookupImpl":               "AnalyzingInfixLookupFactory",
 			"dictionaryImpl":           "DocumentDictionaryFactory",
 			"field":                    "suggest",
 			"suggestAnalyzerFieldType": "suggext_text",
-		}).
-		BuildComponent()
+		}).BuildComponent()
 
 	expect := solr.M{
 		"name":                     "suggest",

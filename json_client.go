@@ -41,12 +41,7 @@ func (c *JSONClient) WithHTTPClient(httpClient *http.Client) *JSONClient {
 // Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#create
 func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParam(), c.baseURL)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
-
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -69,12 +64,7 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 // Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#delete
 func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParam(), c.baseURL)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
-
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -96,19 +86,14 @@ func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionPar
 //
 // Refer to https://lucene.apache.org/solr/guide/8_8/json-request-api.html
 func (c *JSONClient) Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error) {
-	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "parse url")
-	}
-
 	buf := &bytes.Buffer{}
-	err = json.NewEncoder(buf).Encode(query.BuildQuery())
+	err := json.NewEncoder(buf).Encode(query.BuildQuery())
 	if err != nil {
 		return nil, errors.Wrap(err, "encode query")
 	}
 
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), buf)
+	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, buf)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -127,17 +112,11 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 }
 
 // Update can be used to add, update, or delete a document from the index.
-// `body` is expected to contain the list of documents.
 //
 // Refer to https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html
 func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "parse url")
-	}
-
-	httpResp, err := c.sendRequestWithContentType(ctx, http.MethodPost, theURL.String(), ct.String(), body)
+	httpResp, err := c.sendRequestWithContentType(ctx, http.MethodPost, urlStr, ct.String(), body)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -157,17 +136,8 @@ func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentTy
 
 // Commit commits the last update.
 func (c *JSONClient) Commit(ctx context.Context, collection string) error {
-	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
-
-	q := theURL.Query()
-	q.Add("commit", "true")
-	theURL.RawQuery = q.Encode()
-
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	urlStr := fmt.Sprintf("%s/solr/%s/update?commit=true", c.baseURL, collection)
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -267,23 +237,14 @@ func (c *JSONClient) modifySchema(ctx context.Context, collection, command strin
 	return c.postJSON(ctx, urlStr, M{command: body})
 }
 
-func (c *JSONClient) postJSON(
-	ctx context.Context,
-	urlStr string,
-	reqBody interface{},
-) error {
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
-
+func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interface{}) error {
 	buf := &bytes.Buffer{}
-	err = json.NewEncoder(buf).Encode(reqBody)
+	err := json.NewEncoder(buf).Encode(reqBody)
 	if err != nil {
 		return errors.Wrap(err, "encode request body")
 	}
 
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), buf)
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, buf)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -326,12 +287,6 @@ func (c *JSONClient) UnsetProperty(ctx context.Context, collection string, prope
 //
 // Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-handlers-and-components
 func (c *JSONClient) AddComponents(ctx context.Context, collection string, components ...*Component) error {
-	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return errors.Wrap(err, "parse url")
-	}
-
 	commands := []string{}
 	for _, comp := range components {
 		b, err := json.Marshal(comp.BuildComponent())
@@ -345,7 +300,8 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 
 	reqBody := "{" + strings.Join(commands, ",") + "}"
 
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, theURL.String(), strings.NewReader(reqBody))
+	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
+	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, strings.NewReader(reqBody))
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -382,14 +338,8 @@ func (c *JSONClient) DeleteComponents(ctx context.Context, collection string, co
 //
 // Refer to https://lucene.apache.org/solr/guide/8_8/suggester.html#get-suggestions-with-weights
 func (c *JSONClient) Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error) {
-	urlStr := fmt.Sprintf("%s/solr/%s/%s", c.baseURL, collection, params.endpoint)
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "parse url")
-	}
-	theURL.RawQuery = params.BuildParams()
-
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, theURL.String(), nil)
+	urlStr := fmt.Sprintf("%s/solr/%s/%s?%s", c.baseURL, collection, params.endpoint, params.BuildParams())
+	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -412,8 +362,13 @@ func (c *JSONClient) sendRequest(ctx context.Context, httpMethod, urlStr string,
 }
 
 func (c *JSONClient) sendRequestWithContentType(ctx context.Context, httpMethod, urlStr, contentType string, body io.Reader) (*http.Response, error) {
+	theURL, err := url.Parse(urlStr)
+	if err != nil {
+		return nil, errors.Wrap(err, "parse url")
+	}
+
 	httpReq, err := http.NewRequestWithContext(ctx,
-		httpMethod, urlStr, body)
+		httpMethod, theURL.String(), body)
 	if err != nil {
 		return nil, errors.Wrap(err, "new http request")
 	}

@@ -6,9 +6,19 @@
 
 A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
+## Supported APIs
+
+- [Collections API](https://lucene.apache.org/solr/guide/8_8/collections-api.html)
+- [Query API](https://lucene.apache.org/solr/guide/8_8/json-request-api.html)
+  - [Facet API](https://lucene.apache.org/solr/guide/8_8/json-facet-api.html)
+- [Update API](https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
+- [Schema API](https://lucene.apache.org/solr/guide/8_8/schema-api.html)
+- [Config API](https://lucene.apache.org/solr/guide/8_8/config-api.html)
+- [Suggester API](https://lucene.apache.org/solr/guide/8_8/suggester.html)
+
 ## Example
 
-Please see [integration test](integration_test.go) for more examples.
+See [integration test](integration_test.go) for more examples.
 
 ```go
 // Create a client
@@ -59,7 +69,7 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 
 ## Contributing
 
-All contributions are welcome!
+Any contributions are welcome!
 
 ## License
 

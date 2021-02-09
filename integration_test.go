@@ -20,171 +20,161 @@ func TestJSONClient(t *testing.T) {
 	client := solr.NewJSONClient(baseURL)
 	ctx := context.Background()
 
-	t.Run("create collection", func(t *testing.T) {
-		collection := solr.NewCollectionParams().Name(collection).
-			NumShards(1).ReplicationFactor(1)
-		err := client.CreateCollection(ctx, collection)
-		require.NoError(t, err)
-	})
+	// Create a collection
+	err := client.CreateCollection(ctx, solr.NewCollectionParams().
+		Name(collection).NumShards(1).ReplicationFactor(1))
+	require.NoError(t, err, "creating a collection should not error")
 
-	t.Run("initialize schema", func(t *testing.T) {
-		suggestText := solr.FieldType{
-			Name:                 "suggest_text",
-			Class:                "solr.TextField",
-			PositionIncrementGap: "100",
-			IndexAnalyzer: &solr.Analyzer{
-				Tokenizer: &solr.Tokenizer{
-					Class: "solr.WhitespaceTokenizerFactory",
-				},
-				Filters: []solr.Filter{
-					{
-						Class: "solr.LowerCaseFilterFactory",
-					},
-					{
-						Class: "solr.ASCIIFoldingFilterFactory",
-					},
-					{
-						Class:       "solr.EdgeNGramFilterFactory",
-						MinGramSize: 1,
-						MaxGramSize: 20,
-					},
-				},
+	// Initialize schema
+
+	// add new field type
+	suggestText := solr.FieldType{
+		Name:                 "suggest_text",
+		Class:                "solr.TextField",
+		PositionIncrementGap: "100",
+		IndexAnalyzer: &solr.Analyzer{
+			Tokenizer: &solr.Tokenizer{
+				Class: "solr.WhitespaceTokenizerFactory",
 			},
-			QueryAnalyzer: &solr.Analyzer{
-				Tokenizer: &solr.Tokenizer{
-					Class: "solr.WhitespaceTokenizerFactory",
+			Filters: []solr.Filter{
+				{
+					Class: "solr.LowerCaseFilterFactory",
 				},
-				Filters: []solr.Filter{
-					{
-						Class: "solr.LowerCaseFilterFactory",
-					},
-					{
-						Class: "solr.ASCIIFoldingFilterFactory",
-					},
-					{
-						Class:    "solr.SynonymGraphFilterFactory",
-						Synonyms: "synonyms.txt",
-					},
+				{
+					Class: "solr.ASCIIFoldingFilterFactory",
+				},
+				{
+					Class:       "solr.EdgeNGramFilterFactory",
+					MinGramSize: 1,
+					MaxGramSize: 20,
 				},
 			},
-		}
-		err := client.AddFieldTypes(ctx, collection, suggestText)
-		require.NoError(t, err)
-
-		fields := []solr.Field{
-			{
-				Name: "name",
-				Type: "text_general",
+		},
+		QueryAnalyzer: &solr.Analyzer{
+			Tokenizer: &solr.Tokenizer{
+				Class: "solr.WhitespaceTokenizerFactory",
 			},
-			{
-				Name: "suggest",
-				Type: "suggest_text",
-			},
-		}
-
-		err = client.AddFields(ctx, collection, fields...)
-		require.NoError(t, err)
-
-		copyFields := []solr.CopyField{
-			{
-				Source: "name",
-				Dest:   "suggest",
-			},
-			{
-				Source: "name",
-				Dest:   "_text_",
-			},
-		}
-
-		err = client.AddCopyFields(ctx, collection, copyFields...)
-		require.NoError(t, err)
-	})
-
-	t.Run("add suggester component", func(t *testing.T) {
-		suggestComponent := solr.NewComponent(solr.SearchComponent).
-			Name("suggest").
-			Class("solr.SuggestComponent").
-			Config(solr.M{
-				"suggester": solr.M{
-					"name":                     "default",
-					"lookupImpl":               "AnalyzingInfixLookupFactory",
-					"dictionaryImpl":           "DocumentDictionaryFactory",
-					"field":                    "suggest",
-					"suggestAnalyzerFieldType": "suggest_text",
+			Filters: []solr.Filter{
+				{
+					Class: "solr.LowerCaseFilterFactory",
 				},
-			})
-
-		suggestHandler := solr.NewComponent(solr.RequestHandler).
-			Name("/suggest").
-			Class("solr.SearchHandler").
-			Config(solr.M{
-				"startup": "lazy",
-				"defaults": solr.M{
-					"suggest":            true,
-					"suggest.count":      10,
-					"suggest.dictionary": "default",
+				{
+					Class: "solr.ASCIIFoldingFilterFactory",
 				},
-				"components": []string{"suggest"},
-			})
-
-		err := client.AddComponents(ctx, collection, suggestComponent, suggestHandler)
-		require.NoError(t, err)
-	})
-
-	t.Run("index data", func(t *testing.T) {
-		docs := []solr.M{
-			{
-				"id":   1,
-				"name": "Solr",
+				{
+					Class:    "solr.SynonymGraphFilterFactory",
+					Synonyms: "synonyms.txt",
+				},
 			},
-			{
-				"id":   2,
-				"name": "Elastic",
+		},
+	}
+	err = client.AddFieldTypes(ctx, collection, suggestText)
+	require.NoError(t, err, "adding field types should not error")
+
+	// add fields
+	fields := []solr.Field{
+		{
+			Name: "name",
+			Type: "text_general",
+		},
+		{
+			Name: "suggest",
+			Type: "suggest_text",
+		},
+	}
+	err = client.AddFields(ctx, collection, fields...)
+	require.NoError(t, err, "adding fields should not error")
+
+	// add copy fields
+	copyFields := []solr.CopyField{
+		{
+			Source: "name",
+			Dest:   "suggest",
+		},
+		{
+			Source: "name",
+			Dest:   "_text_",
+		},
+	}
+	err = client.AddCopyFields(ctx, collection, copyFields...)
+	require.NoError(t, err, "adding copy fields should not error")
+
+	// Add suggester
+	suggestComponent := solr.NewComponent(solr.SearchComponent).
+		Name("suggest").Class("solr.SuggestComponent").
+		Config(solr.M{
+			"suggester": solr.M{
+				"name":                     "default",
+				"lookupImpl":               "AnalyzingInfixLookupFactory",
+				"dictionaryImpl":           "DocumentDictionaryFactory",
+				"field":                    "suggest",
+				"suggestAnalyzerFieldType": "suggest_text",
 			},
-			{
-				"id":   3,
-				"name": "Blast",
+		})
+
+	suggestHandler := solr.NewComponent(solr.RequestHandler).
+		Name("/suggest").Class("solr.SearchHandler").
+		Config(solr.M{
+			"startup": "lazy",
+			"defaults": solr.M{
+				"suggest":            true,
+				"suggest.count":      10,
+				"suggest.dictionary": "default",
 			},
-			{
-				"id":   4,
-				"name": "Bayard",
-			},
-		}
-		buf := &bytes.Buffer{}
-		err := json.NewEncoder(buf).Encode(docs)
-		require.NoError(t, err)
+			"components": []string{"suggest"},
+		})
 
-		_, err = client.Update(ctx, collection, solr.JSON, buf)
-		require.NoError(t, err)
+	err = client.AddComponents(ctx, collection, suggestComponent, suggestHandler)
+	require.NoError(t, err, "adding suggester components should not error")
 
-		err = client.Commit(ctx, collection)
-		require.NoError(t, err)
-	})
+	// Index
+	docs := []solr.M{
+		{
+			"id":   1,
+			"name": "Solr",
+		},
+		{
+			"id":   2,
+			"name": "Elastic",
+		},
+		{
+			"id":   3,
+			"name": "Blast",
+		},
+		{
+			"id":   4,
+			"name": "Bayard",
+		},
+	}
+	buf := &bytes.Buffer{}
+	err = json.NewEncoder(buf).Encode(docs)
+	require.NoError(t, err, "encoding data should not error")
 
-	t.Run("query all", func(t *testing.T) {
-		queryParser := solr.NewStandardQueryParser().Query("*:*")
-		query := solr.NewQuery().QueryParser(queryParser)
-		queryResp, err := client.Query(ctx, collection, query)
-		require.NoError(t, err)
-		assert.NotNil(t, queryResp)
-		assert.Len(t, queryResp.Response.Documents, 4)
-	})
+	_, err = client.Update(ctx, collection, solr.JSON, buf)
+	require.NoError(t, err, "indexing data should not eror")
 
-	t.Run("query suggester", func(t *testing.T) {
-		queryStr := "solr"
-		suggestParams := solr.NewSuggesterParams("suggest").
-			Build().Query(queryStr)
-		suggestResp, err := client.Suggest(ctx, collection, suggestParams)
-		require.NoError(t, err)
+	err = client.Commit(ctx, collection)
+	require.NoError(t, err, "commmit should not error")
 
-		suggest := *suggestResp.Suggest
-		termBody := suggest["default"][queryStr]
-		assert.Len(t, termBody.Suggestions, 1)
-	})
+	// Query
+	queryParser := solr.NewStandardQueryParser().Query("*:*")
+	query := solr.NewQuery().QueryParser(queryParser)
+	queryResp, err := client.Query(ctx, collection, query)
+	require.NoError(t, err, "query should not error")
+	require.NotNil(t, queryResp, "query response should not be nil")
+	assert.Len(t, queryResp.Response.Documents, 4, "query response is expected to have 4 documents")
 
-	t.Run("delete the collection", func(t *testing.T) {
-		collection := solr.NewCollectionParams().Name(collection)
-		err := client.DeleteCollection(ctx, collection)
-		require.NoError(t, err)
-	})
+	// Suggest
+	queryStr := "solr"
+	suggestParams := solr.NewSuggesterParams("suggest").Build().Query(queryStr)
+	suggestResp, err := client.Suggest(ctx, collection, suggestParams)
+	require.NoError(t, err, "suggest should not error")
+
+	suggest := *suggestResp.Suggest
+	termBody := suggest["default"][queryStr]
+	assert.Len(t, termBody.Suggestions, 1, "expected to have one suggestion")
+
+	// Delete the collection
+	err = client.DeleteCollection(ctx, solr.NewCollectionParams().Name(collection))
+	require.NoError(t, err, "deleting collection should not error")
 }

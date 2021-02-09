@@ -21,7 +21,6 @@ type Client interface {
 	Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error)
 
 	// Update can be used to add, update, or delete a document from the index.
-	// `body` is expected to contain the list of documents.
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html
 	Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error)

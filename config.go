@@ -28,11 +28,14 @@ func (ct ComponentType) String() string {
 
 // Component is a component
 type Component struct {
-	// Type is the component type
-	ct    ComponentType
-	name  string
+	// ct is the component type
+	ct ComponentType
+	// name is the component name
+	name string
+	// class is the component class
 	class string
-	m     M
+	// m is the component configurations
+	m M
 }
 
 // NewComponent returns a new Component
@@ -68,6 +71,3 @@ func (c *Component) BuildComponent() M {
 
 	return m
 }
-
-// UserProperty is a user property
-type UserProperty struct{}
