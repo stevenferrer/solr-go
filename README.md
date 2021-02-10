@@ -6,15 +6,11 @@
 
 A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
-## Supported APIs
+## Installation
 
-- [Collections API](https://lucene.apache.org/solr/guide/8_8/collections-api.html)
-- [Query API](https://lucene.apache.org/solr/guide/8_8/json-request-api.html)
-  - [Facet API](https://lucene.apache.org/solr/guide/8_8/json-facet-api.html)
-- [Update API](https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
-- [Schema API](https://lucene.apache.org/solr/guide/8_8/schema-api.html)
-- [Config API](https://lucene.apache.org/solr/guide/8_8/config-api.html)
-- [Suggester API](https://lucene.apache.org/solr/guide/8_8/suggester.html)
+```console
+$ go get github.com/sf9v/solr-go
+```
 
 ## Example
 
@@ -66,6 +62,20 @@ query := solr.NewQuery().
 // Send the query
 queryResponse, err := client.Query(context.Background(), "techproducts", query)
 ```
+
+## Supported APIs
+
+- [Collections API](https://lucene.apache.org/solr/guide/8_8/collections-api.html)
+- [Query API](https://lucene.apache.org/solr/guide/8_8/json-request-api.html)
+  - [Facet API](https://lucene.apache.org/solr/guide/8_8/json-facet-api.html)
+- [Update API](https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
+- [Schema API](https://lucene.apache.org/solr/guide/8_8/schema-api.html)
+- [Config API](https://lucene.apache.org/solr/guide/8_8/config-api.html)
+- [Suggester API](https://lucene.apache.org/solr/guide/8_8/suggester.html)
+
+## Projects using it
+
+- [Multi-select facet using Solr, Vue and Go](https://github.com/sf9v/multi-select-facet)
 
 ## Contributing
 
