@@ -169,8 +169,8 @@ func (qp *DisMaxQueryParser) Alt(alt string) *DisMaxQueryParser {
 	return qp
 }
 
-// WithQf sets the qf param
-func (qp *DisMaxQueryParser) WithQf(qf string) *DisMaxQueryParser {
+// Qf sets the qf param
+func (qp *DisMaxQueryParser) Qf(qf string) *DisMaxQueryParser {
 	qp.qf = qf
 	return qp
 }
