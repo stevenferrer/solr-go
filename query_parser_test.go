@@ -36,7 +36,7 @@ func TestQueryParsers(t *testing.T) {
 		got = solr.NewDisMaxQueryParser().
 			Query("'solr rocks'").
 			Alt("*:*").
-			WithQf("'one^2.3 two three^0.4'").
+			Qf("'one^2.3 two three^0.4'").
 			Mm("75%").
 			Pf("'one^2.3 two three^0.4'").
 			Ps("1").

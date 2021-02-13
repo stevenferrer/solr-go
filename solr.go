@@ -1,21 +1,23 @@
 // Package solr is a solr client for Go
 package solr
 
-// ContentType is a content-type
-type ContentType int
+// MimeType is a mime-type
+type MimeType int
 
-// List of content-types
+// List of mime-types
 const (
-	JSON ContentType = iota
+	JSON MimeType = iota
 	XML
+	CSV
 )
 
 // String implements Stringer
-func (ct ContentType) String() string {
+func (mt MimeType) String() string {
 	return [...]string{
 		"application/json",
 		"application/xml",
-	}[ct]
+		"text/csv",
+	}[mt]
 }
 
 // M is an alias for map of interface

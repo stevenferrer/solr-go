@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// SuggestParams is a suggest params
+// SuggestParams is the suggester API param builder
 type SuggestParams struct {
 	endpoint string
 

@@ -5,17 +5,47 @@ import (
 	"io"
 )
 
-// Client is an a client interface for interacting with Solr
+// Client is an interface for interacting with Solr APIs
+// (Collections, Core Admin, Query, Update, Schema, Config and Suggester)
 type Client interface {
+	// Collections Management API
+	// Status, Create, Delete, Reload, Rename, Modify, List
+
 	// CreateCollection creates a new collection.
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#create
-	CreateCollection(ctx context.Context, params *CollectionParams) error
+	CreateCollection(context.Context, *CollectionParams) error
 	// DeleteCollection deletes a collection.
 	// Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#delete
-	DeleteCollection(ctx context.Context, params *CollectionParams) error
+	DeleteCollection(context.Context, *CollectionParams) error
 
-	// Query sends a query request to query API.
+	// // https://lucene.apache.org/solr/guide/8_8/collection-management.html#colstatus
+	// CollectionStatus(context.Context, *CollectionParams)
+	// // https://lucene.apache.org/solr/guide/8_8/collection-management.html#reload
+	// ReloadCollection(context.Context, *CollectionParams)
+	// // https://lucene.apache.org/solr/guide/8_8/collection-management.html#modifycollection
+	// ModifyCollection(context.Context, *CollectionParams)
+	// // https://lucene.apache.org/solr/guide/8_8/collection-management.html#rename
+	// RenameCollection(context.Context, *CollectionParams)
+	// // https://lucene.apache.org/solr/guide/8_8/collection-management.html#list
+	// ListCollections(context.Context)
+
+	// Core Admin API
+	// Create, Unload, Reload, Rename, List, Status
+
+	// CreateCore(context.Context, *CoreParams)
+	// // https://lucene.apache.org/solr/guide/8_8/coreadmin-api.html#coreadmin-unload
+	// UnloadCore(context.Context, *CoreParams)
+	// // https://lucene.apache.org/solr/guide/8_8/coreadmin-api.html#coreadmin-reload
+	// ReloadCore(context.Context, *CoreParams)
+	// // https://lucene.apache.org/solr/guide/8_8/coreadmin-api.html#coreadmin-rename
+	// RenameCore(context.Context, *CoreParams)
+	// ListCores(context.Context)
+	// // https://lucene.apache.org/solr/guide/8_8/coreadmin-api.html#coreadmin-status
+	// CoreStatus(context.Context, *CoreParams)
+	// // https://lucene.apache.org/solr/guide/8_8/coreadmin-api.html#coreadmin-create
+
+	// Query sends a query to the query API.
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/json-request-api.html
 	Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error)
@@ -23,9 +53,11 @@ type Client interface {
 	// Update can be used to add, update, or delete a document from the index.
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html
-	Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error)
+	Update(ctx context.Context, collection string, ct MimeType, body io.Reader) (*UpdateResponse, error)
 	// Commit commits the last update
 	Commit(ctx context.Context, collection string) error
+
+	// Schema API
 
 	// AddFields adds new field definitions to the schema.
 	//
@@ -72,6 +104,8 @@ type Client interface {
 	// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#delete-a-copy-field-rule
 	DeleteCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error
 
+	// Config API
+
 	// SetProperties sets well known properties.
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-common-properties
@@ -92,6 +126,8 @@ type Client interface {
 	//
 	// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-handlers-and-components
 	DeleteComponents(ctx context.Context, collection string, component ...*Component) error
+
+	// Suggester API
 
 	// Suggest queries the suggest endpoint.
 	//

@@ -1,8 +1,4 @@
-![Github Actions](https://github.com/sf9v/solr-go/workflows/test/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/sf9v/solr-go/badge.svg?branch=main)](https://coveralls.io/github/sf9v/solr-go?branch=main)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go)
-
-# Solr-Go
+# Solr-Go ![Github Actions](https://github.com/sf9v/solr-go/workflows/test/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/sf9v/solr-go/badge.svg?branch=main)](https://coveralls.io/github/sf9v/solr-go?branch=main) [![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go) [![pkg.go.dev](https://pkg.go.dev/badge/github.com/sf9v/solr-go)](https://pkg.go.dev/github.com/sf9v/solr-go)
 
 A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
@@ -79,7 +75,7 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 
 ## Contributing
 
-Any contributions are welcome!
+Please feel free to improve this project by [opening an issue](https://github.com/sf9v/solr-go/issues/new) or by [making a pull-request](https://github.com/sf9v/solr-go/pulls).
 
 ## License
 
