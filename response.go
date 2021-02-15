@@ -3,7 +3,7 @@ package solr
 // BaseResponse is the base response
 type BaseResponse struct {
 	Header *ResponseHeader `json:"responseHeader"`
-	Error  *Error          `json:"error,omitempty"`
+	Error  *ResponseError  `json:"error,omitempty"`
 }
 
 // ResponseHeader is a response header
@@ -13,14 +13,14 @@ type ResponseHeader struct {
 	QTime       int  `json:"QTime"`
 }
 
-// Error is a response error
-type Error struct {
+// ResponseError is a response error
+type ResponseError struct {
 	Code     int      `json:"code"`
 	Metadata []string `json:"metadata"`
 	Msg      string   `json:"msg"`
 }
 
-func (e Error) Error() string {
+func (e ResponseError) Error() string {
 	return e.Msg
 }
 
@@ -49,7 +49,7 @@ type SuggestResponse struct {
 	ResponseHeader ResponseHeader `json:"responseHeader"`
 	Command        string         `json:"command,omitempty"`
 	Suggest        *SuggestBody   `json:"suggest,omitempty"`
-	Error          *Error         `json:"error,omitempty"`
+	Error          *ResponseError `json:"error,omitempty"`
 }
 
 // SuggestBody is the suggest body

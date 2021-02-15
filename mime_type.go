@@ -1,4 +1,3 @@
-// Package solr is a solr client for Go
 package solr
 
 // MimeType is a mime-type
@@ -19,6 +18,3 @@ func (mt MimeType) String() string {
 		"text/csv",
 	}[mt]
 }
-
-// M is an alias for map of interface
-type M map[string]interface{}

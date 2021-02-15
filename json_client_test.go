@@ -412,7 +412,7 @@ func TestJSONClientMock(t *testing.T) {
 				http.MethodPost,
 				baseURL+"/solr/"+collection+"/schema",
 				newResponderWithStatus(http.StatusBadRequest, mockBody, solr.BaseResponse{
-					Error: &solr.Error{
+					Error: &solr.ResponseError{
 						Msg: "this is an error",
 					},
 				}),

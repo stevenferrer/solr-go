@@ -14,7 +14,6 @@ import (
 
 // JSONClient is a client for interacting with Solr via JSON API
 type JSONClient struct {
-	// baseURL is the base url of the solr instance
 	baseURL       string
 	requestSender RequestSender
 }

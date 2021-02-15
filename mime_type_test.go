@@ -21,6 +21,10 @@ func TestContentTypeStringer(t *testing.T) {
 			solr.XML,
 			"application/xml",
 		},
+		{
+			solr.CSV,
+			"text/csv",
+		},
 	}
 
 	for _, test := range tests {
