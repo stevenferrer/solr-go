@@ -1,7 +1,6 @@
 ![Github Actions](https://github.com/sf9v/solr-go/workflows/test/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/sf9v/solr-go/badge.svg?branch=main)](https://coveralls.io/github/sf9v/solr-go?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go)
-[![Sourcegraph](https://sourcegraph.com/github.com/sf9v/solr-go/-/badge.svg)](https://sourcegraph.com/github.com/sf9v/solr-go?badge)
 
 # Solr-Go
 
@@ -77,6 +76,10 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 ## Projects using it
 
 - [Multi-select facet using Solr, Vue and Go](https://github.com/sf9v/multi-select-facet)
+
+## Note
+
+The current API is still evolving and will likely change before it hits version 1. Please use this library with caution.
 
 ## Contributing
 
