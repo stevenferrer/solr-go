@@ -157,8 +157,8 @@ func TestJSONClient(t *testing.T) {
 	require.NoError(t, err, "commmit should not error")
 
 	// Query
-	queryParser := solr.NewStandardQueryParser().Query("*:*")
-	query := solr.NewQuery().QueryParser(queryParser)
+	qp := solr.NewStandardQueryParser().Query("*:*")
+	query := solr.NewQuery(qp.BuildParser())
 	queryResp, err := client.Query(ctx, collection, query)
 	require.NoError(t, err, "query should not error")
 	require.NotNil(t, queryResp, "query response should not be nil")

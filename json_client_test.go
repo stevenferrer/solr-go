@@ -23,10 +23,10 @@ type errorRequestSender struct{}
 
 var _ solr.RequestSender = (*errorRequestSender)(nil)
 
-var sendRequestError = errors.New("an error from request sender")
+var errSendRequest = errors.New("an error from request sender")
 
 func (rs *errorRequestSender) SendRequest(_ context.Context, _, _, _ string, _ io.Reader) (*http.Response, error) {
-	return nil, sendRequestError
+	return nil, errSendRequest
 }
 
 func TestJSONClientMock(t *testing.T) {
@@ -64,7 +64,7 @@ func TestJSONClientMock(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = clientThatErrors.CreateCollection(ctx, collection)
-			assert.ErrorIs(t, err, sendRequestError)
+			assert.ErrorIs(t, err, errSendRequest)
 		})
 		t.Run("delete collection", func(t *testing.T) {
 			httpmock.RegisterResponder(
@@ -87,7 +87,7 @@ func TestJSONClientMock(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = clientThatErrors.DeleteCollection(ctx, collection)
-			assert.ErrorIs(t, err, sendRequestError)
+			assert.ErrorIs(t, err, errSendRequest)
 		})
 	})
 
@@ -99,13 +99,13 @@ func TestJSONClientMock(t *testing.T) {
 			newResponder(mockBody, solr.M{}),
 		)
 
-		queryParser := solr.NewDisMaxQueryParser().Query("'apple pie'")
-		query := solr.NewQuery().QueryParser(queryParser)
+		query := solr.NewQuery(solr.NewDisMaxQueryParser().
+			Query("'apple pie'").BuildParser())
 		_, err := client.Query(ctx, collection, query)
 		assert.NoError(t, err)
 
 		_, err = clientThatErrors.Query(ctx, collection, query)
-		assert.ErrorIs(t, err, sendRequestError)
+		assert.ErrorIs(t, err, errSendRequest)
 	})
 
 	t.Run("update and commit", func(t *testing.T) {
@@ -154,10 +154,10 @@ func TestJSONClientMock(t *testing.T) {
 		assert.NoError(t, err)
 
 		_, err = clientThatErrors.Update(ctx, collection, solr.JSON, buf)
-		assert.ErrorIs(t, err, sendRequestError)
+		assert.ErrorIs(t, err, errSendRequest)
 
 		err = clientThatErrors.Commit(ctx, collection)
-		assert.ErrorIs(t, err, sendRequestError)
+		assert.ErrorIs(t, err, errSendRequest)
 	})
 
 	t.Run("schema", func(t *testing.T) {
@@ -183,7 +183,7 @@ func TestJSONClientMock(t *testing.T) {
 			require.NoError(t, err)
 
 			err = clientThatErrors.AddFields(ctx, collection, fields...)
-			assert.ErrorIs(t, err, sendRequestError)
+			assert.ErrorIs(t, err, errSendRequest)
 		})
 
 		t.Run("delete fields", func(t *testing.T) {
@@ -490,7 +490,7 @@ func TestJSONClientMock(t *testing.T) {
 			assert.NoError(t, err)
 
 			err = clientThatErrors.AddComponents(ctx, collection, suggestComponent)
-			assert.ErrorIs(t, err, sendRequestError)
+			assert.ErrorIs(t, err, errSendRequest)
 		})
 
 		t.Run("update components", func(t *testing.T) {
@@ -519,7 +519,7 @@ func TestJSONClientMock(t *testing.T) {
 		assert.NoError(t, err)
 
 		_, err = clientThatErrors.Suggest(ctx, collection, suggestParams)
-		assert.ErrorIs(t, err, sendRequestError)
+		assert.ErrorIs(t, err, errSendRequest)
 	})
 }
 
