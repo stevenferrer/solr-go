@@ -23,7 +23,7 @@ type TermsFacet struct {
 	// overRequest int
 	// refine      bool
 	// overRefine  int
-	// minCount    int
+	minCount int
 	// missing     bool
 	// numBuckets  bool
 	// allBuckets  bool
@@ -61,6 +61,10 @@ func (f *TermsFacet) BuildFacet() M {
 
 	if f.sort != "" {
 		m["sort"] = f.sort
+	}
+
+	if f.minCount > 0 {
+		m["mincount"] = f.minCount
 	}
 
 	if len(f.facet) > 0 {
@@ -122,6 +126,12 @@ func (f *TermsFacet) AddToDomain(key string, value interface{}) *TermsFacet {
 // Name returns the name of the facet
 func (f *TermsFacet) Name() string {
 	return f.name
+}
+
+// MinCount sets the mincount param
+func (f *TermsFacet) MinCount(minCount int) *TermsFacet {
+	f.minCount = minCount
+	return f
 }
 
 // QueryFacet is query facet
