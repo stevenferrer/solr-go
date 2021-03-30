@@ -136,6 +136,7 @@ func TestJSONClientMock(t *testing.T) {
 
 			_, err = clientThatErrors.CoreStatus(ctx, params)
 			assert.ErrorIs(t, err, errSendRequest)
+
 		})
 
 		t.Run("unload core", func(t *testing.T) {
@@ -589,6 +590,18 @@ func TestJSONClientMock(t *testing.T) {
 
 		_, err = clientThatErrors.Suggest(ctx, collection, suggestParams)
 		assert.ErrorIs(t, err, errSendRequest)
+	})
+
+	t.Run("unexpected html", func(t *testing.T) {
+		httpmock.RegisterResponder(http.MethodGet, baseURL+"/solr/admin/cores", func(r *http.Request) (*http.Response, error) {
+			response := httpmock.NewBytesResponse(http.StatusUnauthorized, []byte("<html><title>Unauthorized</html>"))
+			response.Header.Set("Content-Type", "text/html")
+			return response, nil
+		})
+
+		params := solr.NewCoreParams("mycore")
+		_, err := client.CoreStatus(ctx, params)
+		assert.Error(t, err)
 	})
 }
 
