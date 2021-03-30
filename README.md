@@ -1,8 +1,9 @@
+# Solr-Go
+
 ![Github Actions](https://github.com/sf9v/solr-go/workflows/test/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/sf9v/solr-go/badge.svg?branch=main)](https://coveralls.io/github/sf9v/solr-go?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go)
-
-# Solr-Go
+[![GoDoc](https://pkg.go.dev/badge/github.com/sf9v/solr-go)](https://pkg.go.dev/github.com/sf9v/solr-go)
 
 A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
@@ -65,13 +66,13 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 
 ## Supported APIs
 
-- [Collections API](https://lucene.apache.org/solr/guide/8_8/collections-api.html)
-- [Query API](https://lucene.apache.org/solr/guide/8_8/json-request-api.html)
-  - [Facet API](https://lucene.apache.org/solr/guide/8_8/json-facet-api.html)
-- [Update API](https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
-- [Schema API](https://lucene.apache.org/solr/guide/8_8/schema-api.html)
-- [Config API](https://lucene.apache.org/solr/guide/8_8/config-api.html)
-- [Suggester API](https://lucene.apache.org/solr/guide/8_8/suggester.html)
+- [Collections API](https://solr.apache.org/guide/8_8/collections-api.html)
+- [Query API](https://solr.apache.org/guide/8_8/json-request-api.html)
+  - [Facet API](https://solr.apache.org/guide/8_8/json-facet-api.html)
+- [Update API](https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
+- [Schema API](https://solr.apache.org/guide/8_8/schema-api.html)
+- [Config API](https://solr.apache.org/guide/8_8/config-api.html)
+- [Suggester API](https://solr.apache.org/guide/8_8/suggester.html)
 
 ## Projects using it
 
@@ -83,7 +84,7 @@ The current API is still evolving and will likely change before it hits version 
 
 ## Contributing
 
-Any contributions are welcome!
+Please feel free to improve this project by [opening an issue](https://github.com/sf9v/solr-go/issues/new) or by [making a pull-request](https://github.com/sf9v/solr-go/pulls).
 
 ## License
 

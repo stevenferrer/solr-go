@@ -9,9 +9,6 @@ import (
 )
 
 func TestResponseError(t *testing.T) {
-	err := solr.Error{
-		Msg: "an error",
-	}
-
+	err := solr.ResponseError{Msg: "an error"}
 	assert.Equal(t, "an error", err.Error())
 }

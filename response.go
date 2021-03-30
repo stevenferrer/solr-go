@@ -1,9 +1,11 @@
 package solr
 
+import "time"
+
 // BaseResponse is the base response
 type BaseResponse struct {
 	Header *ResponseHeader `json:"responseHeader"`
-	Error  *Error          `json:"error,omitempty"`
+	Error  *ResponseError  `json:"error,omitempty"`
 }
 
 // ResponseHeader is a response header
@@ -13,14 +15,14 @@ type ResponseHeader struct {
 	QTime       int  `json:"QTime"`
 }
 
-// Error is a response error
-type Error struct {
+// ResponseError is a response error
+type ResponseError struct {
 	Code     int      `json:"code"`
 	Metadata []string `json:"metadata"`
 	Msg      string   `json:"msg"`
 }
 
-func (e Error) Error() string {
+func (e ResponseError) Error() string {
 	return e.Msg
 }
 
@@ -46,10 +48,9 @@ type QueryResponseBody struct {
 
 // SuggestResponse is the suggester response
 type SuggestResponse struct {
-	ResponseHeader ResponseHeader `json:"responseHeader"`
-	Command        string         `json:"command,omitempty"`
-	Suggest        *SuggestBody   `json:"suggest,omitempty"`
-	Error          *Error         `json:"error,omitempty"`
+	*BaseResponse
+	Command string       `json:"command,omitempty"`
+	Suggest *SuggestBody `json:"suggest,omitempty"`
 }
 
 // SuggestBody is the suggest body
@@ -69,4 +70,37 @@ type Suggestion struct {
 	Term    string `json:"term"`
 	Weight  int    `json:"weight"`
 	Payload string `json:"payload,omitempty"`
+}
+
+type CoreStatusResponse struct {
+	*BaseResponse
+	InitFailures M                      `json:"initFailures"`
+	Status       map[string]*CoreStatus `json:"status"`
+}
+
+type CoreStatus struct {
+	Config      string     `json:"config"`
+	DataDir     string     `json:"dataDir"`
+	Index       *Index     `json:"index"`
+	InstanceDir string     `json:"instanceDir"`
+	Name        string     `json:"name"`
+	Schema      string     `json:"schema"`
+	StartTime   *time.Time `json:"startTime"`
+	Uptime      int        `json:"uptime"`
+}
+
+type Index struct {
+	Current                 bool   `json:"current"`
+	DeletedDocs             int    `json:"deletedDocs"`
+	Directory               string `json:"directory"`
+	HasDeletions            bool   `json:"hasDeletions"`
+	IndexHeapUsageBytes     int    `json:"indexHeapUsageBytes"`
+	MaxDoc                  int    `json:"maxDoc"`
+	NumDocs                 int    `json:"numDocs"`
+	SegmentCount            int    `json:"segmentCount"`
+	SegmentFile             string `json:"segmentFile"`
+	SegmentsFileSizeInBytes int    `json:"segmentsFileSizeInBytes"`
+	Size                    string `json:"size"`
+	UserData                M      `json:"userData"`
+	Version                 int
 }

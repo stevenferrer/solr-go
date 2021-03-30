@@ -10,11 +10,8 @@ import (
 
 func TestQuery(t *testing.T) {
 	a := assert.New(t)
-	got := solr.NewQuery().
-		QueryParser(
-			solr.NewDisMaxQueryParser().
-				Query("'solr rocks'"),
-		).
+	got := solr.NewQuery(solr.NewDisMaxQueryParser().
+		Query("'solr rocks'").BuildParser()).
 		Queries(solr.M{
 			"query_filters": []solr.M{
 				{

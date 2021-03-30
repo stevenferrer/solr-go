@@ -7,17 +7,16 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/pkg/errors"
 )
 
-// JSONClient is a client for interacting with Apache Solr via JSON API
+// JSONClient is a client for interacting with Solr via JSON API
 type JSONClient struct {
 	// baseURL is the base url of the solr instance
-	baseURL    string
-	httpClient *http.Client
+	baseURL       string
+	requestSender RequestSender
 }
 
 var _ Client = (*JSONClient)(nil)
@@ -25,23 +24,23 @@ var _ Client = (*JSONClient)(nil)
 // NewJSONClient returns a new JSONClient
 func NewJSONClient(baseURL string) *JSONClient {
 	return &JSONClient{
-		baseURL:    baseURL,
-		httpClient: http.DefaultClient,
+		baseURL:       baseURL,
+		requestSender: NewDefaultRequestSender(),
 	}
 }
 
-// WithHTTPClient overrides the default http client
-func (c *JSONClient) WithHTTPClient(httpClient *http.Client) *JSONClient {
-	c.httpClient = httpClient
+// WithRequestSender overrides the default request sender
+func (c *JSONClient) WithRequestSender(rs RequestSender) *JSONClient {
+	c.requestSender = rs
 	return c
 }
 
 // CreateCollection creates a new collection.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#create
+// Refer to https://solr.apache.org/guide/8_8/collection-management.html#create
 func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionParams) error {
-	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParam(), c.baseURL)
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -61,10 +60,70 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 
 // DeleteCollection deletes a collection.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/collection-management.html#delete
+// Refer to https://solr.apache.org/guide/8_8/collection-management.html#delete
 func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionParams) error {
-	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParam(), c.baseURL)
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
+func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreStatusResponse, error) {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=STATUS&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "send request")
+	}
+
+	var resp CoreStatusResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return nil, errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return nil, errors.New("something went wrong")
+	}
+
+	return &resp, nil
+}
+
+func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=CREATE&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
+func (c *JSONClient) UnloadCore(ctx context.Context, params *CoreParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=UNLOAD&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -84,16 +143,16 @@ func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionPar
 
 // Query sends a query request to query API.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/json-request-api.html
+// Refer to https://solr.apache.org/guide/8_8/json-request-api.html
 func (c *JSONClient) Query(ctx context.Context, collection string, query *Query) (*QueryResponse, error) {
 	buf := &bytes.Buffer{}
 	err := json.NewEncoder(buf).Encode(query.BuildQuery())
 	if err != nil {
-		return nil, errors.Wrap(err, "encode query")
+		return nil, errors.Wrap(err, "encode request body")
 	}
 
 	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, buf)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -113,10 +172,10 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 
 // Update can be used to add, update, or delete a document from the index.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html
-func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentType, body io.Reader) (*UpdateResponse, error) {
+// Refer to https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html
+func (c *JSONClient) Update(ctx context.Context, collection string, mimeType MimeType, body io.Reader) (*UpdateResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
-	httpResp, err := c.sendRequestWithContentType(ctx, http.MethodPost, urlStr, ct.String(), body)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, mimeType.String(), body)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -137,7 +196,7 @@ func (c *JSONClient) Update(ctx context.Context, collection string, ct ContentTy
 // Commit commits the last update.
 func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/update?commit=true", c.baseURL, collection)
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -157,77 +216,77 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 
 // AddFields adds new field definitions to the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#add-a-new-field
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#add-a-new-field
 func (c *JSONClient) AddFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "add-field", fields)
 }
 
 // DeleteFields removes field definitions from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#delete-a-field
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#delete-a-field
 func (c *JSONClient) DeleteFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "delete-field", fields)
 }
 
 // ReplaceFields replaces field definition from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#replace-a-field
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#replace-a-field
 func (c *JSONClient) ReplaceFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "replace-field", fields)
 }
 
 // AddDynamicFields adds new dynamic field rules to the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#add-a-dynamic-field-rule
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#add-a-dynamic-field-rule
 func (c *JSONClient) AddDynamicFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "add-dynamic-field", fields)
 }
 
 // DeleteDynamicFields removes dynamic field rules from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#delete-a-dynamic-field-rule
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#delete-a-dynamic-field-rule
 func (c *JSONClient) DeleteDynamicFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "delete-dynamic-field", fields)
 }
 
 // ReplaceDynamicFields replaces dynamic field rules from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#replace-a-dynamic-field-rule
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#replace-a-dynamic-field-rule
 func (c *JSONClient) ReplaceDynamicFields(ctx context.Context, collection string, fields ...Field) error {
 	return c.modifySchema(ctx, collection, "replace-dynamic-field", fields)
 }
 
 // AddFieldTypes adds new field types to the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#add-a-new-field-type
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#add-a-new-field-type
 func (c *JSONClient) AddFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
 	return c.modifySchema(ctx, collection, "add-field-type", fieldTypes)
 }
 
 // DeleteFieldTypes removes field type definitions from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#delete-a-field-type
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#delete-a-field-type
 func (c *JSONClient) DeleteFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
 	return c.modifySchema(ctx, collection, "delete-field-type", fieldTypes)
 }
 
 // ReplaceFieldTypes replaces field type defintions from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#replace-a-field-type
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#replace-a-field-type
 func (c *JSONClient) ReplaceFieldTypes(ctx context.Context, collection string, fieldTypes ...FieldType) error {
 	return c.modifySchema(ctx, collection, "replace-field-type", fieldTypes)
 }
 
 // AddCopyFields adds new copy field rules to the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#add-a-new-copy-field-rule
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#add-a-new-copy-field-rule
 func (c *JSONClient) AddCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error {
 	return c.modifySchema(ctx, collection, "add-copy-field", copyFields)
 }
 
 // DeleteCopyFields deletes copy field rules from the schema.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/schema-api.html#delete-a-copy-field-rule
+// Refer to https://solr.apache.org/guide/8_8/schema-api.html#delete-a-copy-field-rule
 func (c *JSONClient) DeleteCopyFields(ctx context.Context, collection string, copyFields ...CopyField) error {
 	return c.modifySchema(ctx, collection, "delete-copy-field", copyFields)
 }
@@ -244,7 +303,7 @@ func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interf
 		return errors.Wrap(err, "encode request body")
 	}
 
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, buf)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -264,7 +323,7 @@ func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interf
 
 // SetProperties sets well known properties.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-common-properties
+// Refer to https://solr.apache.org/guide/8_8/config-api.html#commands-for-common-properties
 func (c *JSONClient) SetProperties(ctx context.Context, collection string, properties ...CommonProperty) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
 	m := M{}
@@ -277,7 +336,7 @@ func (c *JSONClient) SetProperties(ctx context.Context, collection string, prope
 
 // UnsetProperty removes a property set via set-properties.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-common-properties
+// Refer to https://solr.apache.org/guide/8_8/config-api.html#commands-for-common-properties
 func (c *JSONClient) UnsetProperty(ctx context.Context, collection string, property CommonProperty) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
 	return c.postJSON(ctx, urlStr, M{"unset-property": property.Name})
@@ -285,7 +344,7 @@ func (c *JSONClient) UnsetProperty(ctx context.Context, collection string, prope
 
 // AddComponents adds a component (request handler, search component, init params, etc.) to configoverlay.json.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-handlers-and-components
+// Refer to https://solr.apache.org/guide/8_8/config-api.html#commands-for-handlers-and-components
 func (c *JSONClient) AddComponents(ctx context.Context, collection string, components ...*Component) error {
 	commands := []string{}
 	for _, comp := range components {
@@ -301,7 +360,7 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 	reqBody := "{" + strings.Join(commands, ",") + "}"
 
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	httpResp, err := c.sendRequest(ctx, http.MethodPost, urlStr, strings.NewReader(reqBody))
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), strings.NewReader(reqBody))
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -322,24 +381,24 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 
 // UpdateComponents overwrites existing settings from configoverlay.json.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-handlers-and-components
+// Refer to https://solr.apache.org/guide/8_8/config-api.html#commands-for-handlers-and-components
 func (c *JSONClient) UpdateComponents(ctx context.Context, collection string, components ...*Component) error {
 	return errors.New("not implemented")
 }
 
 // DeleteComponents removes settings from configoverlay.json
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/config-api.html#commands-for-handlers-and-components
+// Refer to https://solr.apache.org/guide/8_8/config-api.html#commands-for-handlers-and-components
 func (c *JSONClient) DeleteComponents(ctx context.Context, collection string, components ...*Component) error {
 	return errors.New("not implemented")
 }
 
 // Suggest queries the suggest endpoint.
 //
-// Refer to https://lucene.apache.org/solr/guide/8_8/suggester.html#get-suggestions-with-weights
+// Refer to https://solr.apache.org/guide/8_8/suggester.html#get-suggestions-with-weights
 func (c *JSONClient) Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/%s?%s", c.baseURL, collection, params.endpoint, params.BuildParams())
-	httpResp, err := c.sendRequest(ctx, http.MethodGet, urlStr, nil)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -347,7 +406,7 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	var res SuggestResponse
 	err = json.NewDecoder(httpResp.Body).Decode(&res)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
+		return nil, errors.Wrap(err, "decode response body")
 	}
 
 	if httpResp.StatusCode > http.StatusOK {
@@ -355,30 +414,4 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	}
 
 	return &res, nil
-}
-
-func (c *JSONClient) sendRequest(ctx context.Context, httpMethod, urlStr string, body io.Reader) (*http.Response, error) {
-	return c.sendRequestWithContentType(ctx, httpMethod, urlStr, JSON.String(), body)
-}
-
-func (c *JSONClient) sendRequestWithContentType(ctx context.Context, httpMethod, urlStr, contentType string, body io.Reader) (*http.Response, error) {
-	theURL, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, errors.Wrap(err, "parse url")
-	}
-
-	httpReq, err := http.NewRequestWithContext(ctx,
-		httpMethod, theURL.String(), body)
-	if err != nil {
-		return nil, errors.Wrap(err, "new http request")
-	}
-	httpReq.Header.Add("Content-Type", contentType)
-
-	var httpResp *http.Response
-	httpResp, err = c.httpClient.Do(httpReq)
-	if err != nil {
-		return nil, errors.Wrap(err, "send http request")
-	}
-
-	return httpResp, nil
 }

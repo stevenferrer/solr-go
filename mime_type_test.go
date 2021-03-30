@@ -10,8 +10,8 @@ import (
 
 func TestContentTypeStringer(t *testing.T) {
 	var tests = []struct {
-		contentType solr.ContentType
-		expected    string
+		mimeType solr.MimeType
+		expected string
 	}{
 		{
 			solr.JSON,
@@ -21,10 +21,14 @@ func TestContentTypeStringer(t *testing.T) {
 			solr.XML,
 			"application/xml",
 		},
+		{
+			solr.CSV,
+			"text/csv",
+		},
 	}
 
 	for _, test := range tests {
-		got := test.contentType.String()
+		got := test.mimeType.String()
 		assert.Equal(t, test.expected, got)
 	}
 }

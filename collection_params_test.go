@@ -14,7 +14,7 @@ func TestBuildCollectionParams(t *testing.T) {
 		NumShards(1).
 		ReplicationFactor(1).
 		Async("1234").
-		BuildParam()
+		BuildParams()
 
 	expect := "async=1234&name=mycollection&numShards=1&replicationFactor=1"
 	assert.Equal(t, expect, got)

@@ -22,9 +22,8 @@ type Query struct {
 	filters []string // fq
 	fields  []string // fl
 
-	// query parser
-	// Refer to https://lucene.apache.org/solr/guide/8_7/query-syntax-and-parsing.html
-	qp QueryParser
+	// query is the main query
+	query string
 
 	// facets
 	// Refer to https://lucene.apache.org/solr/guide/8_7/json-facet-api.html
@@ -35,14 +34,15 @@ type Query struct {
 	queries M
 }
 
-// NewQuery returns a new Query
-func NewQuery() *Query {
-	return &Query{}
+// NewQuery accepts the main query built from the various
+// query parsers and returns the Query object.
+func NewQuery(query string) *Query {
+	return &Query{query: query}
 }
 
 // BuildQuery builds the query
 func (q *Query) BuildQuery() M {
-	qm := M{"query": q.qp.BuildParser()}
+	qm := M{"query": q.query}
 
 	if q.queries != nil {
 		qm["queries"] = q.queries
@@ -107,12 +107,6 @@ func (q *Query) Filters(filters ...string) *Query {
 // Fields sets the fields param
 func (q *Query) Fields(fields ...string) *Query {
 	q.fields = fields
-	return q
-}
-
-// QueryParser sets the query parser
-func (q *Query) QueryParser(qp QueryParser) *Query {
-	q.qp = qp
 	return q
 }
 

@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// CollectionParams is a solr collection param
+// CollectionParams is the collection API param builder
 type CollectionParams struct {
 	name              string
 	numShards         int
@@ -36,14 +36,14 @@ func (c *CollectionParams) ReplicationFactor(rf int) *CollectionParams {
 	return c
 }
 
-// Async enables async request with the provided request id
+// Async enable async request with a request ID to track this action
 func (c *CollectionParams) Async(requestID string) *CollectionParams {
 	c.requestID = requestID
 	return c
 }
 
-// BuildParam builds the param
-func (c *CollectionParams) BuildParam() string {
+// BuildParams builds the parameters
+func (c *CollectionParams) BuildParams() string {
 	vals := &url.Values{}
 
 	if c.name != "" {
