@@ -14,13 +14,13 @@ integration-test:
 .PHONY: solr
 solr: rm-solr
 	$(DOCKER) run -d -p 8983:8983 --name $(SOLR_NAME) $(SOLR_IMAGE) solr -f
-	$(DOCKER) exec -it $(SOLR_NAME) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
-	$(DOCKER) exec -it $(SOLR_NAME) solr create -c searchengines
+	$(DOCKER) exec -t $(SOLR_NAME) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
+	$(DOCKER) exec -t $(SOLR_NAME) solr create -c searchengines
 
 .PHONY: solrcloud
 solrcloud: rm-solrcloud	
 	$(DOCKER) run -d -p 8984:8983 --name $(SOLR_CLOUD_NAME) $(SOLR_IMAGE) solr -c -f
-	$(DOCKER) exec -it $(SOLR_CLOUD_NAME) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
+	$(DOCKER) exec -t $(SOLR_CLOUD_NAME) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
 
 .PHONY: rm-solrcloud
 rm-solrcloud: 
