@@ -66,13 +66,13 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 
 ## Supported APIs
 
-- [Collections API](https://lucene.apache.org/solr/guide/8_8/collections-api.html)
-- [Query API](https://lucene.apache.org/solr/guide/8_8/json-request-api.html)
-  - [Facet API](https://lucene.apache.org/solr/guide/8_8/json-facet-api.html)
-- [Update API](https://lucene.apache.org/solr/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
-- [Schema API](https://lucene.apache.org/solr/guide/8_8/schema-api.html)
-- [Config API](https://lucene.apache.org/solr/guide/8_8/config-api.html)
-- [Suggester API](https://lucene.apache.org/solr/guide/8_8/suggester.html)
+- [Collections API](https://solr.apache.org/guide/8_8/collections-api.html)
+- [Query API](https://solr.apache.org/guide/8_8/json-request-api.html)
+  - [Facet API](https://solr.apache.org/guide/8_8/json-facet-api.html)
+- [Update API](https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
+- [Schema API](https://solr.apache.org/guide/8_8/schema-api.html)
+- [Config API](https://solr.apache.org/guide/8_8/config-api.html)
+- [Suggester API](https://solr.apache.org/guide/8_8/suggester.html)
 
 ## Projects using it
 
