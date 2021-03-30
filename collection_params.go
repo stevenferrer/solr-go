@@ -42,8 +42,8 @@ func (c *CollectionParams) Async(requestID string) *CollectionParams {
 	return c
 }
 
-// BuildParam builds the parameters
-func (c *CollectionParams) BuildParam() string {
+// BuildParams builds the parameters
+func (c *CollectionParams) BuildParams() string {
 	vals := &url.Values{}
 
 	if c.name != "" {

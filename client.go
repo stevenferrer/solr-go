@@ -33,17 +33,23 @@ type Client interface {
 	// Core Admin API
 	// Create, Unload, Reload, Rename, List, Status
 
-	// CreateCore(context.Context, *CoreParams)
-	// // https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-unload
-	// UnloadCore(context.Context, *CoreParams)
+	// CreateCore creates a new core
+	//
+	// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-create
+	CreateCore(context.Context, *CreateCoreParams) error
+	// CoreStatus returns the status of all running Solr cores, or status for only the named core.
+	//
+	// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-status
+	CoreStatus(context.Context, *CoreParams) (*CoreStatusResponse, error)
+	// UnloadCore removes a core from Solr
+	//
+	// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-unload
+	UnloadCore(context.Context, *CoreParams) error
 	// // https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-reload
 	// ReloadCore(context.Context, *CoreParams)
 	// // https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-rename
 	// RenameCore(context.Context, *CoreParams)
 	// ListCores(context.Context)
-	// // https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-status
-	// CoreStatus(context.Context, *CoreParams)
-	// // https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-create
 
 	// Query sends a query to the query API.
 	//

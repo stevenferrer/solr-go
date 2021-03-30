@@ -57,13 +57,13 @@ func TestJSONClientMock(t *testing.T) {
 				},
 			)
 
-			collection := solr.NewCollectionParams().
+			params := solr.NewCollectionParams().
 				Name("mycollection").NumShards(1).
 				ReplicationFactor(1)
-			err := client.CreateCollection(ctx, collection)
+			err := client.CreateCollection(ctx, params)
 			assert.NoError(t, err)
 
-			err = clientThatErrors.CreateCollection(ctx, collection)
+			err = clientThatErrors.CreateCollection(ctx, params)
 			assert.ErrorIs(t, err, errSendRequest)
 		})
 		t.Run("delete collection", func(t *testing.T) {
@@ -81,13 +81,82 @@ func TestJSONClientMock(t *testing.T) {
 				},
 			)
 
-			collection := solr.NewCollectionParams().
+			params := solr.NewCollectionParams().
 				Name("mycollection")
-			err := client.DeleteCollection(ctx, collection)
+			err := client.DeleteCollection(ctx, params)
 			assert.NoError(t, err)
 
-			err = clientThatErrors.DeleteCollection(ctx, collection)
+			err = clientThatErrors.DeleteCollection(ctx, params)
 			assert.ErrorIs(t, err, errSendRequest)
+		})
+	})
+
+	t.Run("core admin", func(t *testing.T) {
+		t.Run("create core", func(t *testing.T) {
+			httpmock.RegisterResponder(
+				http.MethodGet,
+				baseURL+"/solr/admin/cores",
+				func(r *http.Request) (*http.Response, error) {
+					query := "action=CREATE&name=mycore"
+					gotQuery := r.URL.Query().Encode()
+					if gotQuery != query {
+						return nil, errors.Errorf("expecting url query to be %q but got %q", query, gotQuery)
+					}
+
+					return httpmock.NewJsonResponse(http.StatusOK, solr.M{})
+				},
+			)
+
+			params := solr.NewCreateCoreParams("mycore")
+			err := client.CreateCore(ctx, params)
+			assert.NoError(t, err)
+
+			err = clientThatErrors.CreateCore(ctx, params)
+			assert.ErrorIs(t, err, errSendRequest)
+		})
+
+		t.Run("core status", func(t *testing.T) {
+			httpmock.RegisterResponder(
+				http.MethodGet,
+				baseURL+"/solr/admin/cores",
+				func(r *http.Request) (*http.Response, error) {
+					query := "action=STATUS&core=mycore"
+					gotQuery := r.URL.Query().Encode()
+					if gotQuery != query {
+						return nil, errors.Errorf("expecting url query to be %q but got %q", query, gotQuery)
+					}
+
+					return httpmock.NewJsonResponse(http.StatusOK, solr.M{})
+				},
+			)
+
+			params := solr.NewCoreParams("mycore")
+			_, err := client.CoreStatus(ctx, params)
+			assert.NoError(t, err)
+
+			_, err = clientThatErrors.CoreStatus(ctx, params)
+			assert.ErrorIs(t, err, errSendRequest)
+		})
+
+		t.Run("unload core", func(t *testing.T) {
+			httpmock.RegisterResponder(
+				http.MethodGet,
+				baseURL+"/solr/admin/cores",
+				func(r *http.Request) (*http.Response, error) {
+					query := "action=UNLOAD&core=mycore"
+					gotQuery := r.URL.Query().Encode()
+					if gotQuery != query {
+						return nil, errors.Errorf("expecting url query to be %q but got %q", query, gotQuery)
+					}
+
+					return httpmock.NewJsonResponse(http.StatusOK, solr.M{})
+				},
+			)
+
+			params := solr.NewCoreParams("mycore")
+			err := client.UnloadCore(ctx, params)
+			assert.NoError(t, err)
+
 		})
 	})
 

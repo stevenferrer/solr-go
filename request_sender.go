@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"time"
 
 	"github.com/pkg/errors"
 )
@@ -30,9 +29,7 @@ var _ RequestSender = (*DefaultRequestSender)(nil)
 // NewDefaultRequestSender returns a new DefaultRequestSender
 func NewDefaultRequestSender() *DefaultRequestSender {
 	return &DefaultRequestSender{
-		httpClient: &http.Client{
-			Timeout: time.Second * 10,
-		},
+		httpClient: http.DefaultClient,
 	}
 }
 

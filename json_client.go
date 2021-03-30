@@ -39,7 +39,7 @@ func (c *JSONClient) WithRequestSender(rs RequestSender) *JSONClient {
 //
 // Refer to https://solr.apache.org/guide/8_8/collection-management.html#create
 func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionParams) error {
-	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParam(), c.baseURL)
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
@@ -62,7 +62,67 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 //
 // Refer to https://solr.apache.org/guide/8_8/collection-management.html#delete
 func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionParams) error {
-	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParam(), c.baseURL)
+	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
+func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreStatusResponse, error) {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=STATUS&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "send request")
+	}
+
+	var resp CoreStatusResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return nil, errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return nil, errors.New("something went wrong")
+	}
+
+	return &resp, nil
+}
+
+func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=CREATE&"+params.BuildParams(), c.baseURL)
+	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	if err != nil {
+		return errors.Wrap(err, "send request")
+	}
+
+	var resp BaseResponse
+	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	if err != nil {
+		return errors.Wrap(err, "decode response body")
+	}
+
+	if httpResp.StatusCode > http.StatusOK {
+		return resp.Error
+	}
+
+	return nil
+}
+
+func (c *JSONClient) UnloadCore(ctx context.Context, params *CoreParams) error {
+	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=UNLOAD&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
