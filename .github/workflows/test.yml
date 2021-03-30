@@ -35,7 +35,7 @@ jobs:
           docker exec solr bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
 
       - name: Tests
-        run: go test -tags integration -v -coverprofile=profile.cov
+        run: go test -tags integration -coverprofile=profile.cov
         
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
