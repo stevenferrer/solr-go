@@ -12,7 +12,8 @@ import (
 
 func TestRequestSender(t *testing.T) {
 	rs := solr.NewDefaultRequestSender().
-		WithHTTPClient(http.DefaultClient)
+		WithHTTPClient(http.DefaultClient).
+		WithBasicAuth("solr", "SolrRocks")
 
 	ctx := context.Background()
 	_, err := rs.SendRequest(ctx, "", "", "", nil)

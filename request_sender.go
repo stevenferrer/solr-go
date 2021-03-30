@@ -15,23 +15,23 @@ type RequestSender interface {
 		contentType string, body io.Reader) (*http.Response, error)
 }
 
+type basicAuth struct {
+	username, password string
+}
+
 // DefaultRequestSender is the default HTTP request sender
 type DefaultRequestSender struct {
 	httpClient *http.Client
+	basicAuth  *basicAuth
 }
 
 var _ RequestSender = (*DefaultRequestSender)(nil)
 
 // NewDefaultRequestSender returns a new DefaultRequestSender
 func NewDefaultRequestSender() *DefaultRequestSender {
-	httpTransport := http.DefaultTransport.(*http.Transport).Clone()
-	httpTransport.MaxIdleConns = 100
-	httpTransport.MaxConnsPerHost = 100
-	httpTransport.MaxIdleConnsPerHost = 100
 	return &DefaultRequestSender{
 		httpClient: &http.Client{
-			Timeout:   time.Second * 10,
-			Transport: httpTransport,
+			Timeout: time.Second * 10,
 		},
 	}
 }
@@ -42,17 +42,24 @@ func (rs *DefaultRequestSender) WithHTTPClient(httpClient *http.Client) *Default
 	return rs
 }
 
+func (rs *DefaultRequestSender) WithBasicAuth(username, password string) *DefaultRequestSender {
+	rs.basicAuth = &basicAuth{username: username, password: password}
+	return rs
+}
+
 // SendRequest builds and sends the HTTP request
-func (rs *DefaultRequestSender) SendRequest(
-	ctx context.Context, httpMethod,
-	urlStr, contentType string,
-	body io.Reader,
-) (*http.Response, error) {
+func (rs *DefaultRequestSender) SendRequest(ctx context.Context, httpMethod,
+	urlStr, contentType string, body io.Reader) (*http.Response, error) {
 	httpReq, err := http.NewRequestWithContext(ctx, httpMethod, urlStr, body)
 	if err != nil {
 		return nil, errors.Wrap(err, "new http request")
 	}
-	httpReq.Header.Add("Content-Type", contentType)
+	httpReq.Header.Add("content-type", contentType)
+
+	// include basic auth if available
+	if rs.basicAuth != nil {
+		httpReq.SetBasicAuth(rs.basicAuth.username, rs.basicAuth.password)
+	}
 
 	var httpResp *http.Response
 	httpResp, err = rs.httpClient.Do(httpReq)
