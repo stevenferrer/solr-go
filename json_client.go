@@ -16,8 +16,9 @@ import (
 // JSONClient is a client for interacting with Solr via JSON API
 type JSONClient struct {
 	// baseURL is the base url of the solr instance
-	baseURL       string
-	requestSender RequestSender
+	baseURL string
+	// reqSender is the request sender
+	reqSender RequestSender
 }
 
 var _ Client = (*JSONClient)(nil)
@@ -25,14 +26,14 @@ var _ Client = (*JSONClient)(nil)
 // NewJSONClient returns a new JSONClient
 func NewJSONClient(baseURL string) *JSONClient {
 	return &JSONClient{
-		baseURL:       baseURL,
-		requestSender: NewDefaultRequestSender(),
+		baseURL:   baseURL,
+		reqSender: NewDefaultRequestSender(),
 	}
 }
 
 // WithRequestSender overrides the default request sender
-func (c *JSONClient) WithRequestSender(rs RequestSender) *JSONClient {
-	c.requestSender = rs
+func (c *JSONClient) WithRequestSender(reqSender RequestSender) *JSONClient {
+	c.reqSender = reqSender
 	return c
 }
 
@@ -41,7 +42,7 @@ func (c *JSONClient) WithRequestSender(rs RequestSender) *JSONClient {
 // Refer to https://solr.apache.org/guide/8_8/collection-management.html#create
 func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParams(), c.baseURL)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -64,7 +65,7 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 // Refer to https://solr.apache.org/guide/8_8/collection-management.html#delete
 func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParams(), c.baseURL)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -82,9 +83,12 @@ func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionPar
 	return nil
 }
 
+// CoreStatus returns the status of all running Solr cores, or status for only the named core.
+//
+// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-status
 func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreStatusResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=STATUS&"+params.BuildParams(), c.baseURL)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -102,9 +106,12 @@ func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreS
 	return &resp, nil
 }
 
+// CreateCore creates a new core
+//
+// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-create
 func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=CREATE&"+params.BuildParams(), c.baseURL)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -122,9 +129,12 @@ func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) e
 	return nil
 }
 
+// UnloadCore removes a core from Solr
+//
+// Refer to https://solr.apache.org/guide/8_8/coreadmin-api.html#coreadmin-unload
 func (c *JSONClient) UnloadCore(ctx context.Context, params *CoreParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=UNLOAD&"+params.BuildParams(), c.baseURL)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -153,7 +163,7 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 	}
 
 	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -176,7 +186,7 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 // Refer to https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html
 func (c *JSONClient) Update(ctx context.Context, collection string, mimeType MimeType, body io.Reader) (*UpdateResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, mimeType.String(), body)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, mimeType.String(), body)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}
@@ -197,7 +207,7 @@ func (c *JSONClient) Update(ctx context.Context, collection string, mimeType Mim
 // Commit commits the last update.
 func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/update?commit=true", c.baseURL, collection)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -304,7 +314,7 @@ func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interf
 		return errors.Wrap(err, "encode request body")
 	}
 
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -361,7 +371,7 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 	reqBody := "{" + strings.Join(commands, ",") + "}"
 
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), strings.NewReader(reqBody))
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), strings.NewReader(reqBody))
 	if err != nil {
 		return errors.Wrap(err, "send request")
 	}
@@ -399,7 +409,7 @@ func (c *JSONClient) DeleteComponents(ctx context.Context, collection string, co
 // Refer to https://solr.apache.org/guide/8_8/suggester.html#get-suggestions-with-weights
 func (c *JSONClient) Suggest(ctx context.Context, collection string, params *SuggestParams) (*SuggestResponse, error) {
 	urlStr := fmt.Sprintf("%s/solr/%s/%s?%s", c.baseURL, collection, params.endpoint, params.BuildParams())
-	httpResp, err := c.requestSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
+	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
 		return nil, errors.Wrap(err, "send request")
 	}

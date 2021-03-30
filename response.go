@@ -72,12 +72,14 @@ type Suggestion struct {
 	Payload string `json:"payload,omitempty"`
 }
 
+// CoreStatusResponse is the core status response
 type CoreStatusResponse struct {
 	*BaseResponse
 	InitFailures M                      `json:"initFailures"`
 	Status       map[string]*CoreStatus `json:"status"`
 }
 
+// CoreStatus is the core status
 type CoreStatus struct {
 	Config      string     `json:"config"`
 	DataDir     string     `json:"dataDir"`
@@ -89,6 +91,7 @@ type CoreStatus struct {
 	Uptime      int        `json:"uptime"`
 }
 
+// Index is the index details from core status
 type Index struct {
 	Current                 bool   `json:"current"`
 	DeletedDocs             int    `json:"deletedDocs"`
