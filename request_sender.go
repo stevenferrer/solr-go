@@ -39,6 +39,7 @@ func (rs *DefaultRequestSender) WithHTTPClient(httpClient *http.Client) *Default
 	return rs
 }
 
+// WithBasicAuth sets the basic auth credentials
 func (rs *DefaultRequestSender) WithBasicAuth(username, password string) *DefaultRequestSender {
 	rs.basicAuth = &basicAuth{username: username, password: password}
 	return rs
