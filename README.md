@@ -23,11 +23,8 @@ baseURL := "http://solr.example.com"
 client := solr.NewJSONClient(baseURL)
 
 // Create a query
-query := solr.NewQuery().
-    QueryParser(
-        solr.NewDisMaxQueryParser().
-            Query("'solr rocks'"),
-    ).
+query := solr.NewQuery(solr.NewDisMaxQueryParser().
+        Query("'solr rocks'").BuildParser()).
     Queries(solr.M{
         "query_filters": []solr.M{
             {
@@ -67,12 +64,17 @@ queryResponse, err := client.Query(context.Background(), "techproducts", query)
 ## Supported APIs
 
 - [Collections API](https://solr.apache.org/guide/8_8/collections-api.html)
+- [Core Admin API]()
 - [Query API](https://solr.apache.org/guide/8_8/json-request-api.html)
   - [Facet API](https://solr.apache.org/guide/8_8/json-facet-api.html)
 - [Update API](https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers)
 - [Schema API](https://solr.apache.org/guide/8_8/schema-api.html)
 - [Config API](https://solr.apache.org/guide/8_8/config-api.html)
 - [Suggester API](https://solr.apache.org/guide/8_8/suggester.html)
+
+## Other supported features
+
+- [Basic Auth](https://solr.apache.org/guide/8_8/basic-authentication-plugin.html#basic-authentication-plugin)
 
 ## Projects using it
 

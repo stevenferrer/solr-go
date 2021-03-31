@@ -18,9 +18,7 @@ import (
 
 func TestJSONClient(t *testing.T) {
 	requestSender := solr.NewDefaultRequestSender().
-		WithHTTPClient(&http.Client{
-			Timeout: 30 * time.Second,
-		}).
+		WithHTTPClient(&http.Client{Timeout: 30 * time.Second}).
 		WithBasicAuth("solr", "SolrRocks")
 
 	t.Run("standalone", func(t *testing.T) {

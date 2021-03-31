@@ -48,13 +48,9 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 	}
 
 	var resp BaseResponse
-	err = json.NewDecoder(httpResp.Body).Decode(&resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response body")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -71,13 +67,9 @@ func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionPar
 	}
 
 	var resp BaseResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -94,13 +86,9 @@ func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreS
 	}
 
 	var resp CoreStatusResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return nil, resp.Error
+		return nil, errors.Wrap(err, "read response")
 	}
 
 	return &resp, nil
@@ -117,13 +105,9 @@ func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) e
 	}
 
 	var resp BaseResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -140,13 +124,9 @@ func (c *JSONClient) UnloadCore(ctx context.Context, params *CoreParams) error {
 	}
 
 	var resp BaseResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -169,13 +149,9 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 	}
 
 	var resp QueryResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return nil, resp.Error
+		return nil, errors.Wrap(err, "read response")
 	}
 
 	return &resp, nil
@@ -192,13 +168,9 @@ func (c *JSONClient) Update(ctx context.Context, collection string, mimeType Mim
 	}
 
 	var resp UpdateResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return nil, resp.Error
+		return nil, errors.Wrap(err, "read response")
 	}
 
 	return &resp, nil
@@ -213,13 +185,9 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	}
 
 	var resp UpdateResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -320,13 +288,9 @@ func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interf
 	}
 
 	var resp BaseResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -377,13 +341,9 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 	}
 
 	var resp BaseResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return resp.Error
+		return errors.Wrap(err, "read response")
 	}
 
 	return nil
@@ -415,19 +375,15 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	}
 
 	var resp SuggestResponse
-	err = decodeReponse(httpResp, &resp)
+	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "decode response")
-	}
-
-	if httpResp.StatusCode > http.StatusOK {
-		return nil, resp.Error
+		return nil, errors.Wrap(err, "read response")
 	}
 
 	return &resp, nil
 }
 
-func decodeReponse(resp *http.Response, v interface{}) error {
+func readResponse(resp *http.Response, v interface{}) error {
 	contentType := resp.Header.Get("content-type")
 	if strings.Contains(contentType, "text/html") {
 		b, err := ioutil.ReadAll(resp.Body)
@@ -438,5 +394,15 @@ func decodeReponse(resp *http.Response, v interface{}) error {
 		return errors.Errorf("unexpected html response: %s", string(b))
 	}
 
-	return errors.Wrap(json.NewDecoder(resp.Body).Decode(v), "decode json response")
+	err := json.NewDecoder(resp.Body).Decode(v)
+	if err != nil {
+		return errors.Wrap(err, "decode json response")
+	}
+
+	val, ok := v.(*BaseResponse)
+	if ok && resp.StatusCode > http.StatusOK {
+		return val.Error
+	}
+
+	return nil
 }
