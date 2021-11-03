@@ -1,23 +1,23 @@
 # Solr-Go
 
-![Github Actions](https://github.com/sf9v/solr-go/workflows/test/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/sf9v/solr-go/badge.svg?branch=main)](https://coveralls.io/github/sf9v/solr-go?branch=main)
-[![Go Report Card](https://goreportcard.com/badge/github.com/sf9v/solr-go)](https://goreportcard.com/report/github.com/sf9v/solr-go)
-[![GoDoc](https://pkg.go.dev/badge/github.com/sf9v/solr-go)](https://pkg.go.dev/github.com/sf9v/solr-go)
+![Github Actions](https://github.com/stevenferrer/solr-go/workflows/test/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/solr-go/badge.svg?branch=main)](https://coveralls.io/github/stevenferrer/solr-go?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/solr-go)](https://goreportcard.com/report/github.com/stevenferrer/solr-go)
+[![GoDoc](https://pkg.go.dev/badge/github.com/stevenferrer/solr-go)](https://pkg.go.dev/github.com/stevenferrer/solr-go)
 
 A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
 
 ## Installation
 
 ```console
-$ go get github.com/sf9v/solr-go
+$ go get github.com/stevenferrer/solr-go
 ```
 
 ## Example
 
 ```go
 import (
-    "github.com/sf9v/solr-go"
+    "github.com/stevenferrer/solr-go"
 )
 
 ...
@@ -84,7 +84,7 @@ See [integration test](integration_test.go) for a more complete example.
 
 ## Projects using it
 
-- [Multi-select facet using Solr, Vue and Go](https://github.com/sf9v/multi-select-facet)
+- [Multi-select facet using Solr, Vue and Go](https://github.com/stevenferrer/multi-select-facet)
 
 ## A (minor) word of caution
 
@@ -93,13 +93,13 @@ Keep in mind that this library is still evolving and will likely have some break
 ## Supporting the project
 
 You can support the project in the following ways: 
- - Give it a [star](https://github.com/sf9v/solr-go/stargazers), it's free!
+ - Give it a [star](https://github.com/stevenferrer/solr-go/stargazers), it's free!
  - Write some tutorials
  - Use it your projects
 
 ## Contributing
 
-Please feel free to improve this project by [opening an issue](https://github.com/sf9v/solr-go/issues/new) or by [making a pull-request](https://github.com/sf9v/solr-go/pulls).
+Please feel free to improve this project by [opening an issue](https://github.com/stevenferrer/solr-go/issues/new) or by [making a pull-request](https://github.com/stevenferrer/solr-go/pulls).
 
 ## License
 

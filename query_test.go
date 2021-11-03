@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/sf9v/solr-go"
+	"github.com/stevenferrer/solr-go"
 )
 
 func TestQuery(t *testing.T) {

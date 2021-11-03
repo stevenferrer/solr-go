@@ -1,4 +1,4 @@
-module github.com/sf9v/solr-go
+module github.com/stevenferrer/solr-go
 
 go 1.15
 

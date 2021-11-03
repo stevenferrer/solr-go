@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sf9v/solr-go"
+	"github.com/stevenferrer/solr-go"
 )
 
 // errorRequestSender is a request sender that errors

@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package solr_test
@@ -13,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/sf9v/solr-go"
+	"github.com/stevenferrer/solr-go"
 )
 
 func TestJSONClient(t *testing.T) {
