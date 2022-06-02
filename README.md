@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/solr-go)](https://goreportcard.com/report/github.com/stevenferrer/solr-go)
 [![GoDoc](https://pkg.go.dev/badge/github.com/stevenferrer/solr-go)](https://pkg.go.dev/github.com/stevenferrer/solr-go)
 
-A [Solr](https://lucene.apache.org/solr) client for [Go](https://golang.org/).
+A [Solr](https://solr.apache.org/) client for [Go](https://golang.org/).
 
 ## Installation
 
@@ -92,10 +92,11 @@ Keep in mind that this library is still evolving and will likely have some break
 
 ## Supporting the project
 
-You can support the project in the following ways: 
- - Give it a [star](https://github.com/stevenferrer/solr-go/stargazers), it's free!
- - Write some tutorials
- - Use it your projects
+You can support the project in the following ways:
+
+- Give it a [star](https://github.com/stevenferrer/solr-go/stargazers), it's free!
+- Write some tutorials
+- Use it your projects
 
 ## Contributing
 
