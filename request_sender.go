@@ -4,8 +4,6 @@ import (
 	"context"
 	"io"
 	"net/http"
-
-	"github.com/pkg/errors"
 )
 
 // RequestSender is an HTTP request sender
@@ -50,7 +48,7 @@ func (rs *DefaultRequestSender) SendRequest(ctx context.Context, httpMethod,
 	urlStr, contentType string, body io.Reader) (*http.Response, error) {
 	httpReq, err := http.NewRequestWithContext(ctx, httpMethod, urlStr, body)
 	if err != nil {
-		return nil, errors.Wrap(err, "new http request")
+		return nil, wrapErr(err, "new http request")
 	}
 	httpReq.Header.Add("content-type", contentType)
 
@@ -62,7 +60,7 @@ func (rs *DefaultRequestSender) SendRequest(ctx context.Context, httpMethod,
 	var httpResp *http.Response
 	httpResp, err = rs.httpClient.Do(httpReq)
 	if err != nil {
-		return nil, errors.Wrap(err, "send http request")
+		return nil, wrapErr(err, "send http request")
 	}
 
 	return httpResp, nil
