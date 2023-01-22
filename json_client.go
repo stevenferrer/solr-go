@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 // JSONClient is a client for interacting with Solr via JSON API
@@ -43,13 +42,13 @@ func (c *JSONClient) CreateCollection(ctx context.Context, params *CollectionPar
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=CREATE&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -62,13 +61,13 @@ func (c *JSONClient) DeleteCollection(ctx context.Context, params *CollectionPar
 	urlStr := fmt.Sprintf("%s/solr/admin/collections?action=DELETE&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -81,13 +80,13 @@ func (c *JSONClient) CoreStatus(ctx context.Context, params *CoreParams) (*CoreS
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=STATUS&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "send request")
+		return nil, wrapErr(err, "send request")
 	}
 
 	var resp CoreStatusResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "read response")
+		return nil, wrapErr(err, "read response")
 	}
 
 	return &resp, nil
@@ -100,13 +99,13 @@ func (c *JSONClient) CreateCore(ctx context.Context, params *CreateCoreParams) e
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=CREATE&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -119,13 +118,13 @@ func (c *JSONClient) UnloadCore(ctx context.Context, params *CoreParams) error {
 	urlStr := fmt.Sprintf("%s/solr/admin/cores?action=UNLOAD&"+params.BuildParams(), c.baseURL)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -138,19 +137,19 @@ func (c *JSONClient) Query(ctx context.Context, collection string, query *Query)
 	buf := &bytes.Buffer{}
 	err := json.NewEncoder(buf).Encode(query.BuildQuery())
 	if err != nil {
-		return nil, errors.Wrap(err, "encode request body")
+		return nil, wrapErr(err, "encode request body")
 	}
 
 	urlStr := fmt.Sprintf("%s/solr/%s/query", c.baseURL, collection)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
-		return nil, errors.Wrap(err, "send request")
+		return nil, wrapErr(err, "send request")
 	}
 
 	var resp QueryResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "read response")
+		return nil, wrapErr(err, "read response")
 	}
 
 	return &resp, nil
@@ -163,13 +162,13 @@ func (c *JSONClient) Update(ctx context.Context, collection string, mimeType Mim
 	urlStr := fmt.Sprintf("%s/solr/%s/update", c.baseURL, collection)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, mimeType.String(), body)
 	if err != nil {
-		return nil, errors.Wrap(err, "send request")
+		return nil, wrapErr(err, "send request")
 	}
 
 	var resp UpdateResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "read response")
+		return nil, wrapErr(err, "read response")
 	}
 
 	return &resp, nil
@@ -180,13 +179,13 @@ func (c *JSONClient) Commit(ctx context.Context, collection string) error {
 	urlStr := fmt.Sprintf("%s/solr/%s/update?commit=true", c.baseURL, collection)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp UpdateResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -278,18 +277,18 @@ func (c *JSONClient) postJSON(ctx context.Context, urlStr string, reqBody interf
 	buf := &bytes.Buffer{}
 	err := json.NewEncoder(buf).Encode(reqBody)
 	if err != nil {
-		return errors.Wrap(err, "encode request body")
+		return wrapErr(err, "encode request body")
 	}
 
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), buf)
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -324,7 +323,7 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 	for _, comp := range components {
 		b, err := json.Marshal(comp.BuildComponent())
 		if err != nil {
-			return errors.Wrap(err, "marshal component")
+			return wrapErr(err, "marshal component")
 		}
 
 		command := fmt.Sprintf("%q:%s", "add-"+comp.ct.String(), string(b))
@@ -336,13 +335,13 @@ func (c *JSONClient) AddComponents(ctx context.Context, collection string, compo
 	urlStr := fmt.Sprintf("%s/solr/%s/config", c.baseURL, collection)
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodPost, urlStr, JSON.String(), strings.NewReader(reqBody))
 	if err != nil {
-		return errors.Wrap(err, "send request")
+		return wrapErr(err, "send request")
 	}
 
 	var resp BaseResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return errors.Wrap(err, "read response")
+		return wrapErr(err, "read response")
 	}
 
 	return nil
@@ -370,13 +369,13 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 	urlStr := fmt.Sprintf("%s/solr/%s/%s?%s", c.baseURL, collection, params.endpoint, params.BuildParams())
 	httpResp, err := c.reqSender.SendRequest(ctx, http.MethodGet, urlStr, JSON.String(), nil)
 	if err != nil {
-		return nil, errors.Wrap(err, "send request")
+		return nil, wrapErr(err, "send request")
 	}
 
 	var resp SuggestResponse
 	err = readResponse(httpResp, &resp)
 	if err != nil {
-		return nil, errors.Wrap(err, "read response")
+		return nil, wrapErr(err, "read response")
 	}
 
 	return &resp, nil
@@ -387,15 +386,15 @@ func readResponse(resp *http.Response, v interface{}) error {
 	if strings.Contains(contentType, "text/html") {
 		b, err := io.ReadAll(resp.Body)
 		if err != nil {
-			return errors.Wrap(err, "read html response")
+			return wrapErr(err, "read html response")
 		}
 
-		return errors.Errorf("unexpected html response: %s", string(b))
+		return fmt.Errorf("unexpected html response: %s", string(b))
 	}
 
 	err := json.NewDecoder(resp.Body).Decode(v)
 	if err != nil {
-		return errors.Wrap(err, "decode json response")
+		return wrapErr(err, "decode json response")
 	}
 
 	val, ok := v.(*BaseResponse)
