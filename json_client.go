@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -386,7 +385,7 @@ func (c *JSONClient) Suggest(ctx context.Context, collection string, params *Sug
 func readResponse(resp *http.Response, v interface{}) error {
 	contentType := resp.Header.Get("content-type")
 	if strings.Contains(contentType, "text/html") {
-		b, err := ioutil.ReadAll(resp.Body)
+		b, err := io.ReadAll(resp.Body)
 		if err != nil {
 			return errors.Wrap(err, "read html response")
 		}
