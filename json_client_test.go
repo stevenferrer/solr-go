@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"reflect"
 	"testing"
@@ -617,7 +616,7 @@ func newResponderWithStatus(status int, body string, mockResp interface{}) httpm
 	}
 
 	return func(r *http.Request) (*http.Response, error) {
-		b, err := ioutil.ReadAll(r.Body)
+		b, err := io.ReadAll(r.Body)
 		if err != nil {
 			return nil, errors.Wrap(err, "read request body")
 		}
