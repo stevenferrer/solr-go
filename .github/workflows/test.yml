@@ -2,9 +2,9 @@ name: test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint:
@@ -12,11 +12,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Run linter
         uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.29
 
   test:
     runs-on: ubuntu-latest
@@ -27,7 +25,7 @@ jobs:
       - name: Setup go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.15
+          go-version: 1.18
 
       - name: Setup solr
         run: |
@@ -36,7 +34,7 @@ jobs:
 
       - name: Run tests
         run: go test -tags integration -coverprofile=profile.cov
-        
+
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
         with:
