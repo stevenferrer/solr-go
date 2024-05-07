@@ -108,7 +108,7 @@ type Field struct {
 	Indexed              bool   `json:"indexed,omitempty"`
 	Stored               bool   `json:"stored,omitempty"`
 	MultiValued          bool   `json:"multiValued,omitempty"`
-	Required             bool   `json:"requied,omitempty"`
+	Required             bool   `json:"required,omitempty"`
 	UseDocValuesAsStored bool   `json:"useDocValuesAsStored,omitempty"`
 }
 
