@@ -52,7 +52,7 @@ func (qp *StandardQueryParser) BuildParser() string {
 	}
 
 	if qp.q != "" {
-		kv = append(kv, fmt.Sprintf("v=%s", qp.q))
+		kv = append(kv, fmt.Sprintf("v=%q", qp.q))
 	}
 
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
