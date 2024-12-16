@@ -14,8 +14,8 @@ integration-test:
 .PHONY: solr
 solr: rm-solr
 	$(DOCKER) run -d -p 8983:8983 --name $(SOLR_NAME) $(SOLR_IMAGE) solr -f
-	$(DOCKER) chmod -R 755 /var/solr/data
-	$(DOCKER) chown -R solr:solr /var/solr/data
+	$(DOCKER) exec chmod -R 755 /var/solr/data
+	$(DOCKER) exec chown -R solr:solr /var/solr/data
 	$(DOCKER) cp fixtures/security.json $(SOLR_NAME):/var/solr/data/security.json
 	$(DOCKER) exec -t $(SOLR_NAME) bash -c 'sleep 5; wait-for-solr.sh --max-attempts 10 --wait-seconds 5'
 	$(DOCKER) exec -t $(SOLR_NAME) bash -c 'SOLR_AUTH_TYPE="basic" SOLR_AUTHENTICATION_OPTS="-Dbasicauth=solr:SolrRocks" solr create -c searchengines'
