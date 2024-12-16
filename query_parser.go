@@ -21,6 +21,7 @@ type StandardQueryParser struct {
 	df  string // default field
 	sow bool   // split on whitespace
 	tag string // tag
+	rows string // rows
 }
 
 var _ QueryParser = (*StandardQueryParser)(nil)
@@ -55,6 +56,10 @@ func (qp *StandardQueryParser) BuildParser() string {
 		kv = append(kv, fmt.Sprintf("v=%s", qp.q))
 	}
 
+	if qp.rows != "" {
+		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
+	}
+
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
 }
 
@@ -85,6 +90,12 @@ func (qp *StandardQueryParser) Sow() *StandardQueryParser {
 // Tag sets the tag param
 func (qp *StandardQueryParser) Tag(tag string) *StandardQueryParser {
 	qp.tag = tag
+	return qp
+}
+
+// Tag sets the tag param
+func (qp *StandardQueryParser) Rows(rows string) *StandardQueryParser {
+	qp.rows = rows
 	return qp
 }
 
