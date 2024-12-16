@@ -69,22 +69,18 @@ See [integration test](integration_test.go) for a more complete example.
 
 ## Supported APIs
 
-- [Collections API](https://solr.apache.org/guide/8_8/collections-api.html) - Create and delete collection.
-- [Core Admin API](https://solr.apache.org/guide/8_8/coreadmin-api.html) - [Create](https://issues.apache.org/jira/browse/SOLR-7316), delete and check core status.
-- [Query API](https://solr.apache.org/guide/8_8/json-request-api.html) - Query via the JSON request API.
-  - [Facet API](https://solr.apache.org/guide/8_8/json-facet-api.html) - Terms and query facet.
-- [Update API](https://solr.apache.org/guide/8_8/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers) - JSON formatted index updates.
-- [Schema API](https://solr.apache.org/guide/8_8/schema-api.html) - Modify schema fields, dynamic fields, copy fields and field types.
-- [Config API](https://solr.apache.org/guide/8_8/config-api.html) - Modify config properties and update components.
-- [Suggester API](https://solr.apache.org/guide/8_8/suggester.html) - Auto-suggest/type-ahead via suggester component.
+- [Collections API](https://solr.apache.org/guide/collections-api.html) - Create and delete collection.
+- [Core Admin API](https://solr.apache.org/guide/coreadmin-api.html) - [Create](https://issues.apache.org/jira/browse/SOLR-7316), delete and check core status.
+- [Query API](https://solr.apache.org/guide/json-request-api.html) - Query via the JSON request API.
+  - [Facet API](https://solr.apache.org/guide/json-facet-api.html) - Terms and query facet.
+- [Update API](https://solr.apache.org/guide/uploading-data-with-index-handlers.html#uploading-data-with-index-handlers) - JSON formatted index updates.
+- [Schema API](https://solr.apache.org/guide/schema-api.html) - Modify schema fields, dynamic fields, copy fields and field types.
+- [Config API](https://solr.apache.org/guide/config-api.html) - Modify config properties and update components.
+- [Suggester API](https://solr.apache.org/guide/suggester.html) - Auto-suggest/type-ahead via suggester component.
 
 ## Other features
 
-- [Basic auth support](https://solr.apache.org/guide/8_8/basic-authentication-plugin.html#basic-authentication-plugin) - Interacting with a Solr server that uses the basic authentication plugin.
-
-## Projects using it
-
-- [Multi-select facet using Solr, Vue and Go](https://github.com/public-safety-canada/multi-select-facet)
+- [Basic auth support](https://solr.apache.org/guide/basic-authentication-plugin.html#basic-authentication-plugin) - Interacting with a Solr server that uses the basic authentication plugin.
 
 ## A (minor) word of caution
 
