@@ -25,6 +25,11 @@ func TestQueryParsers(t *testing.T) {
 			Query("'solr rocks'").BuildParser()
 		expect = "{!lucene v='solr rocks'}"
 		a.Equal(expect, got)
+
+		got = solr.NewStandardQueryParser().Query("'solr rocks'").
+			Df("text").Op("AND").Sow().Rows("100").BuildParser()
+		expect = "{!lucene df=text q.op=AND sow=true v='solr rocks' rows=100}"
+		a.Equal(expect, got)
 	})
 
 	t.Run("dismax query parser", func(t *testing.T) {
