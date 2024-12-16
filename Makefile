@@ -1,5 +1,5 @@
 DOCKER ?= docker
-SOLR_IMAGE ?= solr:8.8
+SOLR_IMAGE ?= solr:9.7.0
 SOLR_CLOUD_NAME ?= solrcloud
 SOLR_NAME ?= solr
 
