@@ -1,23 +1,23 @@
 # Solr-Go
 
-![Github Actions](https://github.com/stevenferrer/solr-go/workflows/test/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/stevenferrer/solr-go/badge.svg?branch=main)](https://coveralls.io/github/stevenferrer/solr-go?branch=main)
-[![Go Report Card](https://goreportcard.com/badge/github.com/stevenferrer/solr-go)](https://goreportcard.com/report/github.com/stevenferrer/solr-go)
-[![GoDoc](https://pkg.go.dev/badge/github.com/stevenferrer/solr-go)](https://pkg.go.dev/github.com/stevenferrer/solr-go)
+![Github Actions](https://github.com/public-safety-canada/solr-go/workflows/test/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/public-safety-canada/solr-go/badge.svg?branch=main)](https://coveralls.io/github/public-safety-canada/solr-go?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/public-safety-canada/solr-go)](https://goreportcard.com/report/github.com/public-safety-canada/solr-go)
+[![GoDoc](https://pkg.go.dev/badge/github.com/public-safety-canada/solr-go)](https://pkg.go.dev/github.com/public-safety-canada/solr-go)
 
 A [Solr](https://solr.apache.org/) client for [Go](https://golang.org/).
 
 ## Installation
 
 ```console
-$ go get github.com/stevenferrer/solr-go
+$ go get github.com/public-safety-canada/solr-go
 ```
 
 ## Example
 
 ```go
 import (
-    "github.com/stevenferrer/solr-go"
+    "github.com/public-safety-canada/solr-go"
 )
 
 ...
@@ -84,7 +84,7 @@ See [integration test](integration_test.go) for a more complete example.
 
 ## Projects using it
 
-- [Multi-select facet using Solr, Vue and Go](https://github.com/stevenferrer/multi-select-facet)
+- [Multi-select facet using Solr, Vue and Go](https://github.com/public-safety-canada/multi-select-facet)
 
 ## A (minor) word of caution
 
@@ -94,13 +94,13 @@ Keep in mind that this library is still evolving and will likely have some break
 
 You can support the project in the following ways:
 
-- Give it a [star](https://github.com/stevenferrer/solr-go/stargazers), it's free!
+- Give it a [star](https://github.com/public-safety-canada/solr-go/stargazers), it's free!
 - Write some tutorials
 - Use it your projects
 
 ## Contributing
 
-Please feel free to improve this project by [opening an issue](https://github.com/stevenferrer/solr-go/issues/new) or by [making a pull-request](https://github.com/stevenferrer/solr-go/pulls).
+Please feel free to improve this project by [opening an issue](https://github.com/public-safety-canada/solr-go/issues/new) or by [making a pull-request](https://github.com/public-safety-canada/solr-go/pulls).
 
 ## License
 
