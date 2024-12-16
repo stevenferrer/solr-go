@@ -1,10 +1,10 @@
 module github.com/stevenferrer/solr-go
 
-go 1.19
+go 1.23
 
 require (
-	github.com/jarcoal/httpmock v1.2.0
-	github.com/stretchr/testify v1.7.1
+	github.com/jarcoal/httpmock v1.3.1
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
