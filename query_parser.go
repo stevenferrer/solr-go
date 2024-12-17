@@ -15,12 +15,12 @@ type QueryParser interface {
 // StandardQueryParser is a standard query parser (lucene)
 type StandardQueryParser struct {
 	// standard q parser params
-	// reference: https://lucene.apache.org/solr/guide/8_7/the-standard-q-parser.html
-	q   string // query
-	op  string // default operator
-	df  string // default field
-	sow bool   // split on whitespace
-	tag string // tag
+	// reference: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html
+	q    string // query
+	op   string // default operator
+	df   string // default field
+	sow  bool   // split on whitespace
+	tag  string // tag
 	rows string // rows
 }
 
@@ -102,7 +102,7 @@ func (qp *StandardQueryParser) Rows(rows string) *StandardQueryParser {
 // DisMaxQueryParser is a dismax query parser
 type DisMaxQueryParser struct {
 	// dismax q parser params
-	// reference: https://lucene.apache.org/solr/guide/8_7/the-dismax-q-parser.html
+	// reference: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html
 	q   string // query
 	alt string // alt query
 	qf  string // query fields
@@ -225,6 +225,190 @@ func (qp *DisMaxQueryParser) Bq(bq string) *DisMaxQueryParser {
 // Bf sets the boost function param
 func (qp *DisMaxQueryParser) Bf(bf string) *DisMaxQueryParser {
 	qp.bf = bf
+	return qp
+}
+
+// ExtendedDisMaxQueryParser is an extended dismax query parser
+type ExtendedDisMaxQueryParser struct {
+	// extended dismax q parser params
+	// reference: https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html
+	q         string // query
+	alt       string // alt query
+	qf        string // query fields
+	mm        string // minimum should match
+	autorelax string // autorelax
+	pf        string // phrase field
+	ps        string // phrase slop
+	qs        string // query slop
+	tie       string // tie breaker parameter
+	bq        string // boost query
+	bf        string // boost
+	uf        string // uf
+	stopwords string // stopwords
+	sow       string // split on whitespace
+	boost     string // boost
+}
+
+var _ QueryParser = (*ExtendedDisMaxQueryParser)(nil)
+
+// NewExtendedDisMaxQueryParser returns a new ExtendedDisMaxQueryParser
+func NewExtendedDisMaxQueryParser() *ExtendedDisMaxQueryParser {
+	return &ExtendedDisMaxQueryParser{}
+}
+
+// BuildParser builds the query parser
+func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
+	kv := []string{"edismax"}
+	if qp.alt != "" {
+		kv = append(kv, fmt.Sprintf("q.alt=%s", qp.alt))
+	}
+
+	if qp.qf != "" {
+		kv = append(kv, fmt.Sprintf("qf=%s", qp.qf))
+	}
+
+	if qp.mm != "" {
+		kv = append(kv, fmt.Sprintf("mm=%s", qp.mm))
+	}
+
+	if qp.autorelax != "" {
+		kv = append(kv, fmt.Sprintf("mm.autorelax=%s", qp.autorelax))
+	}
+
+	if qp.pf != "" {
+		kv = append(kv, fmt.Sprintf("pf=%s", qp.pf))
+	}
+
+	if qp.ps != "" {
+		kv = append(kv, fmt.Sprintf("ps=%s", qp.ps))
+	}
+
+	if qp.qs != "" {
+		kv = append(kv, fmt.Sprintf("qs=%s", qp.qs))
+	}
+
+	if qp.tie != "" {
+		kv = append(kv, fmt.Sprintf("tie=%s", qp.tie))
+	}
+
+	if qp.bq != "" {
+		kv = append(kv, fmt.Sprintf("bq=%s", qp.bq))
+	}
+
+	if qp.bf != "" {
+		kv = append(kv, fmt.Sprintf("bf=%s", qp.bf))
+	}
+
+	if qp.uf != "" {
+		kv = append(kv, fmt.Sprintf("uf=%s", qp.uf))
+	}
+
+	if qp.stopwords != "" {
+		kv = append(kv, fmt.Sprintf("v=%s", qp.stopwords))
+	}
+
+	if qp.sow != "" {
+		kv = append(kv, fmt.Sprintf("v=%s", qp.sow))
+	}
+
+	if qp.boost != "" {
+		kv = append(kv, fmt.Sprintf("v=%s", qp.boost))
+	}
+
+	if qp.q != "" {
+		kv = append(kv, fmt.Sprintf("v=%s", qp.q))
+	}
+
+	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
+}
+
+// Query sets the query
+func (qp *ExtendedDisMaxQueryParser) Query(query string) *ExtendedDisMaxQueryParser {
+	qp.q = query
+	return qp
+}
+
+// Alt sets the q.alt param
+func (qp *ExtendedDisMaxQueryParser) Alt(alt string) *ExtendedDisMaxQueryParser {
+	qp.alt = alt
+	return qp
+}
+
+// Qf sets the qf param
+func (qp *ExtendedDisMaxQueryParser) Qf(qf string) *ExtendedDisMaxQueryParser {
+	qp.qf = qf
+	return qp
+}
+
+// Mm sets the minimum should match param
+func (qp *ExtendedDisMaxQueryParser) Mm(mm string) *ExtendedDisMaxQueryParser {
+	qp.mm = mm
+	return qp
+}
+
+// Autorelax, if true, the number of clauses required will automatically be relaxed
+func (qp *ExtendedDisMaxQueryParser) Autorelax(autorelax string) *ExtendedDisMaxQueryParser {
+	qp.autorelax = autorelax
+	return qp
+}
+
+// Pf sets the phrase field param
+func (qp *ExtendedDisMaxQueryParser) Pf(pf string) *ExtendedDisMaxQueryParser {
+	qp.pf = pf
+	return qp
+}
+
+// Ps sets the phrase slop param
+func (qp *ExtendedDisMaxQueryParser) Ps(ps string) *ExtendedDisMaxQueryParser {
+	qp.ps = ps
+	return qp
+}
+
+// Qs sets the query slop param
+func (qp *ExtendedDisMaxQueryParser) Qs(qs string) *ExtendedDisMaxQueryParser {
+	qp.qs = qs
+	return qp
+}
+
+// Tie sets the tie breaker param param
+func (qp *ExtendedDisMaxQueryParser) Tie(tie string) *ExtendedDisMaxQueryParser {
+	qp.tie = tie
+	return qp
+}
+
+// Bq sets the boost query param
+func (qp *ExtendedDisMaxQueryParser) Bq(bq string) *ExtendedDisMaxQueryParser {
+	qp.bq = bq
+	return qp
+}
+
+// Bf sets the boost function param
+func (qp *ExtendedDisMaxQueryParser) Bf(bf string) *ExtendedDisMaxQueryParser {
+	qp.bf = bf
+	return qp
+}
+
+// Uf sets specifies which schema fields the end user is allowed to explicitly query
+func (qp *ExtendedDisMaxQueryParser) Uf(uf string) *ExtendedDisMaxQueryParser {
+	qp.uf = uf
+	return qp
+}
+
+// Stopwords sets the stop words
+func (qp *ExtendedDisMaxQueryParser) Stopwords(stopwords string) *ExtendedDisMaxQueryParser {
+	qp.stopwords = stopwords
+	return qp
+}
+
+// Sow sets the split on whitespace
+func (qp *ExtendedDisMaxQueryParser) Sow(sow string) *ExtendedDisMaxQueryParser {
+	qp.sow = sow
+	return qp
+}
+
+// Boost sets the boost words
+func (qp *ExtendedDisMaxQueryParser) Boost(boost string) *ExtendedDisMaxQueryParser {
+	qp.boost = boost
 	return qp
 }
 
