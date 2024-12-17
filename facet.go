@@ -191,7 +191,7 @@ func (f *QueryFacet) AddToFacet(key string, value interface{}) *QueryFacet {
 // 	start   int
 // 	end     int
 // 	gap     int
-// 	hardend bool
+// 	hardened bool
 // 	other   string
 // 	include string
 // 	ranges  string
