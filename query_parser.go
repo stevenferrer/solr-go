@@ -16,12 +16,15 @@ type QueryParser interface {
 type StandardQueryParser struct {
 	// standard q parser params
 	// reference: https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html
-	q    string // query
-	op   string // default operator
-	df   string // default field
-	sow  bool   // split on whitespace
-	tag  string // tag
-	rows string // rows
+	q     string   // query
+	op    string   // default operator
+	df    string   // default field
+	sow   bool     // split on whitespace
+	tag   string   // tag
+	rows  string   // rows
+	start string   // start
+	fl    string   // field list
+	fq    []string // filter query
 }
 
 var _ QueryParser = (*StandardQueryParser)(nil)
@@ -60,6 +63,20 @@ func (qp *StandardQueryParser) BuildParser() string {
 		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
 	}
 
+	if qp.start != "" {
+		kv = append(kv, fmt.Sprintf("start=%s", qp.start))
+	}
+
+	if qp.fl != "" {
+		kv = append(kv, fmt.Sprintf("fl=%s", qp.fl))
+	}
+
+	if len(qp.fq) > 0 {
+		for _, fq := range qp.fq {
+			kv = append(kv, fmt.Sprintf("fq=%s", fq))
+		}
+	}
+
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
 }
 
@@ -96,6 +113,24 @@ func (qp *StandardQueryParser) Tag(tag string) *StandardQueryParser {
 // Rows sets the rows param
 func (qp *StandardQueryParser) Rows(rows string) *StandardQueryParser {
 	qp.rows = rows
+	return qp
+}
+
+// Start sets the start position
+func (qp *StandardQueryParser) Start(start string) *StandardQueryParser {
+	qp.start = start
+	return qp
+}
+
+// Fl sets the field list
+func (qp *StandardQueryParser) Fl(fl string) *StandardQueryParser {
+	qp.fl = fl
+	return qp
+}
+
+// Fq sets the query filter
+func (qp *StandardQueryParser) Fq(fq []string) *StandardQueryParser {
+	qp.fq = fq
 	return qp
 }
 
@@ -180,7 +215,7 @@ func (qp *DisMaxQueryParser) BuildParser() string {
 	if qp.op != "" {
 		kv = append(kv, fmt.Sprintf("q.op=%s", qp.op))
 	}
-	
+
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
 }
 
@@ -266,25 +301,27 @@ func (qp *DisMaxQueryParser) Op(op string) *DisMaxQueryParser {
 type ExtendedDisMaxQueryParser struct {
 	// extended dismax q parser params
 	// reference: https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html
-	q         string // query
-	alt       string // alt query
-	qf        string // query fields
-	mm        string // minimum should match
-	autorelax bool   // autorelax
-	pf        string // phrase field
-	ps        string // phrase slop
-	qs        string // query slop
-	tie       string // tie breaker parameter
-	bq        string // boost query
-	bf        string // boost
-	uf        string // uf
-	stopwords string // stopwords
-	sow       bool   // split on whitespace
-	boost     string // boost
-	rows      string // rows
-	df        string // default field
-	op   string // default operator
-
+	q         string   // query
+	alt       string   // alt query
+	qf        string   // query fields
+	mm        string   // minimum should match
+	autorelax bool     // autorelax
+	pf        string   // phrase field
+	ps        string   // phrase slop
+	qs        string   // query slop
+	tie       string   // tie breaker parameter
+	bq        string   // boost query
+	bf        string   // boost
+	uf        string   // uf
+	stopwords string   // stopwords
+	sow       bool     // split on whitespace
+	boost     string   // boost
+	rows      string   // rows
+	df        string   // default field
+	op        string   // default operator
+	start     string   // start
+	fl        string   // field list
+	fq        []string // filter query
 }
 
 var _ QueryParser = (*ExtendedDisMaxQueryParser)(nil)
@@ -367,6 +404,20 @@ func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
 
 	if qp.op != "" {
 		kv = append(kv, fmt.Sprintf("q.op=%s", qp.op))
+	}
+
+	if qp.start != "" {
+		kv = append(kv, fmt.Sprintf("start=%s", qp.start))
+	}
+
+	if qp.fl != "" {
+		kv = append(kv, fmt.Sprintf("fl=%s", qp.fl))
+	}
+
+	if len(qp.fq) > 0 {
+		for _, fq := range qp.fq {
+			kv = append(kv, fmt.Sprintf("fq=%s", fq))
+		}
 	}
 
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
@@ -477,6 +528,24 @@ func (qp *ExtendedDisMaxQueryParser) Df(df string) *ExtendedDisMaxQueryParser {
 // Op sets the default operator
 func (qp *ExtendedDisMaxQueryParser) Op(op string) *ExtendedDisMaxQueryParser {
 	qp.op = op
+	return qp
+}
+
+// Start sets the start position
+func (qp *ExtendedDisMaxQueryParser) Start(start string) *ExtendedDisMaxQueryParser {
+	qp.start = start
+	return qp
+}
+
+// Fl sets the field list
+func (qp *ExtendedDisMaxQueryParser) Fl(fl string) *ExtendedDisMaxQueryParser {
+	qp.fl = fl
+	return qp
+}
+
+// Fq sets the query filter
+func (qp *ExtendedDisMaxQueryParser) Fq(fq []string) *ExtendedDisMaxQueryParser {
+	qp.fq = fq
 	return qp
 }
 
