@@ -78,9 +78,20 @@ See [integration test](integration_test.go) for a more complete example.
 - [Config API](https://solr.apache.org/guide/config-api.html) - Modify config properties and update components.
 - [Suggester API](https://solr.apache.org/guide/suggester.html) - Auto-suggest/type-ahead via suggester component.
 
+## Supported Query Parsers
+
+- [Standard Query Parser](https://solr.apache.org/guide/solr/latest/query-guide/standard-query-parser.html)
+- [DisMax Query Parser](https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html)
+- [Extended DisMax (eDisMax) Query Parser](https://solr.apache.org/guide/solr/latest/query-guide/edismax-query-parser.html)
+
 ## Other features
 
 - [Basic auth support](https://solr.apache.org/guide/basic-authentication-plugin.html#basic-authentication-plugin) - Interacting with a Solr server that uses the basic authentication plugin.
+
+## Currently tested versions
+
+- [Solr 9.7](https://solr.apache.org/guide/9_7/index.html)
+- [Solr 8.11](https://solr.apache.org/guide/8_11/index.html)
 
 ## A (minor) word of caution
 
