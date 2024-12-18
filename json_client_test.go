@@ -172,6 +172,11 @@ func TestJSONClientMock(t *testing.T) {
 		_, err := client.Query(ctx, collection, query)
 		assert.NoError(t, err)
 
+		query = NewQuery(NewExtendedDisMaxQueryParser().
+			Query("'apple pie'").BuildParser())
+		_, err = client.Query(ctx, collection, query)
+		assert.NoError(t, err)
+
 		_, err = clientThatErrors.Query(ctx, collection, query)
 		assert.ErrorIs(t, err, errSendRequest)
 	})

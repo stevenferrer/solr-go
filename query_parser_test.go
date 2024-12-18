@@ -65,12 +65,12 @@ func TestQueryParsers(t *testing.T) {
 		got := solr.NewExtendedDisMaxQueryParser().BuildParser()
 		a.Equal("{!edismax}", got)
 
-		got = solr.ExtendedDisMaxQueryParser().
+		got = solr.NewExtendedDisMaxQueryParser().
 			Query("'solr rocks'").
 			Alt("*:*").
 			Qf("'one^2.3 two three^0.4'").
 			Mm("75%").
-			Autorelax("true").
+			Autorelax().
 			Pf("'one^2.3 two three^0.4'").
 			Ps("1").
 			Qs("1").
@@ -79,15 +79,15 @@ func TestQueryParsers(t *testing.T) {
 			Bf("div(1,sum(1,price))^1.5").
 			Uf("title").
 			Stopwords("stuff").
-			Sow("true").
+			Sow().
 			Boost("div(1,sum(1,price))").
 			BuildParser()
-		expect := `{!edismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% mm.autorelax=true pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 uf=title stopwords=stuff v='solr rocks boost=div(1,sum(1,price)) sow=true '}`
+		expect := `{!edismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% mm.autorelax=true pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 uf=title stopwords=stuff sow=true boost=div(1,sum(1,price)) v='solr rocks'}`
 		a.Equal(expect, got)
 
 		got = solr.NewExtendedDisMaxQueryParser().
 			Query("'solr rocks'").BuildParser()
-		expect := "{!edismax v='solr rocks'}"
+		expect = "{!edismax v='solr rocks'}"
 		a.Equal(expect, got)
 	})
 

@@ -236,7 +236,7 @@ type ExtendedDisMaxQueryParser struct {
 	alt       string // alt query
 	qf        string // query fields
 	mm        string // minimum should match
-	autorelax string // autorelax
+	autorelax bool   // autorelax
 	pf        string // phrase field
 	ps        string // phrase slop
 	qs        string // query slop
@@ -245,7 +245,7 @@ type ExtendedDisMaxQueryParser struct {
 	bf        string // boost
 	uf        string // uf
 	stopwords string // stopwords
-	sow       string // split on whitespace
+	sow       bool   // split on whitespace
 	boost     string // boost
 }
 
@@ -271,8 +271,8 @@ func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
 		kv = append(kv, fmt.Sprintf("mm=%s", qp.mm))
 	}
 
-	if qp.autorelax != "" {
-		kv = append(kv, fmt.Sprintf("mm.autorelax=%s", qp.autorelax))
+	if qp.autorelax {
+		kv = append(kv, "mm.autorelax=true")
 	}
 
 	if qp.pf != "" {
@@ -304,15 +304,15 @@ func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
 	}
 
 	if qp.stopwords != "" {
-		kv = append(kv, fmt.Sprintf("v=%s", qp.stopwords))
+		kv = append(kv, fmt.Sprintf("stopwords=%s", qp.stopwords))
 	}
 
-	if qp.sow != "" {
-		kv = append(kv, fmt.Sprintf("v=%s", qp.sow))
+	if qp.sow {
+		kv = append(kv, "sow=true")
 	}
 
 	if qp.boost != "" {
-		kv = append(kv, fmt.Sprintf("v=%s", qp.boost))
+		kv = append(kv, fmt.Sprintf("boost=%s", qp.boost))
 	}
 
 	if qp.q != "" {
@@ -347,8 +347,8 @@ func (qp *ExtendedDisMaxQueryParser) Mm(mm string) *ExtendedDisMaxQueryParser {
 }
 
 // Autorelax, if true, the number of clauses required will automatically be relaxed
-func (qp *ExtendedDisMaxQueryParser) Autorelax(autorelax string) *ExtendedDisMaxQueryParser {
-	qp.autorelax = autorelax
+func (qp *ExtendedDisMaxQueryParser) Autorelax() *ExtendedDisMaxQueryParser {
+	qp.autorelax = true
 	return qp
 }
 
@@ -401,8 +401,8 @@ func (qp *ExtendedDisMaxQueryParser) Stopwords(stopwords string) *ExtendedDisMax
 }
 
 // Sow sets the split on whitespace
-func (qp *ExtendedDisMaxQueryParser) Sow(sow string) *ExtendedDisMaxQueryParser {
-	qp.sow = sow
+func (qp *ExtendedDisMaxQueryParser) Sow() *ExtendedDisMaxQueryParser {
+	qp.sow = true
 	return qp
 }
 
