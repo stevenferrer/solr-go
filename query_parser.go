@@ -93,7 +93,7 @@ func (qp *StandardQueryParser) Tag(tag string) *StandardQueryParser {
 	return qp
 }
 
-// Tag sets the tag param
+// Rows sets the rows param
 func (qp *StandardQueryParser) Rows(rows string) *StandardQueryParser {
 	qp.rows = rows
 	return qp
@@ -113,6 +113,7 @@ type DisMaxQueryParser struct {
 	tie string // tie breaker parameter
 	bq  string // boost query
 	bf  string // boost function
+	rows      string //rows
 }
 
 var _ QueryParser = (*DisMaxQueryParser)(nil)
@@ -163,6 +164,10 @@ func (qp *DisMaxQueryParser) BuildParser() string {
 
 	if qp.q != "" {
 		kv = append(kv, fmt.Sprintf("v=%s", qp.q))
+	}
+
+	if qp.rows != "" {
+		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
 	}
 
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
@@ -228,6 +233,12 @@ func (qp *DisMaxQueryParser) Bf(bf string) *DisMaxQueryParser {
 	return qp
 }
 
+// Rows sets the rows param
+func (qp *DisMaxQueryParser) Rows(rows string) *DisMaxQueryParser {
+	qp.rows = rows
+	return qp
+}
+
 // ExtendedDisMaxQueryParser is an extended dismax query parser
 type ExtendedDisMaxQueryParser struct {
 	// extended dismax q parser params
@@ -247,6 +258,7 @@ type ExtendedDisMaxQueryParser struct {
 	stopwords string // stopwords
 	sow       bool   // split on whitespace
 	boost     string // boost
+	rows      string //rows
 }
 
 var _ QueryParser = (*ExtendedDisMaxQueryParser)(nil)
@@ -317,6 +329,10 @@ func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
 
 	if qp.q != "" {
 		kv = append(kv, fmt.Sprintf("v=%s", qp.q))
+	}
+
+	if qp.rows != "" {
+		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
 	}
 
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
@@ -409,6 +425,12 @@ func (qp *ExtendedDisMaxQueryParser) Sow() *ExtendedDisMaxQueryParser {
 // Boost sets the boost words
 func (qp *ExtendedDisMaxQueryParser) Boost(boost string) *ExtendedDisMaxQueryParser {
 	qp.boost = boost
+	return qp
+}
+
+// Rows sets the rows param
+func (qp *ExtendedDisMaxQueryParser) Rows(rows string) *ExtendedDisMaxQueryParser {
+	qp.rows = rows
 	return qp
 }
 
