@@ -103,17 +103,20 @@ func (qp *StandardQueryParser) Rows(rows string) *StandardQueryParser {
 type DisMaxQueryParser struct {
 	// dismax q parser params
 	// reference: https://solr.apache.org/guide/solr/latest/query-guide/dismax-query-parser.html
-	q   string // query
-	alt string // alt query
-	qf  string // query fields
-	mm  string // minimum should match
-	pf  string // phrase field
-	ps  string // phrase slop
-	qs  string // query slop
-	tie string // tie breaker parameter
-	bq  string // boost query
-	bf  string // boost function
-	rows      string //rows
+	q    string // query
+	alt  string // alt query
+	qf   string // query fields
+	mm   string // minimum should match
+	pf   string // phrase field
+	ps   string // phrase slop
+	qs   string // query slop
+	tie  string // tie breaker parameter
+	bq   string // boost query
+	bf   string // boost function
+	rows string //rows
+	df   string // default field
+	op   string // default operator
+
 }
 
 var _ QueryParser = (*DisMaxQueryParser)(nil)
@@ -170,6 +173,14 @@ func (qp *DisMaxQueryParser) BuildParser() string {
 		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
 	}
 
+	if qp.df != "" {
+		kv = append(kv, fmt.Sprintf("df=%s", qp.df))
+	}
+
+	if qp.op != "" {
+		kv = append(kv, fmt.Sprintf("q.op=%s", qp.op))
+	}
+	
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
 }
 
@@ -239,6 +250,18 @@ func (qp *DisMaxQueryParser) Rows(rows string) *DisMaxQueryParser {
 	return qp
 }
 
+// Df sets the default field
+func (qp *DisMaxQueryParser) Df(df string) *DisMaxQueryParser {
+	qp.df = df
+	return qp
+}
+
+// Op sets the default operator
+func (qp *DisMaxQueryParser) Op(op string) *DisMaxQueryParser {
+	qp.op = op
+	return qp
+}
+
 // ExtendedDisMaxQueryParser is an extended dismax query parser
 type ExtendedDisMaxQueryParser struct {
 	// extended dismax q parser params
@@ -258,7 +281,10 @@ type ExtendedDisMaxQueryParser struct {
 	stopwords string // stopwords
 	sow       bool   // split on whitespace
 	boost     string // boost
-	rows      string //rows
+	rows      string // rows
+	df        string // default field
+	op   string // default operator
+
 }
 
 var _ QueryParser = (*ExtendedDisMaxQueryParser)(nil)
@@ -333,6 +359,14 @@ func (qp *ExtendedDisMaxQueryParser) BuildParser() string {
 
 	if qp.rows != "" {
 		kv = append(kv, fmt.Sprintf("rows=%s", qp.rows))
+	}
+
+	if qp.df != "" {
+		kv = append(kv, fmt.Sprintf("df=%s", qp.df))
+	}
+
+	if qp.op != "" {
+		kv = append(kv, fmt.Sprintf("q.op=%s", qp.op))
 	}
 
 	return fmt.Sprintf("{!%s}", strings.Join(kv, " "))
@@ -431,6 +465,18 @@ func (qp *ExtendedDisMaxQueryParser) Boost(boost string) *ExtendedDisMaxQueryPar
 // Rows sets the rows param
 func (qp *ExtendedDisMaxQueryParser) Rows(rows string) *ExtendedDisMaxQueryParser {
 	qp.rows = rows
+	return qp
+}
+
+// Df sets the default field
+func (qp *ExtendedDisMaxQueryParser) Df(df string) *ExtendedDisMaxQueryParser {
+	qp.df = df
+	return qp
+}
+
+// Op sets the default operator
+func (qp *ExtendedDisMaxQueryParser) Op(op string) *ExtendedDisMaxQueryParser {
+	qp.op = op
 	return qp
 }
 
