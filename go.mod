@@ -1,6 +1,6 @@
 module github.com/public-safety-canada/solr-go
 
-go 1.23
+go 1.23.3
 
 require (
 	github.com/jarcoal/httpmock v1.3.1

@@ -17,8 +17,8 @@ func TestQueryParsers(t *testing.T) {
 		a.Equal("{!lucene tag=certain}", got)
 
 		got = solr.NewStandardQueryParser().Query("'solr rocks'").
-			Df("text").Op("AND").Sow().BuildParser()
-		expect := "{!lucene df=text q.op=AND sow=true v='solr rocks'}"
+			Df("text").Op("AND").Sow().Rows("100").BuildParser()
+		expect := "{!lucene df=text q.op=AND sow=true v='solr rocks' rows=100}"
 		a.Equal(expect, got)
 
 		got = solr.NewStandardQueryParser().
@@ -49,8 +49,9 @@ func TestQueryParsers(t *testing.T) {
 			Tie("0.1").
 			Bq("category:food^10").
 			Bf("div(1,sum(1,price))^1.5").
+			Rows("100").
 			BuildParser()
-		expect := `{!dismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 v='solr rocks'}`
+		expect := `{!dismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 v='solr rocks' rows=100}`
 		a.Equal(expect, got)
 
 		got = solr.NewDisMaxQueryParser().
@@ -81,8 +82,9 @@ func TestQueryParsers(t *testing.T) {
 			Stopwords("stuff").
 			Sow().
 			Boost("div(1,sum(1,price))").
+			Rows("100").
 			BuildParser()
-		expect := `{!edismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% mm.autorelax=true pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 uf=title stopwords=stuff sow=true boost=div(1,sum(1,price)) v='solr rocks'}`
+		expect := `{!edismax q.alt=*:* qf='one^2.3 two three^0.4' mm=75% mm.autorelax=true pf='one^2.3 two three^0.4' ps=1 qs=1 tie=0.1 bq=category:food^10 bf=div(1,sum(1,price))^1.5 uf=title stopwords=stuff sow=true boost=div(1,sum(1,price)) v='solr rocks' rows=100}`
 		a.Equal(expect, got)
 
 		got = solr.NewExtendedDisMaxQueryParser().
