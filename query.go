@@ -16,11 +16,13 @@ type Query struct {
 	// responseWriter        string // wt
 
 	// supported params in json request api
+	// https://solr.apache.org/guide/8_7/json-request-api.html#supported-properties-and-syntax
 	sort    string
 	offset  int      // start
 	limit   int      // rows
 	filters []string // fq
 	fields  []string // fl
+	params  M        // additional params to add verbatim to request query params
 
 	// query is the main query
 	query string
@@ -68,6 +70,10 @@ func (q *Query) BuildQuery() M {
 		qm["fields"] = q.fields
 	}
 
+	if len(q.params) > 0 {
+		qm["params"] = q.params
+	}
+
 	if len(q.facets) > 0 {
 		facets := M{}
 		for _, facet := range q.facets {
@@ -107,6 +113,12 @@ func (q *Query) Filters(filters ...string) *Query {
 // Fields sets the fields param
 func (q *Query) Fields(fields ...string) *Query {
 	q.fields = fields
+	return q
+}
+
+// Params sets the params param
+func (q *Query) Params(params M) *Query {
+	q.params = params
 	return q
 }
 

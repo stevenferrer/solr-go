@@ -43,6 +43,9 @@ func TestQuery(t *testing.T) {
 		Limit(10).
 		Filters("inStock:true").
 		Fields("name", "price").
+		Params(solr.M{
+			"spellcheck.q": "sports",
+		}).
 		BuildQuery()
 
 	expect := solr.M{
@@ -54,6 +57,9 @@ func TestQuery(t *testing.T) {
 		"filter": []string{"inStock:true"},
 		"limit":  10,
 		"offset": 1,
+		"params": solr.M{
+			"spellcheck.q": "sports",
+		},
 		"queries": solr.M{
 			"query_filters": []solr.M{
 				{"#size_tag": solr.M{"field": solr.M{"f": "size", "query": "XL"}}},
