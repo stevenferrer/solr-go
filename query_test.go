@@ -43,6 +43,9 @@ func TestQuery(t *testing.T) {
 		Limit(10).
 		Filters("inStock:true").
 		Fields("name", "price").
+		Params(solr.M{
+			"spellcheck.q": "sports",
+		}).
 		BuildQuery()
 
 	expect := solr.M{
@@ -54,6 +57,9 @@ func TestQuery(t *testing.T) {
 		"filter": []string{"inStock:true"},
 		"limit":  10,
 		"offset": 1,
+		"params": solr.M{
+			"spellcheck.q": "sports",
+		},
 		"queries": solr.M{
 			"query_filters": []solr.M{
 				{"#size_tag": solr.M{"field": solr.M{"f": "size", "query": "XL"}}},
@@ -62,6 +68,27 @@ func TestQuery(t *testing.T) {
 		},
 		"query": "{!dismax v='solr rocks'}",
 		"sort":  "score",
+	}
+
+	a.Equal(expect, got)
+}
+
+// Ensure params can handle arbitrary arguments (like those used in parameter dereferencing)
+// https://solr.apache.org/guide/solr/9_7/query-guide/local-params.html#parameter-dereferencing
+func TestQueryParamsArbitraryArgs(t *testing.T) {
+	a := assert.New(t)
+	got := solr.NewQuery(solr.NewDisMaxQueryParser().
+		Query("$customQueryArg").BuildParser()).
+		Params(solr.M{
+			"customQueryArg": "solr rocks",
+		}).
+		BuildQuery()
+
+	expect := solr.M{
+		"params": solr.M{
+			"customQueryArg": "solr rocks",
+		},
+		"query": "{!dismax v=$customQueryArg}",
 	}
 
 	a.Equal(expect, got)
