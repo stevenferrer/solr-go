@@ -55,6 +55,9 @@ query := solr.NewQuery(solr.NewDisMaxQueryParser().
         solr.NewQueryFacet("high_popularity").
             Query("popularity:[8 TO 10]"),
     ).
+    Params(solr.M{
+        "spellcheck.q": "solr rocks",
+    }).
     Sort("score").
     Offset(1).
     Limit(10).

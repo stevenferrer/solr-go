@@ -72,3 +72,24 @@ func TestQuery(t *testing.T) {
 
 	a.Equal(expect, got)
 }
+
+// Ensure params can handle arbitrary arguments (like those used in parameter dereferencing)
+// https://solr.apache.org/guide/solr/9_7/query-guide/local-params.html#parameter-dereferencing
+func TestQueryParamsArbitraryArgs(t *testing.T) {
+	a := assert.New(t)
+	got := solr.NewQuery(solr.NewDisMaxQueryParser().
+		Query("$customQueryArg").BuildParser()).
+		Params(solr.M{
+			"customQueryArg": "solr rocks",
+		}).
+		BuildQuery()
+
+	expect := solr.M{
+		"params": solr.M{
+			"customQueryArg": "solr rocks",
+		},
+		"query": "{!dismax v=$customQueryArg}",
+	}
+
+	a.Equal(expect, got)
+}
